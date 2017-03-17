@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>---查看</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+	</head>
+
+	<body style="background-color: white;">
+		<!-- PAGE CONTENT BEGINS -->
+		<div class="row page-content">
+			<div class="col-xs-12 tabbable">
+				<div class="tab-content">
+					<div class="tab-pane in active">
+						<form action="#" class="form-horizontal" role="form">
+							<input type="hidden"  th:field="${instance.id}"/>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 电话 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.telphone}' placeholder='telphone' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 发送时间 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.sendTime}' placeholder='sendTime' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 发送类型 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.messageType}' placeholder='messageType' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 发送结果 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.result}' placeholder='result' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 到期时间 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.cancelTime}' placeholder='cancelTime' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 发送参数 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.sendDatas}' placeholder='sendDatas' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							
+						</form>
+					</div>
+				</div>
+			</div><!-- /.col -->
+		</div><!-- /.row -->
+	
+		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+			<i class="icon-double-angle-up icon-only bigger-110"></i>
+		</a>
+	</body>
+</html>

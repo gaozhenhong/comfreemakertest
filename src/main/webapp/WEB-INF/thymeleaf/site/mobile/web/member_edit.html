@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
+<title>个人信息修改</title>
+<link href="../../../../../resources/mobile/css/bootstrap.min.css" th:href="@{/resources/mobile/css/bootstrap.min.css}" rel="stylesheet"/>
+<link href="../../../../../resources/mobile/css/app.css" th:href="@{/resources/mobile/css/app.css}" rel="stylesheet"/>
+<script src="../../../../../resources/mobile/js/jquery.min.js" th:src="@{/resources/mobile/js/jquery.min.js}"></script>
+<script src="../../../../../resources/mobile/js/ajaxfileupload.js" th:src="@{/resources/mobile/js/ajaxfileupload.js}"></script>
+<script src="../../../../../resources/mobile/js/bootstrap.min.js" th:src="@{/resources/mobile/js/bootstrap.min.js}"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/iscroll.js" th:src="@{/resources/mobile/js/iscroll.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+var rootPath=[[$]]
+var myScroll;
+function loaded () {myScroll = new IScroll('#wrapper', { mouseWheel: true });}
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+$(document).ready(function(){
+    $("#boss").on("click",function () {
+    	$('#member-logo').click();
+    })
+    $("body").on("change","#member-logo",function(){
+    	$("#loading-div").show();
+	   	 $("#boss").bind("load",function(){
+	   		 $("#loading-div").hide();
+	   		 $('#boss').unbind("load");
+	   	 });
+    	 ajaxFileUpload();
+	})
+})
+function ajaxFileUpload() {
+	var href=[[@{/site/mobile/member/center/uploadLogoAjax}]];
+    $.ajaxFileUpload
+    (
+        {
+            url: href, //用于文件上传的服务器端请求地址
+            secureuri: false, //是否需要安全协议，一般设置为false
+            fileElementId: 'member-logo', //文件上传域的ID
+            dataType: 'text', //返回值类型 一般设置为json
+            success: function (data, status)  //服务器成功响应处理函数
+            {
+            	var imageObj=JSON.parse(data);
+                $("#logoId").val(imageObj.logoId);
+                $("#boss").attr("src", $("#contentPath").val()+imageObj.resPath);
+               /* if (typeof (data.error) != 'undefined') {
+                    if (data.error != '') {
+                        alert(data.error);
+                    } else {
+                        alert(data.msg);
+                    }
+                }*/
+            },
+            error: function (data, status, e)//服务器响应失败处理函数
+            {
+                alert(e);
+            }
+        }
+    )
+    return false;
+}
+</script>
+</head>
+
+<body>
+<!-- <div id="header">标题</div> -->
+
+<div class="userpage" id="wrapper">
+	<div id="scroller">
+	<!-- 开始主体内容 -->
+	<form action="#" th:action="@{/site/mobile/member/center/baseinfoEditAction.do}" th:object="${member}" role="form" method="post">
+	    <div class="user thumbnail">
+	      <div id="loading-div" style="position:absolute;height:100px;width:100%;line-height:100px;background:#fff;text-align:center;display:none"><img src="" th:src="@{/resources/mobile/images/loading-52.gif}"/></div>
+	      <img id="boss" src="../../../../../resources/mobile/images/user.jpg" th:src="@{${member.logoId}==0?${member.wxLogoUrl}:${ResourceUtil.getPath(member.logoId,'/resources/mobile/images/user.jpg')}}" style="height:100px;" class="img-circle"/>
+	      <input id="logoId" type="hidden" th:field="${member.logoId}"/>
+	      <input type="file" name="imagefile" style="display:none" id="member-logo"/>
+	      <input id="contentPath" name="contentPath" type="hidden" th:value="${#httpServletRequest.contextPath}"/>
+	      <div class="caption">
+	        <h4  style="text-align:center">点击更换头像</h4>
+	      </div>
+	    </div>
+	
+	
+		<div class="list-group">
+		  <ul style="font-size:14px;">
+			  <li class="list-group-item">
+				<span class="list-group-item-heading">昵称</span>
+				<input type="text" th:field="${member.nickName}"/>
+				<input type="hidden" th:field="${member.id}"/>
+			  </li>
+			  <li class="list-group-item">
+				<span class="list-group-item-heading">性别</span>
+				<select th:field="${member.gender}" num="1">
+					<option value="0" >秘密</option>
+					<option value="1" >男</option>
+					<option value="2" >女</option>
+				</select>
+			  </li>
+		  </ul>
+		</div>
+	
+		<button type="submit" class="nextbtn btn btn-primary btn-lg center-block" role="button">保存</button>
+</form>
+
+
+
+
+	<!-- 结束主体内容 -->
+	</div>
+</div>
+<div id="footer" th:include="site/mobile/web/fragment/navFragment :: navTab(2)">
+		<div class="btn-group btn-group-justified" role="group">
+			<div class="btn-group" role="group">
+				<a href="index.html" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-home"></i> <br/>主页
+				</a>
+			</div>
+			<div class="btn-group" role="group">
+				<a href="zb.html" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-map-marker"></i> <br/>周边
+				</a>
+			</div>
+			<div class="btn-group" role="group">
+				<a href="my.html" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-user"></i> <br/>我的
+				</a>
+			</div>
+		</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<style>
+	#meitu_box{
+		height: 400px;
+		width:100%;
+	}
+	
+	.alert-success {
+	    background-color: #dff0d8;
+	    border-color: #d6e9c6;
+	    color: #468847;
+	}
+	
+	.alert-danger {
+	    background-color: #f2dede;
+	    border-color: #eed3d7;
+	    color: #b94a48;
+	}
+	
+	.alert {
+	    border: 1px solid transparent;
+	    border-radius: 4px;
+	    margin-bottom: 5px;
+	    padding: 15px;
+	}
+	
+	.close {
+	    color: #000;
+	    float: right;
+	    font-size: 21px;
+	    font-weight: bold;
+	    line-height: 1;
+	    opacity: 0.2;
+	    text-shadow: 0 1px 0 #fff;
+	}
+</style>
+	<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+	<script th:src="@{/resources/meiTu/js/meiTu.js}"></script>
+	<input type="hidden" id="imgId"  name = "imgId" th:value="${imgId} "/>
+	<input type="hidden" id="imgUrl"  name = "imgUrl" th:value="${imgUrl} "/>
+	<input type="hidden" id="folder"  name = "folder" th:value="${folder} "/>
+	<input type="hidden" id="cropPresets"  name = "cropPresets" th:value="${cropPresets} "/>
+	<input type="hidden" id="fileViewUrl"  name = "fileViewUrl" th:value="${fileViewUrl} "/>
+	<input type="hidden" id="uploadPath"  name = "uploadPath" th:value="@{''+${uploadPath}} "/>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+	window.onload=function(){
+		 /*第1个参数是加载编辑器div容器，第2个参数是编辑器类型1为轻量编辑，2为轻量拼图，3为完整版，4为摄像头FLASH，5为头像编辑器，6为多张图片同时上传
+		  *注意：如果使用本地版美图秀秀则 type=3 完整版会造成部分flash图片丢失不建议使用
+		  *第3个参数是div容器宽，第4个参数是div容器高
+		  */
+		  
+		  var cropPresets = $("#cropPresets").val();
+		  var flashType = 1;
+		  xiuxiu.setLaunchVars("nav", "/edit");
+		  xiuxiu.setLaunchVars("sizeTipVisible", 1);
+		  //xiuxiu.setLaunchVars("cropPresets", "3:5");
+		  //xiuxiu.setLaunchVars("cropPresets", ["320x240"]);
+		  //alert("cropPresets=="+cropPresets);
+		  if(cropPresets != null && "" != cropPresets ){
+			flashType = 5;	//当设置了图片尺寸后则进入头像编辑
+	  		xiuxiu.setLaunchVars("cropPresets", cropPresets);
+	  		xiuxiu.setLaunchVars("customMenu", []); 
+	  	  }
+		  xiuxiu.setLaunchVars("subBrowseBtnVisible", 1);
+		  xiuxiu.embedSWF("meituxiuxiu",flashType,"100%","100%");
+		  /*设置上传的类型，1为流式上传，2为普通form上传*/
+		  xiuxiu.setUploadType(2);
+		  xiuxiu.setUploadDataFieldName("Filedata");
+		  var codingUrl = encodeURI($("#uploadPath").val());
+		  
+		  xiuxiu.setUploadURL(codingUrl);//修改为上传接收图片程序地址
+		  //alert("action url = "+codingUrl);
+		  xiuxiu.onBeforeUpload = function(data, id){
+			 //alert(JSON.stringify(data));
+			 xiuxiu.setUploadArgs({filetype: data.type,imgId:$("#imgId").val(),folder:$("#folder").val(),type: "image", filename: data.name});
+		  };
+		  xiuxiu.onInit = function ()
+		  {
+		    xiuxiu.loadPhoto($("#imgUrl").val());//修改为要处理的图片url
+		  };
+		  xiuxiu.onUploadResponse = function(data) {
+			  //上传后返回的处理函数
+				var dataObj = JSON.parse(data);
+				//alert(JSON.stringify(data));
+				if (data == null || data == "" || data.length<1) {
+					document.getElementById("alert-danger").style.display = "block";
+					$("#msg").val("没有读取到任何文件！");
+				} else {
+					document.getElementById("alert-success").style.display = "block";
+					parent.setImgUrl($("#fileViewUrl").val(),data,false);
+				}
+			};
+		};
+		/*]]>*/
+	</script>
+<div id="meitu_box">
+	<div id="alert-success" class="alert alert-success" style="display:none;" >
+		<strong>
+			<i class="icon-ok"></i>
+		</strong>
+		您的图片保存成功！
+		<br/>
+	</div>
+	<div id="alert-danger" class="alert alert-danger" style="display:none;" >
+		<strong>
+			<i class="icon-remove"></i>
+		</strong>
+		图片保存失败(未登录无法保存图片)！
+		<label id="msg"></label>
+		<br/>
+	</div>
+	<div id="meituxiuxiu">
+	
+	</div>
+</div>
+</html>

@@ -1,0 +1,44 @@
+body {
+	font-family: Helvetica, Verdana, Arial, sans-serif;
+	background-color: white;
+	color: black;
+}
+a:link, a:visited {
+	color: #000;
+}
+a:active, a:hover {
+	color: #666;
+}
+p.header span {
+	font-weight: bold;
+}
+div.content {
+	margin: auto;
+	width: 100%;
+}
+div.broken,
+div.missing {
+	margin: auto;
+	position: relative;
+	top: 50%;
+	width: 193px;
+}
+div.broken a,
+div.missing a {
+	height: 63px;
+	position: relative;
+	top: -31px;
+}
+div.broken img,
+div.missing img {
+	border-width: 0px;
+}
+div.broken {
+	display: none;
+}
+div#unityPlayer {
+	cursor: default;
+	height: 500px;
+	width: 99%;
+    position: absolute;
+}

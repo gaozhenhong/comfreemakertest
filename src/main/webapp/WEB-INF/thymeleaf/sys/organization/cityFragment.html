@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head >
+	<meta charset="utf-8" />
+</head>	
+	<body>
+		<div th:fragment="provinceList()" class="city-list">
+		    <a href="javascript:;" class="cls" title="关闭">×</a>
+		    <ul class=" city-list-content clx">
+		        <li class="on" style="display:block; max-height:270px;">
+		            <div class="item">
+		                <span>华北</span>
+		                <a class="province" href="javascript:;"  data-provinceName="北京" data-provinceId="2" title="北京市">北京</a>
+		                <a class="province" href="javascript:;"  data-provinceName="天津" data-provinceId="4" title="天津市">天津</a>
+		                <a class="province" href="javascript:;"  data-provinceName="河北" data-provinceId="6" title="河北省">河北</a>
+		                <a class="province" href="javascript:;"  data-provinceName="山西" data-provinceId="7" title="山西省">山西</a>
+		                <a class="province" href="javascript:;"  data-provinceName="蒙古" data-provinceId="8" title="内蒙古自治区">内蒙古</a>
+		            </div>
+		            <div class="item">
+		                <span>东北</span>
+		                <a class="province on" href="javascript:;"  data-provinceName="辽宁" data-provinceId="9" title="辽宁省" >辽宁</a>
+		                <a class="province" href="javascript:;"  data-provinceName="吉林" data-provinceId="10" title="吉林省">吉林</a>
+		                <a class="province" href="javascript:;"  data-provinceName="黑龙江" data-provinceId="11" title="黑龙江省">黑龙江</a>
+		            </div>
+		            <div class="item">
+		                <span>华东</span>
+		                <a class="province" href="javascript:;"  data-provinceName="上海" data-provinceId="3" title="上海市">上海</a>
+		                <a class="province" href="javascript:;"  data-provinceName="江苏" data-provinceId="12" title="江苏省">江苏</a>
+		                <a class="province" href="javascript:;"  data-provinceName="浙江" data-provinceId="13" title="浙江省">浙江</a>
+		                <a class="province" href="javascript:;"  data-provinceName="安徽" data-provinceId="14" title="安徽省">安徽</a>
+		                <a class="province" href="javascript:;"  data-provinceName="福建" data-provinceId="15" title="福建省">福建</a>
+		                <a class="province" href="javascript:;"  data-provinceName="江西" data-provinceId="16" title="江西省">江西</a>
+		                <a class="province" href="javascript:;"  data-provinceName="山东" data-provinceId="17" title="山东省">山东</a>
+		            </div>
+		            <div class="item">
+		                <span>中南</span>
+		                <a class="province" href="javascript:;"  data-provinceName="河南" data-provinceId="18" title="河南省">河南</a>
+		                <a class="province" href="javascript:;"  data-provinceName="湖北" data-provinceId="19" title="湖北省">湖北</a>
+		                <a class="province" href="javascript:;"  data-provinceName="湖南" data-provinceId="20" title="湖南省">湖南</a>
+		                <a class="province" href="javascript:;"  data-provinceName="广东" data-provinceId="21" title="广东省">广东</a>
+		                <a class="province" href="javascript:;"  data-provinceName="海南" data-provinceId="23" title="海南省">海南</a>
+		                <a class="province" href="javascript:;"  data-provinceName="广西" data-provinceId="22" title="广西壮族自治区">广西</a>
+		            </div>
+		            <div class="item">
+		                <span>西南</span>
+		                <a class="province" href="javascript:;"  data-provinceName="重庆" data-provinceId="5" title="重庆市">重庆</a>
+		                <a class="province" href="javascript:;"  data-provinceName="四川" data-provinceId="24" title="四川省">四川</a>
+		                <a class="province" href="javascript:;"  data-provinceName="贵州" data-provinceId="25" title="贵州省">贵州</a>
+		                <a class="province" href="javascript:;"  data-provinceName="云南" data-provinceId="26" title="云南省">云南</a>
+		                <a class="province" href="javascript:;"  data-provinceName="西藏" data-provinceId="27" title="西藏自治区">西藏</a>
+		            </div>
+		            <div class="item">
+		                <span>西北</span>
+		                <a class="province" href="javascript:;"  data-provinceName="陕西" data-provinceId="28" title="陕西省">陕西</a>
+		                <a class="province" href="javascript:;"  data-provinceName="甘肃" data-provinceId="29" title="甘肃省">甘肃</a>
+		                <a class="province" href="javascript:;"  data-provinceName="青海" data-provinceId="30" title="青海省">青海</a>
+		                <a class="province" href="javascript:;"  data-provinceName="宁夏" data-provinceId="31" title="宁夏回族自治区">宁夏</a>
+		                <a class="province" href="javascript:;"  data-provinceName="新疆" data-provinceId="32" title="新疆维吾尔自治区">新疆</a>
+		            </div>
+		            <div class="item">
+			            <span>港澳台</span>
+			            <a class="province" href="javascript:;"  data-provinceName="香港" data-provinceId="33" title="香港特别行政区">香港</a>
+			            <a class="province" href="javascript:;"  data-provinceName="澳门" data-provinceId="34" title="澳门特别行政区">澳门</a>
+			            <a class="province" href="javascript:;"  data-provinceName="台湾" data-provinceId="35" title="台湾省">台湾</a>
+			            <a class="province" href="javascript:;"  data-provinceName="其他国家和地区" data-provinceId="36" title="其他国家和地区">其他</a>
+		            </div>
+		        </li>
+		    </ul>
+		</div>
+		
+		<div th:fragment="cityFragment()" class="dropdown-menu city-list" style="width:400px;">
+			<a href="javascript:;" class="cls" title="关闭">×</a>
+			<ul class="city-list-content clx">
+		        <li th:each="city : ${cityList}" th:attr="data-cityId=${city.id},data-cityName=${city.name}" class="city on" style="display:block; max-height:270px;float:left;">
+		        		<a th:text="${city.name}" th:attr="data-id=${city.id}"></a>
+		        </li>
+			</ul>
+		</div>
+		
+	</body>
+</html>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<module name="SYS_MESSAGE">
+		<sql name="BATCH_INSERT_MESSAGE">
+		<![CDATA[
+			INSERT INTO s_message (id,
+                       userId,
+                       sentTime,
+                       messageType,
+                       originName,
+                       messageTitle,
+                       link,
+                       MESSAGE,
+                       sentPersonId)
+			   SELECT concat(to_char(sysdate,'yyyymmddhh24miss'),sys_guid() ),
+			          id,
+			          ?,
+			          ?,
+			          ?,
+			          ?,
+			          ?,
+			          ?,
+			          ?
+			     FROM s_user
+			    WHERE status = 1 
+		]]>
+		</sql>
+	</module>
+</modules>

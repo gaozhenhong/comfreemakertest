@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:include="headFragment :: head('代码生成')">
+		<meta charset="utf-8" />
+		<title>代码生成</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link href="../../resources/bootstrap-3.3.2/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../resources/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet" />
+		<link href="../../resources/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../resources/ace/css/chosen.css" />
+		<link rel="stylesheet" href="../../resources/ace/css/ace.min.css" />
+		<link rel="stylesheet" href="../../resources/ace/css/ace-rtl.min.css" />
+		<link rel="stylesheet" href="../../resources/ace/css/ace-skins.min.css" />
+		
+		<script src="../../resources/js/jquery-2.0.3.min.js"></script>
+		<script src="../../resources/ace/js/ace-extra.min.js"></script>
+	</head>
+
+	<body>
+		<div class="page-content">
+			<div class="row-fluid">
+				<div class="span12">
+					<form  action="#" th:action="@{/sys/codeGen/genCode.do}" th:object="${function}" class="form-horizontal" role="form">
+						<div class="widget-box">
+							<div class="widget-header widget-header-blue widget-header-flat">
+								<h4 class="lighter">代码生成向导</h4>
+							</div>
+							<div class="widget-body">
+								<div class="widget-main">
+									<div id="fuelux-wizard" class="row-fluid" data-target="#step-container">
+										<ul class="wizard-steps">
+											<li data-target="#step1" class="complete">
+												<span class="step">1</span>
+												<span class="title">选择表</span>
+											</li>
+											<li data-target="#step2" class="active">
+												<span class="step">2</span>
+												<span class="title">填写模块信息</span>
+											</li>
+	
+											<li data-target="#step3">
+												<span class="step">3</span>
+												<span class="title">生成</span>
+											</li>
+										</ul>
+									</div>
+	
+									<hr />
+									<div class="step-content row-fluid position-relative" id="step-container">
+										<div class="step-pane active" id="step1">
+											<input type="hidden" th:field="${function.tableName}"/>
+											<h3 class="green" th:text="${'表名：' + function.tableName}"></h3>
+											<div class="form-group">
+												<label class="col-sm-3 control-label no-padding-right" > 模块名称 </label>
+												<div class="col-sm-9">
+													<input type="text" th:field="${function.name}" placeholder="模块名称" class="col-xs-10 col-sm-5" />
+												</div>
+											</div>
+											
+											<div class="form-group">
+												<label class="col-sm-3 control-label no-padding-right" > Java Model类名 </label>
+												<div class="col-sm-9">
+													<input type="text" th:field="${function.className}" placeholder="Java Model类名,如User" class="col-xs-10 col-sm-5" />
+												</div>
+											</div>
+											
+											<div class="form-group">
+												<label class="col-sm-3 control-label no-padding-right" > 包路径 </label>
+												<div class="col-sm-9">
+													<input type="text" th:field="${function.packageName}" placeholder="包路径" class="col-xs-10 col-sm-5" />
+													建议为：com.公司名.项目名称.模块名称;设置后生成的包路径如：com.wiwi.jsoil.sys
+												</div>
+											</div>
+												
+											
+												
+											<div class="form-group">
+												<label class="col-sm-3 control-label no-padding-right" > 模块访问路径 </label>
+												<div class="col-sm-9">
+													<input type="text" th:field="${function.requestBasePath}" placeholder="模块访问路径" class="col-xs-10 col-sm-5" />
+													以/结尾,URL请求地址为：工程名 + 模块访问路径 + 具体Action路径 ，如：jsoil/模块访问路径/list.do
+												</div>
+											</div>
+												
+											<div class="form-group">
+												<label class="col-sm-3 control-label no-padding-right" > Java代码存放路径 </label>
+												<div class="col-sm-9">
+													<input type="text" name="javaSrcPath" value="/Users/lichunyu/OneDrive/codeLib/workspace/freego/src/edb/java" placeholder="Java代码存放路径" class="col-xs-10 col-sm-5" />
+												</div>
+											</div>
+												
+											<div class="form-group">
+												<label class="col-sm-3 control-label no-padding-right" > 页面存放路径 </label>
+												<div class="col-sm-9">
+													<input type="text" name="viewPageSrcPath" value="/Users/lichunyu/OneDrive/codeLib/workspace/freego/src/edb/webapp/WEB-INF/thymeleaf" placeholder="页面存放路径" class="col-xs-10 col-sm-5" />
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="col-sm-3 control-label no-padding-right" > 是否生成页面 </label>
+												<div class="col-sm-9">
+													<select name="genViewPage">
+														<option value="1">生成</option>
+														<option value="2">不生成</option>
+													</select>
+												</div>
+											</div>
+											
+											<h3 class="lighter block green">设置对象字段域：</h3>
+											
+											<table id="list-table" class="table table-striped table-bordered table-hover" style="margin-bottom: 0px;">
+												<thead>
+													<tr>
+														<th>字段ID</th>
+														<th>字段类型</th>
+														<th>字段名称</th>
+														<th>不允许为空</th> 
+														<th>是否输入域</th> 
+														<th>是否查询条件</th> 
+														<th>是否列表字段</th> 
+													</tr>
+												</thead>
+					
+												<tbody>
+													<tr th:each="column:${function.columnList}">
+														<td>
+															<input type="text" name="columnId" th:value="${column.id}" readonly="readonly" />
+														</td>
+														<td>
+															<input type="text" name="columnType" th:value="${column.type}" readonly="readonly" />
+														</td>
+														<td>
+															<input type="text" name="columnName" th:value="${column.name}"  />
+														</td>
+														<td>
+															<label>
+																<input name="isNotNull" th:value="${column.id}" th:checked="${column.isNotNull()}" type="checkbox" class="ace" />
+																<span class="lbl"></span>
+															</label>
+														</td>
+														<td>
+															<label>
+																<input name="isInput" th:value="${column.id}" th:checked="${column.isInput()}" type="checkbox" class="ace" />
+																<span class="lbl"></span>
+															</label>
+														</td>
+														<td>
+															<label>
+																<input name="isQueryColumn" th:value="${column.id}" th:checked="${column.isQueryColumn()}" type="checkbox" class="ace" />
+																<span class="lbl"></span>
+															</label>
+														</td>
+														<td>
+															<label>
+																<input name="isTableHead" th:value="${column.id}" th:checked="${column.isTableHead()}" type="checkbox" class="ace" />
+																<span class="lbl"></span>
+															</label>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+											
+										</div>
+									</div>
+	
+									<hr />
+									<div class="row-fluid wizard-actions">
+										<a th:href="@{/sys/codeGen/chooseTable.do}" class="btn btn-prev">
+											<i class="icon-arrow-left"></i>
+											上一步
+										</a>
+										
+	
+										<button type="submit" class="btn btn-success btn-next" data-last="Finish ">
+											下一步
+											<i class="icon-arrow-right icon-on-right"></i>
+										</button>
+									</div>
+								</div><!-- /widget-main -->
+							</div><!-- /widget-body -->
+						</div>
+					</form>
+				</div>
+			</div>
+		</div><!-- /.page-content -->
+
+		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+			<i class="icon-double-angle-up icon-only bigger-110"></i>
+		</a>
+		
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<script th:src="@{/resources/js/typeahead-bs2.min.js}"></script>
+		<script th:src="@{/resources/ace/js/chosen.jquery.min.js}"></script>
+		
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		
+		$(".chosen-select").chosen(); 
+		
+		/*]]>*/
+		</script>
+	</body>
+</html>

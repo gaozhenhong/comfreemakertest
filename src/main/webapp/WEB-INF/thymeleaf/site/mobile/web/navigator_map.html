@@ -1,0 +1,136 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <title>导航</title>
+    <script src="../../../../../resources/mobile/js/jquery.min.js" th:src="@{/resources/mobile/js/jquery.min.js}"></script>
+    <style>
+    		body, html{width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+    		#map-wrapper{position:relative;height:100%;width:100%;}
+			#r-result{position:absolute;height:0px;width:100%;bottom:0px;z-index:999;background:#A6D2D3;}
+			.a-button-back{
+				display:block;
+				color: #717171;
+   				text-decoration:none;
+   				font-size:14px;
+   				width:70px;
+   				height:20px;
+   				line-height: 20px;
+   				padding:5px;
+   				margin-top:10px;
+   				margin-left:10px;
+   				border:1px solid #eee;
+   				text-align: center;
+   				background:#A6D2D3;
+   				opacity:0.8;
+   				border-radius:15px;
+			}
+    </style>
+</head>
+<body>
+	 <div style="position:fixed;height:50px;width:30%;z-index: 9999;top:0px;">
+	 	<a class="a-button-back" href="javascript:parent.hideHotelBDMap()"> 
+	 		返回
+	 	</a>
+	 </div>
+     <div id="map-wrapper">
+     </div>
+     <div id="r-result"></div>
+     <div id="marker-info" style="position:absolute;top:60px;z-index:999;background:green;display:none">
+			<div id="marker-info-title" style="position:relative;width:100%;height:20px;border-bottom:1px solid #eee;">
+				<h4 style="line-height:20px;" th:text="${hotel.name}"></h4> 
+			</div>
+			<div id="marker-info-image" style="position:relative;float:left;width:100%;background-image:url('../../../../../resources/mobile/images/logo-default-1.png');background-position:center center;background-size:100% auto;background-repeat: no-repeat;">
+				<img style="box-sizing:border-box;padding:0px;" id="hotelImage" th:src="@{hotelLogo}" width="100%" height="150px;"/>
+				<div style="position:absolute;height:60px;width:60px;bottom:-10px;right:5px;border-radius:30px;background-image:url('../../../../../resources/mobile/images/logo-default-2.png');background-position:center center;background-size:100% auto;background-repeat: no-repeat;">
+					<img id="personImage" style="border-radius:30px" th:src="@{hotelPerson}" width="60px" height="60px"/>
+				</div>
+			</div>
+			<div id="marker-info-address" style="position:relative;float:left;width:100%;">
+				<span style="display:block;width:100%;height:25px;border-bottom:1px solid #eee;line-height:25px;font-size:12px;">联系电话：<i th:text="${hotel.telphone}">1333333</i></span>
+				<span style="display:block;width:100%;height:25px;border-bottom:1px solid #eee;line-height:25px;font-size:12px;">地址：<i th:text="${hotel.address}">百度地图API功能</i></span>
+			</div>
+		</div>
+</body>
+ <script  type="text/javascript" th:src="@{${bdMapJsUrl}}"></script>
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+	//-------参数初始化
+	var marker;
+	var sContent ="";
+	sContent =$("#marker-info").html();
+	var infoWindow = new BMap.InfoWindow(sContent);
+	var hotelLogo="[[${hotelLogo}]]";
+	var hotelPerson="[[${hotelPerson}]]";
+	var imageUrl=[[@{/resources/mobile/images/logo-default-2.png}]];
+	//var defaultPoint=new BMap.Point(102.714601,25.049153);//昆明
+	var defaultPoint=new BMap.Point(100.223675,25.5969);//大理
+	var mapZoom=14;
+	var cityPoint_lon=-1;
+	var cityPoint_lat=-1;
+	var cityPoint;
+	if(cityPoint_lon>=0&&cityPoint_lat>=0){
+		cityPoint=new BMap.Point(cityPoint_lon,cityPoint_lat);
+	}else{
+		cityPoint=defaultPoint;
+	}
+	var cityName="大理";
+	var searchPoint;
+	var searchPoint_lon=[[${lon}]];
+	var searchPoint_lat=[[${lat}]];
+	var searchPointName="别理那只大象";
+	var searchPointAddress="大理市双廊镇大建旁村安置地103号";
+	//-------地图初始化
+	//创建Map实例
+	var map = new BMap.Map("map-wrapper");    
+	// 初始化地图,设置中心点坐标和地图级别
+	map.centerAndZoom(cityPoint, mapZoom);  
+	//-------地图设置
+	//map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
+	map.setCurrentCity(cityName);          // 设置地图显示的城市 此项是必须设置的
+	map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+	//map.setMapStyle({style:'light'});	//设置地图风格
+	//-------搜寻地点
+	parent.hideLoadDiv();
+	$(document).ready(function() {
+	if(searchPoint_lon>=0&&searchPoint_lat>=0){
+		searchPoint=new BMap.Point(searchPoint_lon,searchPoint_lat);
+		//alert(imageUrl);
+		//var myIcon = new BMap.Icon(imageUrl, new BMap.Size(50,20));
+		//marker = new BMap.Marker(searchPoint,{icon:myIcon});  // 创建标注
+		marker = new BMap.Marker(searchPoint);
+		map.addOverlay(marker);              // 将标注添加到地图中
+		map.panTo(searchPoint); 
+	    marker.addEventListener("click", function(){          
+		   this.openInfoWindow(infoWindow);
+		   //图片加载完毕重绘infowindow
+		   document.getElementById('imgDemo').onload = function (){
+			   infoWindow.redraw();   //防止在网速较慢，图片未加载时，生成的信息框高度比图片的总高度小，导致图片部分被隐藏
+	   		}
+	    });
+		marker.openInfoWindow(infoWindow);
+	   //图片加载完毕重绘infowindow
+	   document.getElementById('imgDemo').onload = function(){
+	   	   infoWindow.redraw();
+	   }
+	   //parent.hideLoadDiv();
+	   
+	}else{
+		//alert("address point");
+		var keyWords = [searchPointName,searchPointAddress];
+		var local = new BMap.LocalSearch(map, {
+			renderOptions:{map: map}
+		});
+		//local.searchInBounds(keyWords, map.getBounds());
+		local.searchInBounds(searchPointName);
+	}
+	});
+	function showMarker(){
+		marker.openInfoWindow(infoWindow);
+	}
+	/*]]>*/
+</script>
+</html>

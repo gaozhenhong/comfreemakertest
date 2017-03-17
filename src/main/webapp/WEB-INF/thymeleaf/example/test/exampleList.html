@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	 	<meta charset="utf-8" />
+		<title>测试</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		 
+	 	<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+	<body style="background-color: white;">
+		<div class="page-content">
+			<!-- PAGE CONTENT BEGINS -->
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="tabbable">
+						<ul th:include="fragment :: topTab('list','测试','/example/test/')" class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab" ></ul>
+						<div class="tab-content padding-4">
+							<div class="tab-pane in active">
+								<form id="queryForm"  action="#" th:action="@{/example/test/list.do}" th:object="${query}" class="form-horizontal" role="form">
+									<input type="hidden"  th:field="${query.currentPage}"/>
+									<input type="hidden"  th:field="${query.orderByProperty}"/>
+									<input type="hidden"  th:field="${query.orderByKind}"/>
+									<div class="container">
+										<div class="row">
+											<div class='col-xs-3'>
+												名称：<input type='text' th:field='${query.name}' placeholder='名称' />
+											</div>
+											<div class='col-xs-3'>
+												分类：<input type='text' th:field='${query.categoryId}' placeholder='分类' />
+											</div>
+											<div class='col-xs-3'>
+												标签：<input type='text' th:field='${query.labels}' placeholder='标签' />
+											</div>
+											<div class='col-xs-3'>
+												文件：<input type='text' th:field='${query.fileId}' placeholder='文件' />
+											</div>
+										</div>
+										<div class='space-4'></div>
+										<div class="row">
+											<div class='col-xs-3'>
+												其他参数：<input type='text' th:field='${query.parameters}' placeholder='其他参数' />
+											</div>
+											<div class='col-xs-3'>
+												文件类型：<input type='text' th:field='${query.fileType}' placeholder='文件类型' />
+											</div>
+											<div class='col-xs-3'>
+												Logo：<input type='text' th:field='${query.logoId}' placeholder='Logo' />
+											</div>
+											<div class='col-xs-3'>
+												浏览次数：<input type='text' th:field='${query.browseCount}' placeholder='浏览次数' />
+											</div>
+										</div>
+										<div class='space-4'></div>
+										<div class="row">
+											<div class='col-xs-3'>
+												下载次数：<input type='text' th:field='${query.downloadCount}' placeholder='下载次数' />
+											</div>
+											<div class='col-xs-3'>
+												所属机构：<input type='text' th:field='${query.orgId}' placeholder='所属机构' />
+											</div>
+											<div class='col-xs-3'>
+												创建人：<input type='text' th:field='${query.createUserId}' placeholder='创建人' />
+											</div>
+											<div class='col-xs-3'>
+												创建时间：<input type='text' th:field='${query.createTime}' placeholder='创建时间' />
+											</div>
+										</div>
+										<div class='space-4'></div>
+										<div class="row">
+											<div class='col-xs-3'>
+												最后修改人：<input type='text' th:field='${query.lastModifyUserId}' placeholder='最后修改人' />
+											</div>
+											<div class='col-xs-3'>
+												最后修改时间：<input type='text' th:field='${query.lastModifyTime}' placeholder='最后修改时间' />
+											</div>
+											<div class='col-xs-3'>
+												描述：<input type='text' th:field='${query.description}' placeholder='描述' />
+											</div>
+											<div class='col-xs-3  no-padding-left' style='text-align: left;'>
+												<button class='btn btn-sm' type='submit'>
+													<i class='icon-search nav-search-icon'></i>
+													查询
+												</button>
+											</div>
+										</div>
+
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<div>
+						<table id="list-table" class="table table-striped table-bordered table-hover" style="margin-bottom: 0px;">
+							<thead>
+								<tr>
+									<th class="center">
+										<label>
+											<input id="checkAll" type="checkbox" class="ace" />
+											<span class="lbl"></span>
+										</label>
+									</th>
+									<th id='name' class="table-order-column">名称</th>
+									<th id='categoryId' class="table-order-column">分类</th>
+									<th id='labels' class="table-order-column">标签</th>
+									<th id='fileId' class="table-order-column">文件</th>
+									<th id='parameters' class="table-order-column">其他参数</th>
+									<th id='fileType' class="table-order-column">文件类型</th>
+									<th id='logoId' class="table-order-column">Logo</th>
+									<th id='browseCount' class="table-order-column">浏览次数</th>
+									<th id='downloadCount' class="table-order-column">下载次数</th>
+									<th id='orgId' class="table-order-column">所属机构</th>
+									<th id='createUserId' class="table-order-column">创建人</th>
+									<th id='createTime' class="table-order-column">创建时间</th>
+									<th id='lastModifyUserId' class="table-order-column">最后修改人</th>
+									<th id='lastModifyTime' class="table-order-column">最后修改时间</th>
+									<th id='description' class="table-order-column">描述</th>
+
+									<th></th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr th:each="obj:${list}">
+									<td class="center">
+										<label>
+											<input type="checkbox" name="rowId" th:value="${obj.id}" class="ace" />
+											<span class="lbl"></span>
+										</label>
+									</td>
+									<td th:text="${obj.name}">名称</td>
+									<td th:text="${obj.categoryId}">分类</td>
+									<td th:text="${obj.labels}">标签</td>
+									<td th:text="${obj.fileId}">文件</td>
+									<td th:text="${obj.parameters}">其他参数</td>
+									<td th:text="${obj.fileType}">文件类型</td>
+									<td th:text="${obj.logoId}">Logo</td>
+									<td th:text="${obj.browseCount}">浏览次数</td>
+									<td th:text="${obj.downloadCount}">下载次数</td>
+									<td th:text="${obj.orgId}">所属机构</td>
+									<td th:text="${obj.createUserId}">创建人</td>
+									<td th:text="${obj.createTime}">创建时间</td>
+									<td th:text="${obj.lastModifyUserId}">最后修改人</td>
+									<td th:text="${obj.lastModifyTime}">最后修改时间</td>
+									<td th:text="${obj.description}">描述</td>
+
+									<td th:include="fragment ::actionTd(baseUrl='/example/test/',haveView='true',haveEdit='true',haveDelete='true')"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					
+					<div class="wiwi-pagination">
+						<div class="batch_button_div">
+							<button class="btn btn-primary btn-xs batch_operate_button" type="button" th:attr="data-action=@{/example/test/batchDeleteAction.do}" >删除</button>
+						</div>
+						<ul th:replace="fragment :: pagination">
+						</ul>
+					</div>
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+		</div><!-- /.page-content -->
+
+		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+			<i class="icon-double-angle-up icon-only bigger-110"></i>
+		</a>
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		<!-- 表格排序 分页绑定JS --> 
+		<script th:src="@{/resources/jsoil/js/jsoil.common.table.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+	</body>
+</html>

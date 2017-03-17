@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper  
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.wiwi.jsoil.sys.mapper.OrganizationMapper">
+
+ 
+    <insert id="insert" parameterType="com.wiwi.jsoil.sys.model.Organization">  
+        insert into s_organization(id,code,name,cityId,linkMan,linkTel,mobilePhone
+        ,address,email,url,demo,inputUserId,inputTime,lastModifiedUserId
+        ,lastModifiedTime,status,typeId,parentOrgId) 
+        values(#{id},#{code},#{name},#{cityId},#{linkMan},#{linkTel},#{mobilePhone}
+        ,#{address},#{email},#{url},#{demo},#{inputUserId},#{inputTime}
+        ,#{lastModifiedUserId},#{lastModifiedTime},#{status},#{type.id},#{parentOrg.id})
+    </insert>
+    
+    <update id="update" parameterType="com.wiwi.jsoil.sys.model.Organization">
+    	update s_organization set 
+    	code=#{code},name=#{name},cityId=#{cityId},linkMan=#{linkMan},linkTel=#{linkTel}
+    	,mobilePhone=#{mobilePhone},address=#{address},email=#{email},url=#{url}
+    	,demo=#{demo},inputUserId=#{inputUserId},inputTime=#{inputTime}
+    	,lastModifiedUserId=#{lastModifiedUserId},lastModifiedTime=#{lastModifiedTime}
+    	,status=#{status},typeId=#{type.id},parentOrgId=#{parentOrg.id}
+    	where id = #{id}
+    </update>
+    
+    <update id="updateSubOrgCode">
+    	update s_organization set code = 
+    	concat(#{newCode},substring(code,length(#{oldCode})+1))
+	    where length(code) > length(#{oldCode})  
+	    and code like CONCAT('${oldCode}','%')
+    </update>
+    
+    <delete id="delete">
+    	delete from s_organization where id = #{id}
+    </delete>
+    
+    <delete id="batchDelete">
+    	delete from s_organization 
+    	where id in (#{ids})
+    </delete>
+    
+    <resultMap id="getCompanyResultMap" type="com.wiwi.jsoil.sys.model.Organization">
+    	<id property="id" column="id"/>
+    	<result property="name" column="name"/>
+    	<result property="code" column="code"/>
+    	<result property="cityId" column="cityId"/>
+    	<result property="linkMan" column="linkMan"/>
+    	<result property="linkTel" column="linkTel"/>
+    	<result property="mobilePhone" column="mobilePhone"/>
+    	<result property="address" column="address"/>
+    	<result property="email" column="email"/>
+    	<result property="url" column="url"/>
+    	<result property="demo" column="demo"/>
+    	<result property="inputUserId" column="inputUserId"/>
+    	<result property="inputTime" column="inputTime"/>
+    	<result property="lastModifiedTime" column="lastModifiedTime"/>
+    	<result property="status" column="status"/>
+    	<association property="parentOrg" javaType="com.wiwi.jsoil.sys.model.Organization">
+    		<id property="id" column="parentOrgId"/>
+    		<result property="name" column="parentOrgName"/>
+    		<result property="code" column="parentOrgCode"/>
+    	</association>
+    	<association property="type" javaType="com.wiwi.jsoil.sys.model.Category">
+    		<id property="id" column="typeId"/>
+    		<result property="name" column="typeName"/>
+    	</association>
+   	</resultMap>
+    <select id="getCompany" resultMap="getCompanyResultMap">
+    	select m.*,c.name as typeName,subOrg.name as parentOrgName
+    	,subOrg.code as parentOrgCode
+	    FROM s_organization m,s_category c,s_organization subOrg
+	    WHERE m.typeId = c.id and m.code = substring(subOrg.code,1,4) 
+	    and subOrg.id = #{orgId}
+    </select>
+    
+    <select id="isNameRepeat" resultType="com.wiwi.jsoil.sys.model.Organization">
+    	select * from s_organization
+    	WHERE name=#{name} AND parentOrgId = #{parentId} AND id != #{selfId}
+    </select>
+    
+    <resultMap id="organizationResultMap" type="com.wiwi.jsoil.sys.model.Organization">
+    	<id property="id" column="id"/>
+    	<result property="name" column="name"/>
+    	<result property="code" column="code"/>
+    	<result property="cityId" column="cityId"/>
+    	<result property="linkMan" column="linkMan"/>
+    	<result property="linkTel" column="linkTel"/>
+    	<result property="mobilePhone" column="mobilePhone"/>
+    	<result property="address" column="address"/>
+    	<result property="email" column="email"/>
+    	<result property="url" column="url"/>
+    	<result property="demo" column="demo"/>
+    	<result property="inputUserId" column="inputUserId"/>
+    	<result property="inputTime" column="inputTime"/>
+    	<result property="lastModifiedTime" column="lastModifiedTime"/>
+    	<result property="status" column="status"/>
+    	<association property="parentOrg" javaType="com.wiwi.jsoil.sys.model.Organization">
+    		<id property="id" column="parentOrgId"/>
+    		<result property="name" column="parentOrgName"/>
+    		<result property="code" column="parentOrgCode"/>
+    	</association>
+    	<association property="type" javaType="com.wiwi.jsoil.sys.model.Category">
+    		<id property="id" column="typeId"/>
+    		<result property="name" column="typeName"/>
+    	</association>
+    </resultMap>
+    <select id="get" resultMap="organizationResultMap">
+    	select m.*,c.name as typeName,p.name as parentOrgName,p.code as parentOrgCode 
+        FROM s_organization m,s_category c ,s_organization p
+        WHERE m.typeId = c.id and m.parentOrgId = p.id and m.id = #{id}
+    </select>
+    
+    <resultMap id="getListResultMap" type="com.wiwi.jsoil.sys.model.Organization">
+    	<id property="id" column="id"/>
+    	<result property="name" column="name"/>
+    	<result property="code" column="code"/>
+    	<result property="cityId" column="cityId"/>
+    	<result property="linkMan" column="linkMan"/>
+    	<result property="linkTel" column="linkTel"/>
+    	<result property="mobilePhone" column="mobilePhone"/>
+    	<result property="address" column="address"/>
+    	<result property="email" column="email"/>
+    	<result property="url" column="url"/>
+    	<result property="demo" column="demo"/>
+    	<result property="inputUserId" column="inputUserId"/>
+    	<result property="inputTime" column="inputTime"/>
+    	<result property="lastModifiedTime" column="lastModifiedTime"/>
+    	<result property="status" column="status"/>
+    	<association property="parentOrg" javaType="com.wiwi.jsoil.sys.model.Organization">
+    		<id property="id" column="parentOrgId"/>
+    		<result property="name" column="parentOrgName"/>
+    		<result property="code" column="parentOrgCode"/>
+    	</association>
+    	<association property="type" javaType="com.wiwi.jsoil.sys.model.Category">
+    		<id property="id" column="typeId"/>
+    		<result property="name" column="typeName"/>
+    	</association>
+    </resultMap>
+    <select id="getList" resultMap="getListResultMap" parameterType="com.wiwi.jsoil.sys.model.Organization">
+    	select * from (
+    	select m.*,c.name as typeName,p.name as parentOrgName,p.code as parentOrgCode 
+        FROM s_organization m,s_category c ,s_organization p
+        WHERE m.typeId = c.id and m.parentOrgId = p.id) t
+        <where> 
+		    <if test="query.code != null and query.code != ''">
+		         code like CONCAT('%','${query.code}','%' )  
+		    </if> 
+		    <if test="query.name != null and query.name != ''">
+		        AND name like CONCAT('%','${query.name}','%' )
+		    </if>
+		    <if test="query.typeId != null and query.typeId != ''">
+		        AND typeId = #{query.typeId}
+		    </if>
+		    <if test="query.parentOrgName != null and query.parentOrgName != ''">
+		        AND parentOrgName like CONCAT('%','${query.parentOrgName}','%' )  
+		    </if>
+		</where>
+		order by id desc
+    </select>
+</mapper>  

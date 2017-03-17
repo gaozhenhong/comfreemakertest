@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head >
+	<meta charset="utf-8" />
+</head>	
+	<body>
+		<ul th:fragment="topTab(choseTab,listName,baseUrl)" >
+			<li th:class="${'list' == choseTab ? 'active':''}">
+				<a th:attr="data-toggle=${'list' == choseTab ?'tab':''}" th:href="@{${'list' == choseTab ?'#tab-list':(baseUrl+'list.do')}}" th:text="${listName}">列表</a>
+			</li>
+			<li th:class="${'add' == choseTab ? 'active':''}">
+				<a th:href="@{${'add' == choseTab ?'#':(baseUrl+'add.do')}}">添加</a>
+			</li>
+			<li th:if="${'edit' == choseTab}" id="tab-edit" class="active">
+				<a data-toggle="tab"  href="#">修改</a>
+			</li>
+			<li th:if="${'view' == choseTab}" id="tab-view" class="active">
+				<a data-toggle="tab"  href="#">查看</a>
+			</li>
+			<li class="message-tab">
+				<span th:text="${operationMessage}"></span>
+			</li>
+		</ul>
+		
+		
+		<ul th:fragment="noAddTopTab(choseTab,listName,baseUrl)" >
+			<li th:class="${'list' == choseTab ? 'active':''}">
+				<a th:attr="data-toggle=${'list' == choseTab ?'tab':''}" th:href="@{${'list' == choseTab ?'#tab-list':(baseUrl+'list.do')}}" th:text="${listName}">列表</a>
+			</li>
+			<li th:if="${'edit' == choseTab}" id="tab-edit" class="active">
+				<a href="#">修改</a>
+			</li>
+			<li th:if="${'view' == choseTab}" id="tab-view" class="active">
+				<a href="#">查看</a>
+			</li>
+			<li class="message-tab">
+				<span th:text="${operationMessage}"></span>
+			</li>
+		</ul>
+		
+		<table>
+			<tr>
+				<td th:fragment="actionTd(baseUrl,haveView,haveEdit,haveDelete)">
+					<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons row-action-buttons">
+						<a class="blue " th:if="${haveView}" th:href="@{${baseUrl}+'view.do'(id=${obj.id},isModal=false)}" data-rel="tooltip" title="查看">
+							<i class="icon-zoom-in bigger-130"></i>
+						</a>
+
+						<a class="green" th:if="${haveEdit}" th:href="@{${baseUrl}+'edit.do?id='+${obj.id}}" data-rel="tooltip" title="修改">
+							<i class="icon-pencil bigger-130"></i>
+						</a>
+
+						<a class="red row_del_button" th:if="${haveDelete}" th:href="@{${baseUrl}+'deleteAction.do?id='+${obj.id}}" data-rel="tooltip" title="删除">
+							<i class="icon-trash bigger-130"></i>
+						</a>
+					</div>
+				</td>
+			</tr>
+		</table>
+		
+		
+		<ul class="pagination pull-right no-margin " th:fragment="pagination"  >
+			<li>
+				<span th:text="${'总' + pager.totalRecord +'条'}"></span>
+				<span th:text="${'每页' + pager.recordPerPage +'条'}"></span>
+				<span th:text="${'共' + pager.totalPage +'页'}"></span>
+				<span th:text="${'当前第' + pager.currentPage + '页'}"></span>
+			</li>
+			
+			<li th:class="${pager.currentPage == 1}?'prev disabled':'pre'">
+				<a data-pageIndex="1" class="pagination-index" data-rel="tooltip"  title="第一页">
+					<i class="icon-double-angle-left"></i>
+				</a>
+			</li>
+			
+			<li th:class="${pager.currentPage == 1}?'prev disabled':'pre'">
+				<a th:attr="data-pageIndex=${pager.currentPage-1}" class="pagination-index" data-rel="tooltip"  title="上一页">
+					<i class="icon-angle-left"></i>
+				</a>
+			</li>
+			
+			<li th:if="${ 6 >= pager.totalPage}"
+			 th:each="i : ${#numbers.sequence( 1, pager.totalPage)}" 
+			 th:class="${pager.currentPage == i}?'active':''">
+				<a  th:attr="data-pageIndex=${i}" class="pagination-index" th:text="${i}">1</a>
+			</li>
+
+			<li th:if="${pager.totalPage > 6}" >
+				<span style="height:100%;padding:0px;margin-left:1px;margin-bottom:-1px;">
+					<input th:attr="data-maxValue=${pager.totalPage}" type="text" class="current-page" name="currentPage" th:value="${pager.currentPage}" style="width:40px;height:100%;position: relative;"/>
+				</span>
+			</li>
+			
+			<li th:class="${pager.currentPage == pager.totalPage}?'next disabled':'next'">
+				<a th:attr="data-pageIndex=${pager.currentPage+1}" class="pagination-index" data-rel="tooltip"  title="下一页">
+					<i class="icon-angle-right"></i>
+				</a>
+			</li>
+			
+			<li th:class="${pager.currentPage == pager.totalPage}?'next disabled':'next'">
+				<a th:attr="data-pageIndex=${pager.totalPage}" class="pagination-index" data-rel="tooltip"  title="最后一页">
+					<i class="icon-double-angle-right"></i>
+				</a>
+			</li>
+		</ul>
+		
+		<ul class="pagination pull-right no-margin " th:fragment="paginationMybatis"  >
+			<li>
+				<span th:text="${'总' + pager.getTotal() +'条'}"></span>
+				<span th:text="${'每页' + pager.getPageSize() +'条'}"></span>
+				<span th:text="${'共' + pager.getPages() +'页'}"></span>
+				<span th:text="${'当前第' + pager.getPageNum() + '页'}"></span>
+			</li>
+			
+			<li th:class="${pager.getPageNum() == 1}?'prev disabled':'pre'">
+				<a data-pageIndex="1" class="pagination-index" data-rel="tooltip"  title="第一页">
+					<i class="icon-double-angle-left"></i>
+				</a>
+			</li>
+			
+			<li th:class="${pager.getPageNum() == 1}?'prev disabled':'pre'">
+				<a th:attr="data-pageIndex=${pager.getPageNum()-1}" class="pagination-index" data-rel="tooltip"  title="上一页">
+					<i class="icon-angle-left"></i>
+				</a>
+			</li>
+			
+			<li th:if="${ 6 >= pager.getPages()}"
+			 th:each="i : ${#numbers.sequence( 1, pager.getPages())}" 
+			 th:class="${pager.getPageNum() == i}?'active':''">
+				<a  th:attr="data-pageIndex=${i}" class="pagination-index" th:text="${i}">1</a>
+			</li>
+
+			<li th:if="${pager.getPages() > 6}" >
+				<span style="height:100%;padding:0px;margin-left:1px;margin-bottom:-1px;">
+					<input th:attr="data-maxValue=${pager.getPages()}" type="text" class="current-page" name="getPageNum()" th:value="${pager.getPageNum()}" style="width:40px;height:100%;position: relative;"/>
+				</span>
+			</li>
+			
+			<li th:class="${pager.getPageNum() == pager.getPages()}?'next disabled':'next'">
+				<a th:attr="data-pageIndex=${pager.getPageNum()+1}" class="pagination-index" data-rel="tooltip"  title="下一页">
+					<i class="icon-angle-right"></i>
+				</a>
+			</li>
+			
+			<li th:class="${pager.getPageNum() == pager.getPages()}?'next disabled':'next'">
+				<a th:attr="data-pageIndex=${pager.getPages()}" class="pagination-index" data-rel="tooltip"  title="最后一页">
+					<i class="icon-double-angle-right"></i>
+				</a>
+			</li>
+		</ul>
+	</body>
+</html>

@@ -1,0 +1,62 @@
+.fc-content {
+	cursor: pointer;
+}
+
+.fc-past {
+	background-color: #f5f5f5;
+	cursor: not-allowed;
+}
+/*空房间*/
+.fc-room {
+	height: 70px;
+}
+/*有订单记录*/
+.fc-order {
+	height: 70px;
+}
+
+.fc-room:HOVER{
+	background-color: #fff7cf;
+	cursor: pointer;
+}
+/*选中*/
+.fc-day-selected{
+	background-color: #ffefa2;
+}
+
+.fc-reservation {
+	background-color: #CC6666;
+}
+
+.fc-confirm {
+	background-color: #CCCCFF;
+}
+
+.fc-checkin {
+	background-color: #CCCC66;
+}
+
+.fc-closed {
+	background-color: #CCCCCC;
+}
+
+.fc-page {
+	padding: 0px 05px 0px 0px;
+	font-size: 30px;
+	color: #CCCCCC;
+	width: 10%;
+}
+
+.fc-page:HOVER {
+	background-color: #fff7cf;
+}
+
+.fc-date-range {
+	height: 45px;
+	float: left;
+	width:80%;
+}
+
+.fc-date-range:HOVER{
+	background-color: #fcf8e3;
+}

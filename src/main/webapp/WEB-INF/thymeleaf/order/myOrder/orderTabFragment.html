@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	 	<meta charset="utf-8" />
+		<title>订单管理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		 
+	 	<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+	 	<link th:href="@{/resources/ace/css/chosen.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+	<body style="background-color: white;">
+		
+		<ul th:fragment="myOrderTab(chooseTab)" >
+			<li th:classappend='${chooseTab == "myWaitForConfirmOrderList" ?"active":""}'>
+				<a th:if='${chooseTab == "myWaitForConfirmOrderList"}' data-toggle="tab" href="#tab-list">待确认订单</a>
+				<a th:if='${chooseTab != "myWaitForConfirmOrderList"}' 
+					th:href="@{/order/myOrder/myWaitForConfirmOrderList.do}" >待确认订单</a>
+			</li>
+			
+			<li th:classappend='${chooseTab == "myCancleOrderList" ?"active":""}'>
+				<a th:if='${chooseTab == "myCancleOrderList"}' data-toggle="tab" href="#tab-list">退单</a>
+				<a th:if='${chooseTab != "myCancleOrderList"}' 
+					th:href="@{/order/myOrder/myCancleOrderList.do}" >退单</a>
+			</li>
+			
+			<li th:classappend='${chooseTab == "otherHotelCommentList" ?"active":""}'>
+				<a th:if='${chooseTab == "otherHotelCommentList"}' data-toggle="tab" href="#tab-list">其他客栈推荐的订单</a>
+				<a th:if='${chooseTab != "otherHotelCommentList"}' 
+					th:href="@{/order/myOrder/otherHotelCommentList.do}" >其他客栈推荐的订单</a>
+			</li>
+			
+			<li th:classappend='${chooseTab == "myCommentOrderList" ?"active":""}'>
+				<a th:if='${chooseTab == "myCommentOrderList"}' data-toggle="tab" href="#tab-list">我转出的订单</a>
+				<a th:if='${chooseTab != "myCommentOrderList"}' 
+					th:href="@{/order/myOrder/myCommentOrderList.do}" >我转出的订单</a>
+			</li>
+			
+			<li th:classappend='${chooseTab == "canSettlementOrderList" ?"active":""}'>
+				<a th:if='${chooseTab == "canSettlementOrderList"}' data-toggle="tab" href="#tab-list">可结算订单</a>
+				<a th:if='${chooseTab != "canSettlementOrderList"}' 
+					th:href="@{/order/myOrder/canSettlementOrderList.do}" >可结算订单</a>
+			</li>
+			
+			<li th:classappend='${chooseTab == "allList" ?"active":""}'>
+				<a th:if='${chooseTab == "allList"}' data-toggle="tab" href="#tab-list">全部订单</a>
+				<a th:if='${chooseTab != "allList"}' 
+					th:href="@{/order/myOrder/list.do}" >全部订单</a>
+			</li>
+			<li class="message-tab">
+				<span th:text="${operationMessage}"></span>
+			</li>
+		</ul>
+		
+	</body>
+</html>

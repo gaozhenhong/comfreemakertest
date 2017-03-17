@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	 	<meta charset="utf-8" />
+		<title>字典管理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		 
+	 	<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/ul.css}" rel="stylesheet" />
+		
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+		<style>
+		.choose-row{
+			background-color: #F2F6F9;
+		}
+		
+		.show-dictionary-option{
+			cursor: pointer;
+		}
+		</style>
+	</head>
+	<body style="background-color: white;">
+		<div class="page-content">
+			<!-- PAGE CONTENT BEGINS -->
+			<div class="row">
+				<div class="col-xs-12">
+					<div id="top-tabbable" class="tabbable">
+						<ul th:include="fragment :: topTab('list','字典管理','/sys/dictionary/')" class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab" ></ul>
+						<div class="tab-content padding-4">
+							<div id="tab-list" class="tab-pane in active" style="margin-left:-4px;margin-right:-4px;">
+								<form id="queryForm"  action="#" th:action="@{/sys/dictionary/list.do}" th:object="${query}" class="form-horizontal" role="form">
+									<input type="hidden"  th:field="${query.currentPage}"/>
+									<input type="hidden"  th:field="${query.orderByProperty}"/>
+									<input type="hidden"  th:field="${query.orderByKind}"/>
+									<div class="container">
+										<div class="row">
+											<div class='col-xs-3'>
+												字典名称：<input type='text' th:field='${query.name}' placeholder='字典名称' />
+											</div>
+											<div class='col-xs-3'>
+												字典编码：<input type='text' th:field='${query.code}' placeholder='字典编码' />
+											</div>
+											<div class='col-xs-6  no-padding-left' style='text-align: left;'>
+												<button class='btn btn-sm' type='submit'>
+													<i class='icon-search nav-search-icon'></i>
+													查询
+												</button>
+											</div>
+										</div>
+
+									</div>
+									<div class='space-2'></div>
+									<div>
+										<table id="list-table" class="table table-bordered table-hover" style="margin-bottom: 0px;">
+											<thead>
+												<tr>
+													<th class="center">
+														<label>
+															<input id="checkAll" type="checkbox" class="ace" />
+															<span class="lbl"></span>
+														</label>
+													</th>
+													<th id='name' class="table-order-column">字典名称</th>
+													<th id='code' class="table-order-column">字典编码</th>
+
+													<th></th>
+												</tr>
+											</thead>
+				
+											<tbody>
+												<tr th:each="obj:${list}" th:attr="data-id=${obj.id}">
+													<td class="center">
+														<label>
+															<input type="checkbox" name="rowId" th:value="${obj.id}" class="ace" />
+															<span class="lbl"></span>
+														</label>
+													</td>
+													<td th:text="${obj.name}" th:id="${obj.id}" th:attr="data-id=${obj.id}" class="show-dictionary-option">字典名称</td>
+													<td th:text="${obj.code}">字典编码</td>
+
+													<td >
+														<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons row-action-buttons">
+															<a class="blue show-a" th:href="@{/sys/dictionary/view.do(id=${obj.id},isModal=false)}" data-rel="tooltip" title="查看">
+																<i class="icon-zoom-in bigger-130"></i>
+															</a>
+									
+															<a class="green" th:href="@{/sys/dictionary/edit.do(id=${obj.id})}" data-rel="tooltip" title="修改">
+																<i class="icon-pencil bigger-130"></i>
+															</a>
+									
+															<a class="red row_del_button" th:href="@{/sys/dictionary/deleteAction.do(id=${obj.id})}" data-rel="tooltip" title="删除">
+																<i class="icon-trash bigger-130"></i>
+															</a>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div class="wiwi-pagination">
+										<div class="batch_button_div">
+											<button class="btn btn-primary btn-xs batch_operate_button" type="button" th:attr="data-action=@{/sys/dictionary/batchDeleteAction.do}" >删除</button>
+										</div>
+										<ul th:replace="fragment :: pagination">
+										</ul>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+		</div><!-- /.page-content -->
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		<!-- 表格排序 分页绑定JS --> 
+		<script th:src="@{/resources/jsoil/js/jsoil.common.table.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		jQuery(function($) {   
+			$('.show-dictionary-option').on('click', function (e) {
+				e.preventDefault();
+				var dictionaryId = $(this).attr("data-id");
+				if($("#option-"+dictionaryId).length > 0){
+					//如果是第二次点击同一个字典，则关闭字典项展示
+					$("#option-"+dictionaryId).remove();
+					return ;
+				}
+				$(".option_tr").remove();//同一时间只能有一个字典项是打开的，其他关闭
+				$(".choose-row").removeClass("choose-row");
+				ajaxLoadOption($(this),dictionaryId);
+			});
+		});
+		
+		function ajaxLoadOption(enentOjb,dictionaryId){
+			var href= [[@{/sys/dictionary/option/optionFragment.do}]];
+			href = href + "?dictionaryId=" + dictionaryId ;
+			var $rows = $(enentOjb).parent();
+			
+			//alert("href===" + href);
+			$.ajax({ 
+				url: href, 
+				context: document.body, 
+				type : "POST", 
+			    dataType:"text",
+			    contentType:'application/json;charset=UTF-8',
+			    data : {
+			    		"dictionaryId" : dictionaryId
+			    },
+				success: function(resultData){
+					//alert(resultData);
+					if(resultData == null || resultData.length < 5) return ;
+					$rows.addClass("choose-row");
+					var tdLeng = $rows.find("td").length;
+					var rowObj = "<tr id='option-"+dictionaryId+"' class='choose-row option_tr'><td colspan='"+tdLeng+"'>"+resultData+"</td></tr>";
+					$rows.after($(rowObj));
+	      		},
+			    error:function(xhr,status,error){
+			    	  	alert("读取字典项列表失败！异常：error=" + error);
+			    }
+			});
+		}
+		
+		ajaxLoadOption($("#[[${chooseDictionaryId}]]"),'[[${chooseDictionaryId}]]');
+		
+		/*]]>*/
+		</script>
+	</body>
+</html>

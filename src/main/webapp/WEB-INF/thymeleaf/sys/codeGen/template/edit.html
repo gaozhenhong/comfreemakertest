@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>#function_title#---修改</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+
+	<body style="background-color: white;">
+		<!-- PAGE CONTENT BEGINS -->
+		<div class="row page-content">
+			<div class="col-xs-12 tabbable">
+				<ul th:include="fragment :: topTab('edit','#function_title#','#basePath#')" class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab" ></ul>
+				<div class="tab-content">
+					<div class="tab-pane in active">
+						<form id="validation-form"  action="#" th:action="@{#basePath#editAction.do}" th:object="${instance}" class="form-horizontal" role="form">
+							<input type="hidden"  th:field="${instance.id}"/>
+#field_input_group#							
+							<div class="clearfix form-actions">
+								<div class="col-md-offset-3 col-md-9">
+									<button class="btn btn-info" type="submit">
+										<i class="icon-ok bigger-110"></i>
+										提交
+									</button>
+	
+									<button class="btn" type="reset">
+										<i class="icon-undo bigger-110"></i>
+										重置
+									</button>
+									
+									<a th:href="@{#basePath#list.do}" class="btn btn-prev">
+										<i class="icon-arrow-left"></i>
+										返回
+									</a>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div><!-- /.col -->
+		</div><!-- /.row -->
+	
+		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+			<i class="icon-double-angle-up icon-only bigger-110"></i>
+		</a>
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<script th:src="@{/resources/js/jquery.validate.min.js}"></script>
+		<script th:src="@{/resources/js/jquery.messages_zh.js}"></script>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		 jQuery(function($) {
+			 $("#validation-form").validate({
+		        rules: {
+#input_validator#
+		        }
+			});
+		 });
+		/*]]>*/
+		</script>
+	</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:include="headFragment :: head('异常处理')">
+	 	<meta charset="utf-8" />
+		<title>异常处理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		 
+	 	<link href="../../resources/bootstrap-3.3.2/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../../resources/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet" />
+		<link href="../../resources/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link rel="stylesheet" href="../../resources/ace/css/ace.min.css" />
+		<link rel="stylesheet" href="../../resources../../css/wiwi-jsoil.css" />
+		
+		<script src="../../resources/js/jquery-2.0.3.min.js"></script>
+		<script src="../../resources/ace/js/ace-extra.min.js"></script>
+	</head>
+	<body>
+		<div class="page-content">
+			<!-- PAGE CONTENT BEGINS -->
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="error-container">
+						<div class="well">
+							<h1 class="grey lighter smaller">
+								<span class="blue bigger-125">
+									<i class="icon-random"></i>
+									执行异常
+								</span>
+								<span th:text="${ex.message}"></span>
+							</h1>
+
+							<hr />
+							<h3 class="lighter smaller">
+								异常详细信息如下：
+							</h3>
+
+							<div class="space"></div>
+
+							<div>
+								<ul class="list-unstyled spaced inline bigger-110 margin-15">
+									<li>
+										<span th:text="${ex}"></span>
+									</li>
+
+								</ul>
+							</div>
+							
+							<div>
+								<h4 class="lighter smaller">请尝试以下方式联系管理员:</h4>
+
+								<ul class="list-unstyled spaced inline bigger-110 margin-15">
+									<li>
+										<i class="icon-hand-right blue"></i>
+										QQ：
+									</li>
+
+									<li>
+										<i class="icon-hand-right blue"></i>
+										Tel：
+									</li>
+								</ul>
+							</div>
+
+							<hr />
+							<div class="space"></div>
+
+							<div class="center">
+								<a href="#" class="btn btn-grey">
+									<i class="icon-arrow-left"></i>
+									返回
+								</a>
+							</div>
+						</div>
+					</div>
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+		</div><!-- /.page-content -->
+
+		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+			<i class="icon-double-angle-up icon-only bigger-110"></i>
+		</a>
+
+		<!-- basic scripts -->
+
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			if("ontouchend" in document) document.write("<script src='../../resources/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+		/*]]>*/
+		</script>
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}" src="../../resources/bootstrap-3.3.2/js/bootstrap.min.js"></script>
+	</body>
+</html>

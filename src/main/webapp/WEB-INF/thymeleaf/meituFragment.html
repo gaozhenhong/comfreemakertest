@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head >
+	<meta charset="utf-8" />
+</head>	
+	<body>
+		
+		<div th:fragment="meiTuImgUpload(cropPresets,folder)">
+			<div id="imgDiv" class="imgDiv" >
+				<input id="thumbId" name="thumbId" type="hidden" th:value="${resource}? ${resource.id} :'0'"/>
+				<input id="thumbIdPath" name="thumbIdPath" type="hidden" th:value="${resource}?${resource.resPath}:''"/>
+				<input id="cropPresets" name="cropPresets" type="hidden" th:value="${cropPresets}"/>
+				<input id="folder" name="folder" type="hidden" th:value="${folder}"/>
+				<input id="contentPath" name="contentPath" type="hidden" th:value="${#httpServletRequest.contextPath}"/>
+				<img id="imgSrcThumb" th:src="@{${resource}?${resource.resPath}:'/resources/images/default.jpg'}" style="border:1px solid #ccc;border-radius:5px;width:100px;float:left;"/>
+				<br/>
+				<input class="btn btn-info" type="button" onclick="openMeiTu(this)" value="选择缩略图" style="margin:8px 0px 0px 20px;"/>
+			</div>
+			<div class="meitu_clear"></div>		
+		</div>
+		
+		<div th:fragment="imgUpload(imgId,folder,defaultImage,cropPresets)">
+			<div id="imgDiv" class="imgDiv" 
+				th:with="defaultImage=${defaultImage == null?'/resources/images/default.jpg':defaultImage}">
+				<input id="thumbId" name="thumbId" type="hidden" th:value="${imgId}? ${imgId} :'0'"/>
+				<input id="thumbIdPath" name="thumbIdPath" type="hidden" th:value="${defaultImage}"/>
+				<input id="cropPresets" name="cropPresets" type="hidden" th:value="${cropPresets}"/>
+				<input id="folder" name="folder" type="hidden" th:value="${folder}"/>
+				<input id="contentPath" name="contentPath" type="hidden" th:value="${#httpServletRequest.contextPath}"/>
+				<img id="imgSrcThumb" th:src="@{${defaultImage}}" style="border:1px solid #ccc;border-radius:5px;width:100px;float:left;"/>
+				<br/>
+				<input class="btn btn-info" type="button" onclick="openMeiTu(this)" value="选择缩略图" style="margin:8px 0px 0px 20px;"/>
+			</div>
+			<div class="meitu_clear"></div>		
+		</div>
+		
+	</body>
+</html>

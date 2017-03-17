@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>知识库维护---列表</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+
+	<body  style="margin: 0px 0px 0px 0px;background-color: white;width:100%;">
+		<div class="row-fluid">
+			<div class="span12">
+				<!-- PAGE CONTENT BEGINS -->
+				<div class="widget-box" style="border-bottom: 0px;">
+					<div class="widget-header widget-header-blue widget-header-flat" >
+						<h4 class="lighter">知识库维护</h4>
+						<span th:text="${operationMessage}" style="float: right;color: orange;vertical-align: middle;"></span>
+					</div>
+					<div class="widget-body">
+						<div class="widget-main" style="height: 100%;padding: 0px;">
+							<div class="row" >
+								<div class="col-sm-2 category-tree" >
+									<div  th:include="sys/knowledge/categoryTreeFragment :: treeTable(${kmCategoryList},${ cateMap })" id="tree2" style="margin-left:3px;" class="tree tree-unselectable" >
+									</div>
+								</div>
+								<div class="col-sm-10" style="padding-left:5px;padding-right:0px;">
+									<div class="page-iframe" id="content" style="min-height: 400px;">
+										<iframe th:src="@{/sys/knowledge/list.do}"  id="dataiFrame" style="width:100%;height: 620px; border: 1px;"  class="appiframe"></iframe>
+									</div>
+								</div>
+							</div><!-- PAGE CONTENT ENDS -->
+						</div><!-- widget-main end -->
+					</div><!-- widget-body end -->
+				</div><!-- widget-box end -->
+			</div>
+		</div>
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		<script th:src="@{/resources/ace/js/ace.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-elements.min.js}"></script>
+		
+		<script th:src="@{/resources/js/jquery.nestable.min.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			jQuery(function($){
+			
+				$('.dd').nestable();
+				
+				
+				$(".dd").off("mousedown");//使表格不能拖动
+				
+				$('.dd-handle a').on('mousedown', function(e){
+					e.stopPropagation();
+				});
+				
+				
+				$(".tree-folder-name").on('click', function (e) {
+			    		e.preventDefault();
+			    		var $_this = this,
+			            $this = $($_this),
+			            href = $this.closest(".tree-folder-header").attr('data-action');
+			    		$("#dataiFrame").attr("src",href);
+			    		$(".tree-selected").removeClass("tree-selected");
+			    		$this.closest(".tree-folder-header").addClass("tree-selected");
+				});
+
+				/*展开文件夹*/
+				$(document).on("click", ".icon-folder",function (evt) {
+					evt.stopPropagation();
+					var folder = $(this);
+					if (folder.hasClass('icon-folder-close')) {
+						folder.removeClass( "icon-folder-close") .addClass( "icon-folder-open");
+						folder.closest(".tree-folder").find(".tree-folder-content:eq(0)").css('display','block');
+					}else{
+						folder.removeClass( "icon-folder-open") .addClass( "icon-folder-close");
+						folder.closest(".tree-folder").find(".tree-folder-content:eq(0)").css('display','none');
+					}
+			    });
+			});
+		
+		/*]]>*/
+		</script>
+	</body>
+</html>

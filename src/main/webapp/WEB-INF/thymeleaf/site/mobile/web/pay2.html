@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+<title>流浪狗</title>
+<link href="../../../../../resources/mobile/css/bootstrap.min.css" rel="stylesheet">
+<link href="../../../../../resources/mobile/css/app.css" rel="stylesheet">
+<script src="../../../../../resources/mobile/js/jquery.min.js"></script>
+<script src="../../../../../resources/mobile/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/iscroll.js"></script>
+<script type="text/javascript">
+var myScroll;
+function loaded () {myScroll = new IScroll('#wrapper', { mouseWheel: true });}
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+</script>
+</head>
+
+<body onload="loaded()">
+<!-- <div id="header">标题</div> -->
+
+<div id="wrapper">
+	<div id="scroller">
+	<!-- 开始主体内容 -->
+
+<div class="row">
+	<ul class="inninfo">
+		<li><h3>大理双廊别想那只大象海景客栈</h3></li>
+		<li><h4>12月20日-12月22日 共2晚</h4></li>
+		<li><h5>房型:101海景大床房 在线支付</h5></li>
+		<li><h5>床型:大床 </h5></li>
+		<li><h5>每间最多可入住人数:2人</h5></li>
+	</ul>
+
+	<ul class="paydiv list-group">
+	 <li class="list-group-item">
+		<span class="list-group-item-heading">支付房费</span>
+		<span class="price">¥1280.00元</span>
+	  </li>
+		<li class="list-group-item">
+		<span class="list-group-item-heading">请选择支付方式</span>
+	  </li>
+	  <li class="list-group-item">
+		<span class="list-group-item-heading"><img src="../../../../../resources/mobile/images/wx.png"> 微信支付</span>
+		<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+	  </li>
+	  <li class="list-group-item">
+		<span class="list-group-item-heading"><img src="../../../../../resources/mobile/images/zfb.png"> 支付宝支付</span>
+		<input type="radio" name="optionsRadios" id="optionsRadios1" value="option2">
+	  </li>
+<!-- 	  <li class="list-group-item">
+		<span class="list-group-item-heading"><img src="images/yh.png"> 银行卡支付</span>
+		<input type="radio" name="optionsRadios" id="optionsRadios1" value="option3">
+	  </li> -->
+	</ul>
+
+		<button href="pay2.html" type="submit" class="nextbtn btn btn-primary btn-lg center-block" role="button">提交订单</button>
+
+
+
+</div>
+
+
+
+	<!-- 结束主体内容 -->
+	</div>
+</div>
+
+<div id="footer">
+	<div class="btn-group btn-group-justified" role="group">
+		<div class="btn-group" role="group">
+			<a href="index.html" type="button" class="btn btn-default"> <i class="glyphicon glyphicon-home"></i>
+				<br>主页</a>
+		</div>
+		<div class="btn-group" role="group">
+			<a href="zb.html" type="button" class="btn btn-default"> <i class="glyphicon glyphicon-map-marker"></i>
+				<br>周边</a>
+		</div>
+		<div class="btn-group" role="group">
+			<a href="my.html" type="button" class="btn btn-default">
+				<i class="glyphicon glyphicon-user"></i>
+				<br>我的</a>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

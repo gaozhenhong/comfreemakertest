@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
+<title th:text="${currentHotel.name}">流浪狗</title>
+<link href="../../../../../resources/mobile/css/bootstrap.min.css" th:href="@{/resources/mobile/css/bootstrap.min.css}" rel="stylesheet"/>
+<link href="../../../../../resources/mobile/css/app.css" th:href="@{/resources/mobile/css/app.css}" rel="stylesheet"/>
+<script src="../../../../../resources/mobile/js/jquery.min.js" th:src="@{/resources/mobile/js/jquery.min.js}"></script>
+<script src="../../../../../resources/mobile/js/bootstrap.min.js" th:src="@{/resources/mobile/js/bootstrap.min.js}"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/iscroll.js" th:src="@{/resources/mobile/js/iscroll.js}"></script>
+<script type="text/javascript">
+var myScroll;
+function loaded () {myScroll = new IScroll('#wrapper', { mouseWheel: true,click:true });}
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+</script>
+</head>
+
+<body onload="loaded()">
+<!-- <div id="header">标题</div> -->
+
+<div id="wrapper">
+	<div id="scroller">
+	<!-- 开始主体内容 -->
+  <div class="row">
+    <ul id="zb">
+      <li class="list-group-item" th:each="city:${cityList}"><a href="hotel_list.html"	th:href="@{'/site/mobile/web/'+${siteCode}+'/hotel/list'(cityId=${city.id})}"><span class="zb-label-span" th:text="${city.name}">大理</span><img class="img-responsive" src="../../../../../resources/mobile/images/zb1.jpg" th:src="@{/resources/mobile/images/zb1.jpg}"/></a></li>
+    </ul>
+  </div>
+
+	<!-- 结束主体内容 -->
+	</div>
+</div>
+<div id="footer" th:include="site/mobile/web/fragment/navFragment :: navTab(2)">
+		<div class="btn-group btn-group-justified" role="group">
+			<div class="btn-group" role="group">
+				<a href="index.html" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-home"></i> <br/>主页
+				</a>
+			</div>
+			<div class="btn-group" role="group">
+				<a href="zb.html" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-map-marker"></i> <br/>周边
+				</a>
+			</div>
+			<div class="btn-group" role="group">
+				<a href="my.html" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-user"></i> <br/>我的
+				</a>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

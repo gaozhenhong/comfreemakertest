@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>操作日志记录---查看</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+	</head>
+
+	<body>
+		<!-- PAGE CONTENT BEGINS -->
+		<div class="row page-content">
+			<div class="col-xs-12 tabbable">
+				<div class="tab-content">
+					<div class="tab-pane in active">
+						<form action="#" class="form-horizontal" role="form">
+							<input type="hidden"  th:field="${instance.id}"/>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> id </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.id}' placeholder='id' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 用户ID </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.userId}' placeholder='用户ID' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 用户名 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.userName}' placeholder='用户名' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 操作时间 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.operateTime}' placeholder='操作时间' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 请求地址 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.url}' placeholder='请求地址' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> IP </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.ip}' placeholder='IP' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 浏览器信息 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.browser}' placeholder='浏览器信息' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 操作类型 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.operateType}' placeholder='操作类型' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 请求参数 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.parameter}' placeholder='请求参数' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 用户组织机构ID </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.userOrgId}' placeholder='用户组织机构ID' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 用户组织机构名称 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.userOrgName}' placeholder='用户组织机构名称' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							
+							<div class="clearfix form-actions">
+								<div class="col-md-offset-3 col-md-9">
+									<a th:href="@{/sys/operationLog/list.do}" class="btn btn-prev">
+										<i class="icon-arrow-left"></i>
+										返回
+									</a>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div><!-- /.col -->
+		</div><!-- /.row -->
+	
+		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+			<i class="icon-double-angle-up icon-only bigger-110"></i>
+		</a>
+	</body>
+</html>

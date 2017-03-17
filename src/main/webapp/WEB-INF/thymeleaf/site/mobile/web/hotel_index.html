@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
+<title th:text="${hotel.name}">流浪狗</title>
+<link href="../../../../../resources/mobile/css/bootstrap.min.css"  th:href="@{/resources/mobile/css/bootstrap.min.css}" rel="stylesheet"/>
+<link href="../../../../../resources/mobile/css/app.css" th:href="@{/resources/mobile/css/app.css}" rel="stylesheet"/>
+<link href="../../../../../resources/mobile/css/owl.carousel.css" th:href="@{/resources/mobile/css/owl.carousel.css}" rel="stylesheet"/>
+<link href="../../../../../resources/mobile/css/owl.theme.css" th:href="@{/resources/mobile/css/owl.theme.css}" rel="stylesheet"/>
+<script type="text/javascript" src="../../../../../resources/mobile/js/jquery.min.js" th:src="@{/resources/mobile/js/jquery.min.js}"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/bootstrap.min.js" th:src="@{/resources/mobile/js/bootstrap.min.js}"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/iscroll.js" th:src="@{/resources/mobile/js/iscroll.js}"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/jquery.bcSwipe.min.js" th:src="@{/resources/mobile/js/jquery.bcSwipe.min.js}"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/bdmap.js" th:src="@{/resources/mobile/js/bdmap.js}"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/snap.js" th:src="@{/resources/mobile/js/snap.js}"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/owl.carousel.min.js" th:src="@{/resources/mobile/js/owl.carousel.min.js}"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/jquery.swipebox.js" th:src="@{/resources/mobile/js/jquery.swipebox.js}"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/framework.launcher.js" th:src="@{/resources/mobile/js/framework.launcher.js}"></script>
+<style>
+.default-background-1{
+	width:100%;
+	min-height:150px;
+	background-image:url('../../../../../resources/mobile/images/logo-default-1.png');
+	background-position:center center;
+	background-size:70% auto;
+	background-repeat: no-repeat;
+	background-color:#EDEDED
+}
+</style>
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+var dbmapUrl=[[@{'/site/mobile/web/'+${siteCode}+'/bdnav/map'(hotelId=${hotel.id})}]]
+var myScroll;
+function loaded () {myScroll = new IScroll('#wrapper', { mouseWheel: true,click:true });}
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+  $(document).ready(function() {
+	  	 setImageSize();
+  		 $('.carousel').bcSwipe({ threshold: 50 }); 
+  		 $("#enter_btn").on('click',function(){
+  			$("#qr-div").toggle()
+  			$("#enter_btn_span").toggleClass("glyphicon-chevron-up");
+  			$("#enter_btn_span").toggleClass("glyphicon-chevron-down");
+  			myScroll.refresh();
+  		 });
+	}); 
+  
+  function loadHotelInfo(btnId){
+	  changeCurrentSel(btnId);
+		//if(columnId == null || columnId == "") return false;
+		var href= [[@{'/site/mobile/web/'+${siteCode}+'/hotel/info'}]];
+		//alert("href===" + href);
+		$.ajax({ 
+			url: href, 
+			context: document.body, 
+			type : "POST", 
+		    dataType:"text",
+		    contentType:'application/json;charset=UTF-8',
+		    data : {},
+			success: function(resultData){
+				resultData = resultData.substring(5,resultData.length-6);
+				//alert(resultData);
+				$("#hotel-base-info").html(resultData);
+				$('#cityCarousel').bcSwipe({ threshold: 50 });
+				myScroll.refresh();
+				
+    		},
+		    error:function(xhr,status,error){
+		    	  	alert("读取列表失败！异常：error=" + error);
+		    }
+		});
+	}
+  function loadHotelHouseList(btnId){
+		//if(columnId == null || columnId == "") return false;
+		changeCurrentSel(btnId);
+		var href= [[@{'/site/mobile/web/'+${siteCode}+'/hotel/house'}]];
+		href=href+"?hotelId=[[${hotel.id}]]";
+		//alert("href===" + href);
+		$.ajax({ 
+			url: href, 
+			context: document.body, 
+			type : "POST", 
+		    dataType:"text",
+		    contentType:'application/json;charset=UTF-8',
+		    data : {},
+			success: function(resultData){
+				resultData = resultData.substring(5,resultData.length-6);
+				alert(resultData);
+				$("#hotel-base-info").html(resultData);
+				myScroll.refresh();
+  		},
+		    error:function(xhr,status,error){
+		    	  	alert("读取列表失败！异常：error=" + error);
+		    }
+		});
+	}
+  
+  function changeCurrentSel(btnId){
+	  $("#inn_btn a").each(function(){
+		  var $this = $(this);
+          var thisId = $this.attr("id");
+          if (thisId == btnId) {
+        	  $this.addClass("active");
+          } else {
+              $this.removeClass("active");
+          }
+	  });
+  }
+  
+  function setImageSize(){
+	  var winWidth=$(window).width();
+	  //alert(winWidth);
+	  //alert(Math.floor((winWidth*2)/3));
+	  //alert($("#slider-image-main-div").find("img").attr("height"));
+	  $(".responsive-image").attr("height",Math.floor((winWidth*2)/3)+"px");
+  }
+  /*]]>*/
+</script>
+</head>
+
+<body onload="loaded()">
+<!-- <div id="header">标题</div> -->
+<div id="map-loading-div" style="display:none">
+	<div style="position:absolute;width:100%;height:100%;background:#111;opacity:0.6;z-index:998;">
+	</div>
+	<div  style="position:absolute;width:100%;height:20%;top:40%;z-index:999;color:#fff;text-align:center;">
+	 	<img src="../../../../../resources/mobile/images/loading-50.gif" width="40px" style="flost:left"/>
+	 	<span style="display:block;width:100%;flost:left;padding-top:5px;">地图加载中</span>
+	</div>
+</div>
+<div id="wrapper">
+	<div id="scroller">
+	<!-- 开始主体内容 -->
+<div class="row" style="margin-left:0px;margin-right:0px;">
+	<!-- 客栈滚动图 -->
+	<div class="default-background-1">
+	  <div id="slider-image-main-div" class="slider-controls" data-snap-ignore="true">                
+	       <div th:each="imageObj:${hotel.getImages(15)}">
+	           <img src="../../../../../resources/mobile/images/kezhan.png" th:src="@{${ResourceUtil.getPath(imageObj.id,'/resources/mobile/images/kezhan.png')}}" class="responsive-image" alt="img" width="100%" height="200px"/>
+	       </div>
+	   </div>
+   </div>
+	<!-- 客栈滚动图结束 -->
+
+	<!-- 客栈3选按钮 -->
+	<div id="inn_btn" class="btn-group btn-group-justified" role="group">
+	  <div class="btn-group" role="group">
+	    <a id="bt-1" href="hotel_home.html"  th:href="@{'/site/mobile/web/'+${siteCode}+'/hotel/home'(hotelId=${hotel.id})}"  type="button" class="btn btn-default active" style="font-size:18px;line-height:35px">客栈印象</a>
+	  </div>
+	  <div class="btn-group" role="group">
+	    <a id="bt-2" href="hotel_house.html"  th:href="@{'/site/mobile/web/'+${siteCode}+'/hotel/house'(hotelId=${hotel.id})}" type="button" class="btn btn-default"  style="font-size:18px;line-height:35px">房型房价</a>
+	  </div>
+	  <!--  
+	  <div class="btn-group" role="group">
+	    <a id="bt-3" href="hotel_product.html"  th:href="@{'/site/mobile/web/'+${siteCode}+'/hotel/product'}"  type="button" class="btn btn-default">推荐</a>
+	  </div>
+	  -->
+	</div>
+	<!-- 客栈3选按钮结束 -->
+
+	<div id="hotel-base-info">
+	    <div id="inn_info" class="thumbnail">
+	      <img id="boss" src="../../../../../resources/mobile/images/user.jpg"  th:src="@{${ResourceUtil.getPath(hotel.shopkeeper.logo,'/resources/mobile/images/logo-default-2.png')}}" class="img-circle"/>
+	      <div class="caption" style="padding:0px;">
+	        <h5 style="color:#6e6e6e">掌柜：<label th:text="${hotel.shopkeeper.name}">江措措</label></h5>
+	      </div>
+	       <div class="caption" style="padding:0px;">
+	        <h5 style="color:#6e6e6e" th:text="${hotel.shopkeeper.description}">掌柜江措措</h5>
+	      </div>
+	      <div id="qr-div" style="text-align: center;display:none;">
+		      <img id="qr" src="../../../../../resources/mobile/images/qr.png" th:src="@{${ResourceUtil.getPath(hotel.shopkeeper.qrCodeId,'/resources/mobile/images/qr.png')}}"/>
+		      <br/><span style="color:#6e6e6e">长按添加微信</span>
+	      </div>
+	      <div class="caption">
+			<button id="enter_btn" type="button" class="btn btn-block">
+	        	<span id="enter_btn_span" class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+			</button>
+	      </div>
+	      <div style="text-align: left;padding-left:10px;padding-bottom:10px;font-size:16px;">
+		       <a class="ssicon" th:href="@{'/site/mobile/web/'+${siteCode}+'/hotel/comment/view'(hotelId=${hotel.id})}">
+		       		<i class="glyphicon glyphicon-comment"></i>
+					<br/>说说
+				</a>
+	      </div>
+	    </div>
+		<div class="list-group">
+			  <div class="list-group-item">
+			  	<h5 class="list-group-item-heading" style="padding-right:60px;">地址：<i th:text="${hotel.address}">大理市双廊镇大建旁村安置地103号</i></h5>
+			  	<a href="javascript:showHotelBDMap();" class="list_icon"  style="top:10px;"><i class="glyphicon glyphicon-map-marker" aria-hidden="true"></i>导航</a>
+			  </div>
+			  <div class="list-group-item">
+			  	<h5 class="list-group-item-heading">电话：<i th:text="${hotel.telphone}">13888022777</i></h5>
+			  	<a href="#" th:href="@{'tel:'+${hotel.telphone}}" class="list_icon" style="top:10px;"><i class="glyphicon glyphicon-earphone" aria-hidden="true"></i>拨号</a>
+			  </div>
+			  <div class="list-group-item">
+			  	<h5 class="list-group-item-heading">设施：</h5>
+			  	<div class="installation-div" th:each="installation:${hotel.installationNames}"  th:text="${installation}" style="box-sizing:border-box;">
+			  	</div>
+			  	<div style="clear:both"></div>
+			  </div>
+			  <div class="list-group-item">
+			    <h5 class="list-group-item-heading">简述：</h5>
+			    <p class="list-group-item-text" th:text="${hotel.description}">别想那只大象.位于双廊大建旁村，一个阳光明媚、依山傍“海”、民风淳朴的旅行地，不需要喧闹的电子音乐，更不要满街的导游喇叭声和穿行不息的旅行团。它只要拥有一汪平静的海，一朵洁净的云，一壶清幽的茶，和一份温暖、平静的心情。别想那只大象，慢生活的理想国。看海、 晒太阳、发呆、散步、睡觉、看日落……任凭柔软的时光从指尖流走，让灵魂在此做一次深呼吸。</p>
+			  </div>
+		</div>
+		<div id="cityCarousel" class="ptd20 carousel slide" data-ride="carousel">
+			<!-- 滚动的图片 -->
+			<div class="carousel-inner">
+				<div th:each="cityList:${arrayCityList}" class="item" th:classappend="${cityListStat.index == 0?' in active':''}">
+					<div class="city_btn btn-group btn-group-justified" role="group">
+						<div th:each="obj:${cityList}"  class="btn-group" role="group">
+							<a th:text="${obj.name}" href="hotel_list.html" th:href="@{'/site/mobile/web/'+${siteCode}+'/hotel/list'(cityId=${obj.id})}" type="button" class="btn btn-default">双廊</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- 左右控制 -->
+			<a class="left carousel-control" href="#cityCarousel" data-slide="prev">
+				<span class="glyphicon glyphicon-chevron-left"  style="font-size:14px;margin-left:0px"></span>
+			</a>
+			<a class="right carousel-control" href="#cityCarousel" data-slide="next">
+				<span class="glyphicon glyphicon-chevron-right"  style="font-size:14px;margin-right:0px"></span>
+			</a>
+		</div>
+	</div>
+</div>
+	<!-- 结束主体内容 -->
+	</div>
+</div>
+	<div id="footer" th:include="site/mobile/web/fragment/navFragment :: navTab(2)">
+		<div class="btn-group btn-group-justified" role="group">
+			<div class="btn-group" role="group">
+				<a href="index.html" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-home"></i> <br/>主页
+				</a>
+			</div>
+			<div class="btn-group" role="group">
+				<a href="zb.html" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-map-marker"></i> <br/>周边
+				</a>
+			</div>
+			<div class="btn-group" role="group">
+				<a href="my.html" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-user"></i> <br/>我的
+				</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

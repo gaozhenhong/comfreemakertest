@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>结算管理---修改</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+		<style>
+		.price-label{
+			padding-right:20px;
+		}
+		.price{
+			size: 16px;
+			color: #D52040;
+		}
+		</style>
+	</head>
+
+	<body style="background-color: white;">
+		<!-- PAGE CONTENT BEGINS -->
+		<div class="row page-content">
+			<div class="col-xs-12 tabbable">
+				<div class="tab-content">
+					<div class="tab-pane in active">
+						<form id="validation-form"  action="#" th:action="@{/settlement/editAction.do}" th:object="${instance}" class="form-horizontal" role="form">
+							<input type="hidden"  th:field="${instance.id}"/>
+							
+							<div class="profile-info-row pull-right" style="z-index: 999; background-color: white;width:300px;height:150px;border:1px solid #CCCCCC;">
+								<div>
+									<h2 style="padding:0px 20px 0px 20px;">
+									 结算金额：<span class="price" th:text="${'￥' + instance.settlementAmount}">￥1000.00</span>
+									</h2>
+								</div>
+								<div>
+									<h4 class="price-label pull-right">房费：<span class="price" id="hotelRoomFee">￥800.00</span></h4>
+								</div>
+								<div>
+									<h4  class="price-label pull-right">房费提成：<span class="price" id="rebateFee">￥200.00</span></h4>
+								</div>
+							</div>
+							
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 结算收入方：  </div>
+								<div class='profile-info-value'>
+									<input type='hidden' th:field='${instance.toCompany.id}' class='col-xs-10 col-sm-5' />
+									<a th:href="@{/sys/organization/view.do(id=${instance.toCompany.id})}" class="open-a" data-showIframe="true"  title="企业信息查看">
+										<span th:text="${instance.toCompany.name}">供应商名称</span>
+									</a>
+									<a th:href="@{/hotel/view.do(id=${instance.toSupplierId})}" class="open-a" data-showIframe="true" style="margin-left:15px;" title="客栈信息查看" >
+										<span th:attr="data-hotelId=${instance.toSupplierId}" th:text="${'ID:'+instance.toSupplierId}" class="text-primary" > </span>
+									</a>
+								</div>
+							</div>
+							
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 结算名称： </div>
+								<div class='profile-info-value'>
+									<input type='text' th:field='${instance.settlementTitle}' readonly="readonly" placeholder='结算标题' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 结算编号：  </div>
+								<div class='profile-info-value'>
+									<input type='text' th:field='${instance.settlementCode}' readonly="readonly" placeholder='结算编号' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 结算金额：  </div>
+								<div class='profile-info-value'>
+									<input type='text' th:field='${instance.settlementAmount}' readonly="readonly" placeholder='结算金额' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 结算周期：  </div>
+								<div class='profile-info-value'>
+									<input type='text' th:field="${instance.settlementPeriod}" readonly="readonly" placeholder='结算周期' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class="space"></div>
+							<div id="orderList">
+								<div class="widget-box transparent">
+									<div class="widget-header widget-header-flat">
+										<h4 class="lighter">
+											<i class="icon-star orange"></i>
+											账单详情
+										</h4>
+		
+										<div class="widget-toolbar">
+											<a href="#orderDetails" data-toggle="collapse" >
+												<i class="icon-chevron-up"></i>
+											</a>
+										</div>
+									</div>
+									<div id="orderDetails" class="widget-body collapse in">
+										<div class="widget-main no-padding">
+											<table class="table table-bordered table-striped">
+												<thead class="thin-border-bottom">
+													<tr>
+														<th>
+															<i class="icon-caret-right blue"></i>
+															订单编号
+														</th>
+														<th>
+															<i class="icon-caret-right blue"></i>
+															结算类型
+														</th>
+														<th>
+															<i class="icon-caret-right blue"></i>
+															结算金额
+														</th>
+													</tr>
+												</thead>
+												<tbody th:with="allTotalPrice=0.0, allPayPrice = 0.0">
+													<tr th:each="settlementDetails : ${settlementDetailsList}" >
+														<td >
+															<span th:text="${settlementDetails.orderId}"></span>
+															<input type="hidden" name="settlementDetailsId" th:value="${settlementDetails.id}"/>
+															<input type="hidden" name="orderId" th:value="${settlementDetails.orderId}"/>
+														</td>
+														<td >
+															<span th:text="${settlementDetails.title}">房费</span>
+														</td>
+														<td>
+															<b class="green" th:attr="data-feeType=${settlementDetails.feeType},data-price=${settlementDetails.amount}" th:text="${'￥' + settlementDetails.amount}">$19.99</b>
+														</td>
+													</tr>
+													<tr>
+														<td colspan="3" >
+															<span class="text-primary pull-right row-sum"  style="font-size:16px;"></span>
+															<span class="text-primary pull-right"  style="font-size:16px;">合计：</span>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div><!-- /widget-main -->
+									</div><!-- /widget-body -->
+								</div>
+							</div>
+							<br/>
+							<div class="row">
+								<div class="col-sm-7">
+									<div class='form-group'>
+										<label class='col-sm-2 control-label no-padding-right'> 财务凭证 </label>
+										<div class='col-sm-5' th:include="meituFragment :: imgUpload('','settlement','/resources/images/evidence.jpg','')">
+										</div>
+									</div>
+									<div class='form-group'>
+										<label class='col-sm-2 control-label no-padding-right'> 备注 </label>
+										<div class='col-sm-5'>
+											<textarea th:field='${instance.remark}' rows="8" placeholder='描述' class='autosize-transition form-control' ></textarea>
+										</div>
+									</div>
+								</div>
+							
+							
+								<div class="col-sm-5">
+									<div class="tabbable tabs-left">
+										<ul class="nav nav-tabs" id="myTab3">
+											<li class="active">
+												<a data-toggle="tab" href="#home3">
+													<i class="pink icon-home bigger-110"></i>
+													客栈账号信息
+												</a>
+											</li>
+										</ul>
+
+										<div class="tab-content padding-4">
+											<div id="home3" class="tab-pane in active">
+												<div th:if="${ hotelBankInfo == null}" class='profile-info-row'>
+													该客栈尚未设置银行账号！
+												</div>
+												
+												<div th:if="${hotelBankInfo}">
+													<div class='profile-info-row'>
+														<div class='profile-info-name'> 银行账号类型：  </div>
+														<div class='profile-info-value'>
+															<div th:switch="${hotelBankInfo.bankAccountType}">
+																<label th:case="1" class="text-primary" for="type1"> 对公 </label>
+																<label  th:case="2" class="text-primary" for="type2"> 对私</label>
+															</div>
+														</div>
+													</div>
+													<div class='profile-info-row'>
+														<div class='profile-info-name'> 所属银行：  </div>
+														<div class='profile-info-value'>
+															<input type='hidden' th:field='${hotelBankInfo.bank}' />
+															<span th:text="${hotelBankInfo.bank==null?'':hotelBankInfo.bank.label}" class="text-primary" > </span>
+														</div>
+													</div>
+													<div class='profile-info-row'>
+														<div class='profile-info-name'> 开户行：  </div>
+														<div class='profile-info-value'>
+															<span th:text="${hotelBankInfo.subsidiaryBank}" class="text-primary" > </span>
+														</div>
+													</div>
+													<div class='profile-info-row'>
+														<div class='profile-info-name'> 持有人：  </div>
+														<div class='profile-info-value'>
+															<span th:text="${hotelBankInfo.accountHolder}" class="text-primary" > </span>
+														</div>
+													</div>
+													<div class='profile-info-row'>
+														<div class='profile-info-name'> 卡号：  </div>
+														<div class='profile-info-value'>
+															<span th:text="${hotelBankInfo.accountNo}" class="text-primary" > </span>
+														</div>
+													</div>
+												</div>
+												<div class='profile-info-row'>
+													<div class='profile-info-name'> 支付宝账号：  </div>
+													<div class='profile-info-value'>
+														<span th:attr="data-alipayId=${instance.toSupplierId}" th:text="${'ID:'+instance.toSupplierId}" class="text-primary" > </span>
+													</div>
+												</div>
+												<div class='profile-info-row'>
+													<div class='profile-info-name'>客栈电话：  </div>
+													<div class='profile-info-value'>
+														<span th:attr="data-hotelTelephone=${instance.toSupplierId}" th:text="${'ID:'+instance.toSupplierId}" class="text-primary" > </span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div><!-- /span -->
+							</div>
+							<div class="clearfix form-actions">
+								<div class="col-md-offset-3 col-md-9">
+									<button class="btn btn-info" type="submit">
+										<i class="icon-ok bigger-110"></i>
+										提交
+									</button>
+	
+									<button class="btn" type="reset">
+										<i class="icon-undo bigger-110"></i>
+										重置
+									</button>
+									
+									<a th:href="@{/settlement/list.do}" class="btn btn-prev">
+										<i class="icon-arrow-left"></i>
+										返回
+									</a>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div><!-- /.col -->
+		</div><!-- /.row -->
+	
+		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+			<i class="icon-double-angle-up icon-only bigger-110"></i>
+		</a>
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<script th:src="@{/resources/js/jquery.validate.min.js}"></script>
+		<!-- meitu scripts -->
+		<script th:src="@{/resources/meiTu/js/layer/layer.min.js}"></script>
+		<script th:src="@{/resources/meiTu/js/meiTu.js}"></script>
+		<script th:src="@{/resources/meiTu/js/meiTuInit.js}"></script>
+		
+		<!-- textarea 的自动宽度 -->
+		<script th:src="@{/resources/js/jquery.autosize.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+		<script th:src="@{/resources/js/jquery.messages_zh.js}"></script>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		 jQuery(function($) {
+			 $("#validation-form").validate({
+		        rules: {
+
+		        }
+			});
+			
+			 computeRebateFee();
+			 getCommentHotelName();
+		 });
+		
+		function computeRebateFee(){
+			var totalRebateFee = 0.0;
+			$('[data-feeType=rebateFee]').each(function (){
+				totalRebateFee = totalRebateFee + parseFloat($(this).attr("data-price"));
+			});
+			$("#rebateFee").text("￥"+totalRebateFee);
+			
+			var totalHotelRoomFeeFee = 0.0;
+			$('[data-feeType=hotelRoomFee]').each(function (){
+				totalHotelRoomFeeFee = totalHotelRoomFeeFee + parseFloat($(this).attr("data-price"));
+			});
+			$("#hotelRoomFee").text("￥"+totalHotelRoomFeeFee);
+			$(".row-sum").text("￥" + (totalHotelRoomFeeFee+totalRebateFee));
+		}
+		
+		
+		
+		function getCommentHotelName(){
+			var hotelIds = "";
+			$("[data-hotelId]").each(function (e){
+				hotelIds = hotelIds + ","+$(this).attr("data-hotelId");
+			});
+			var href=[[@{/hotel/getHotelByIds.do}]];
+			$.ajax({
+				url: href, 
+				context: document.body, 
+				type : "POST", 
+			    dataType:"json",
+			    contentType:'application/json;charset=UTF-8',
+			    data : JSON.stringify({
+			    		"hotelIds": hotelIds
+			    }),
+				success: function(resultData){
+					//alert("推荐客栈数=="+resultData.length);
+					if( resultData.length > 0){
+						for(var i = 0;i < resultData.length;i++){
+							$("[data-hotelId='"+resultData[i].id+"']").each(function (index){
+								$(this).text(resultData[i].name);
+							});
+							$("[data-alipayId='"+resultData[i].id+"']").each(function (index){
+								$(this).text(resultData[i].alipay);
+							});
+							$("[data-hotelTelephone='"+resultData[i].id+"']").each(function (index){
+								$(this).text(resultData[i].telphone);
+							});
+						}
+					}
+	      		},
+			    error:function(xhr,status,error){
+			    		$(".message-tab").text("读取供应商客栈信息失败，请检查！error="+error);
+			    	  	return false;
+			    }
+			});
+		}
+		/*]]>*/
+		</script>
+	</body>
+</html>

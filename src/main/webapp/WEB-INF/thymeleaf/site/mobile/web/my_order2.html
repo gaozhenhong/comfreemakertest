@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+<title>流浪狗</title>
+<link href="../../../../../resources/mobile/css/bootstrap.min.css" rel="stylesheet">
+<link href="../../../../../resources/mobile/css/app.css" rel="stylesheet">
+<script src="../../../../../resources/mobile/js/jquery.min.js"></script>
+<script src="../../../../../resources/mobile/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/iscroll.js"></script>
+<script type="text/javascript">
+var myScroll;
+function loaded () {myScroll = new IScroll('#wrapper', { mouseWheel: true });}
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+</script>
+</head>
+
+<body onload="loaded()">
+<!-- <div id="header">标题</div> -->
+
+<div class="userpage" id="wrapper">
+	<div id="scroller">
+	<!-- 开始主体内容 -->
+
+      <div class="order jumbotron">
+        <div>
+          <h2>状态 —— 已离店</h2>
+          <div class="progress">
+            <div class="progress-bar" style="width: 25%">
+              <span>提交订单</span>
+            </div>
+            <div class="progress-bar " style="width: 25%">
+              <span>酒店确认</span>
+            </div>
+            <div class="progress-bar" style="width: 25%">
+              <span>入住</span>
+            </div>
+            <div class="progress-bar progress-bar-success" style="width: 25%">
+              <span>离店</span>
+            </div>
+          </div>
+        </div>
+        <div class="order_main">
+          <h2>别想那只大象客栈</h2>
+          <h3>101海景大床房</h3>
+          <h3>24h热水；免费wifi；接送服务</h3>
+
+          <div class="otime center-block">
+            <div>入住<br>10月28日</div>
+            <div class="otimeall"><span>共2晚</span></div>
+            <div>离店<br>10月30日</div>
+          </div>
+
+          <h4>地址：大理市双廊镇大建旁村103号</h4> <a class="daohang" href="#">
+          <span class="daohang"><i class="glyphicon glyphicon-map-marker" aria-hidden="true"></i>导航</span></a>
+        </div>
+        <div class="order_more">
+           <h2>订单详情</h2>
+           订单号：L952795279527<br>
+           下单时间：2015-11-11 22:16<br>
+           最晚到店时间：18:00<br>
+           房间数：1间<br>
+           客人姓名：西门吹雪<br>
+           联系电话：18588335566<br>
+        </div>
+
+        <div class="order_more">
+           <h2>费用及优惠</h2>
+           <h3>订单总额：¥480 <span class="mcolor">&nbsp;&nbsp;支付成功</span></h3>
+        </div>
+      </div>
+
+
+
+
+	<!-- 结束主体内容 -->
+	</div>
+</div>
+
+<div id="footer">
+  <div class="btn-group btn-group-justified" role="group">
+    <div class="btn-group" role="group">
+      <a href="index.html" type="button" class="btn btn-default"> <i class="glyphicon glyphicon-home"></i>
+        <br>主页</a>
+    </div>
+    <div class="btn-group" role="group">
+      <a href="zb.html" type="button" class="btn btn-default"> <i class="glyphicon glyphicon-map-marker"></i>
+        <br>周边</a>
+    </div>
+    <div class="btn-group" role="group">
+      <a href="my.html" type="button" class="btn btn-default">
+        <i class="glyphicon glyphicon-user"></i>
+        <br>我的</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

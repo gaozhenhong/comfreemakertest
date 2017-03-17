@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>分类---查看</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+	</head>
+
+	<body>
+		<!-- PAGE CONTENT BEGINS -->
+		<div class="row page-content">
+			<div class="col-xs-12 tabbable">
+				<ul th:include="fragment :: topTab('view',${customCategory.name},'/sys/category/'+${customCategory.code}+'/')" class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab" ></ul>
+				<div class="tab-content">
+					<div class="tab-pane in active">
+						<form action="#" class="form-horizontal" role="form">
+							<input type="hidden"  th:field="${instance.id}"/>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 主键 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.id}' placeholder='主键' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 分类名称 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.name}' placeholder='分类名称' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 分类编码 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.code}' placeholder='分类编码' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 父结点 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.parentCategory.name}' placeholder='父结点' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 排序号 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.categoryIndex}' placeholder='排序号' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 所属机构 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.orgId}' placeholder='所属机构' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 创建时间 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.createTime}' placeholder='创建时间' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 创建人 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.createUserId}' placeholder='创建人' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 图标 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.logoId}' placeholder='图标' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 备注 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.remark}' placeholder='备注' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> viewUrl </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.viewUrl}' placeholder='viewUrl' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 删除标志 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.deleteFlag}' placeholder='删除标志' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							
+							<div class="clearfix form-actions">
+								<div class="col-md-offset-3 col-md-9">
+									<a th:href="@{'/sys/category/'+${customCategory.code}+'/list.do'}" class="btn btn-prev">
+										<i class="icon-arrow-left"></i>
+										返回
+									</a>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div><!-- /.col -->
+		</div><!-- /.row -->
+	</body>
+</html>

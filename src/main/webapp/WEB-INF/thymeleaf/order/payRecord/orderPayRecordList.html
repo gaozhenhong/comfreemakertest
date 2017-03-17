@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	 	<meta charset="utf-8" />
+		<title>订单收款记录表</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		 
+	 	<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+	<body style="background-color: white;">
+		<div class="page-content">
+			<!-- PAGE CONTENT BEGINS -->
+			<div class="row">
+				<div class="col-xs-12">
+					<div id="top-tabbable" class="tabbable">
+						<ul th:include="fragment :: noAddTopTab('list','订单收款记录表','/order/payRecord/')" class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab" ></ul>
+						<div class="tab-content padding-4">
+							<div id="tab-list" class="tab-pane in active" style="margin-left:-4px;margin-right:-4px;">
+								<form id="queryForm"  action="#" th:action="@{/order/payRecord/list.do}" th:object="${query}" class="form-horizontal" role="form">
+									<input type="hidden"  th:field="${query.currentPage}"/>
+									<input type="hidden"  th:field="${query.orderByProperty}"/>
+									<input type="hidden"  th:field="${query.orderByKind}"/>
+									<input type="hidden"  th:field="${query.orderId}"/>
+									<div class="container">
+										<div class="row">
+											<div class='col-xs-5'>
+												款项类型：<input type='text' th:field='${query.fundType}' placeholder='款项类型' />
+											</div>
+											<div class='col-xs-4'>
+												收款人：<input type='text' th:field='${query.receiverId}' placeholder='收款人' />
+											</div>
+											<div class='col-xs-3  no-padding-left' style='text-align: left;'>
+												<button class='btn btn-sm' type='submit'>
+													<i class='icon-search nav-search-icon'></i>
+													查询
+												</button>
+											</div>
+										</div>
+
+									</div>
+									<div class='space-2'></div>
+									<div>
+										<table id="list-table" class="table table-striped table-bordered table-hover" style="margin-bottom: 0px;">
+											<thead>
+												<tr>
+													<th class="center">
+														<label>
+															<input id="checkAll" type="checkbox" class="ace" />
+															<span class="lbl"></span>
+														</label>
+													</th>
+													<th id='payTime' class="table-order-column">付款时间</th>
+													<th id='orderId' class="table-order-column">订单ID</th>
+													<th id='fundType' class="table-order-column">款项类型</th>
+													<th id='amount' class="table-order-column">数量</th>
+													<th id='receiverId' class="table-order-column">收款人</th>
+													<th id='payType' class="table-order-column">支付方式</th>
+													<th></th>
+												</tr>
+											</thead>
+				
+											<tbody>
+												<tr th:each="obj:${list}">
+													<td class="center">
+														<label>
+															<input type="checkbox" name="rowId" th:value="${obj.id}" class="ace" />
+															<span class="lbl"></span>
+														</label>
+													</td>
+													<td th:text="${#dates.format(obj.payTime,'yyyy-MM-dd')}">付款时间</td>
+													<td th:text="${obj.orderId}">orderId</td>
+													<td>
+														<span th:text="${obj.fundType.label}"></span>
+													</td>
+													<td th:text="${obj.amount}">金额</td>
+													<td th:text="${obj.receiverId}">收款人</td>
+													<td >
+														<span th:text="${DictionaryUtil.getOptionName(obj.payType).name}"></span>
+													</td>
+
+													<td >
+														<div class=" action-buttons">
+															<a class="blue show-a" th:href="@{/order/payRecord/view.do(id=${obj.id},isModal=false)}" data-rel="tooltip" title="查看">
+																<i class="icon-zoom-in bigger-130"></i>
+															</a>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div class="wiwi-pagination">
+										<ul th:replace="fragment :: pagination"></ul>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+		</div><!-- /.page-content -->
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		<!-- 表格排序 分页绑定JS --> 
+		<script th:src="@{/resources/jsoil/js/jsoil.common.table.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+	</body>
+</html>

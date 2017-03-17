@@ -1,0 +1,318 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title th:text="${appName+'工作台'}">工作台</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link href="../resources/bootstrap-3.3.2/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../resources/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet" />
+		<link href="../resources/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../resources/ace/css/ace.min.css" />
+		<link rel="stylesheet" href="../resources/ace/css/ace-rtl.min.css" />
+		<link rel="stylesheet" href="../resources/ace/css/ace-skins.min.css" />
+		<link rel="stylesheet" href="../resources/ace/css/openApp.css" />
+		
+		<script src="../resources/js/jquery-2.0.3.min.js"></script>
+		<script src="../resources/ace/js/ace-extra.min.js"></script>
+		<style>
+			.logo{
+				width: 32px;
+				height: 32px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="loading"><i class="loadingicon"></i><span>正在加载...</span></div>
+		<div id="right_tools_wrapper">
+			<span id="refresh_wrapper" title="刷新当前页" ><i class="icon-refresh bigger-230 right_tool_icon"></i></span>
+		</div>
+		<div class="navbar navbar-default" id="navbar">
+			<script th:inline="javascript">
+			/*<![CDATA[*/
+				try{ace.settings.check('navbar' , 'fixed')}catch(e){}
+			/*]]>*/
+			</script>
+
+			<div class="navbar-container" id="navbar-container">
+				<div class="navbar-header pull-left">
+					<span class="navbar-brand">
+						<small>
+							<img th:src="@{/resources/alogo.png}" class="logo"/>
+							<span class="white" th:text="${appName}"></span>
+						</small>
+						<small>
+							<span class="small" style="font-size: 16px;padding-left:20px;" th:text="${user.org.name}"></span>
+							<span class="small red" th:if="${debugMode}" >开发模式</span>
+						</small>
+					</span><!-- /.brand -->
+				</div><!-- /.navbar-header -->
+
+				<div class="navbar-header pull-right" role="navigation">
+					<ul class="nav ace-nav">
+						
+						<li th:each="worklist : ${topWorkbenchList}">
+							<a th:href="@{/sys/home.do(topUrl=${worklist})}" >
+								<i class="icon-tasks"></i>
+							</a>
+						</li>
+						
+						<li class="grey" th:if="${not #lists.isEmpty(topWorkbenchList)}">
+							<a th:href="@{/sys/home.do(topUrl=config)}" title="后台管理" >
+								<i class="icon-gears"></i>
+							</a>
+						</li>
+						
+						<li class="green">
+							<!-- LCY_TODO 先不弹出，而是直接跳转到页面，所以删除： data-toggle="dropdown"  -->
+							<a  class="dropdown-toggle shortcuts-button " href="#"  th:attr="data-href=@{/sys/message/list.do},data-code='message'" title="站内消息">
+								<i th:class="${unreadNumber >0}?'icon-bell-alt icon-animated-bell':'icon-bell-alt'"></i>
+								<span id="unreadNumber-bell" th:if="${unreadNumber >0}" class="badge badge-important" th:text="${unreadNumber}">8</span>
+							</a>
+						</li>
+
+						<li class="light-blue">
+							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
+								<img class="nav-user-photo" src="../resources/images/user.jpg" th:attr="alt=${user.name}" />
+								<span class="user-info">
+									<small>欢迎登录,</small>
+									<label th:text="${user.name}"></label>
+								</span>
+
+								<i class="icon-caret-down"></i>
+							</a>
+
+							<ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+								<li>
+									<a th:href="@{user.id == null ?'#':'javascript:openapp(\''+@{/sys/user/personalInfo.do(id=${user.id}) } +'\',\'group\',\'个人资料\')'}">
+										<i class="icon-user"></i>
+										个人资料
+									</a>
+								</li>
+
+								<li class="divider"></li>
+
+								<li>
+									<a th:href="@{/sys/logoutAction.do}">
+										<i class="icon-off"></i>
+										退出
+									</a>
+								</li>
+							</ul>
+						</li>
+					</ul><!-- /.ace-nav -->
+				</div><!-- /.navbar-header -->
+			</div><!-- /.container -->
+		</div>
+
+		<div class="main-container" id="main-container" >
+			<script th:inline="javascript">
+				/*<![CDATA[*/
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+				/*]]>*/
+			</script>
+			<div class="main-container-inner" th:if="${ not #strings.isEmpty(topUrl)}">
+				<div class="page-iframe" id="content">
+					<iframe th:src="@{${topUrl}}" style="width:100%;height: 100%; background-color: white;border:0px;scrolling:auto;" id="appiframe-0" class="appiframe"></iframe>
+				</div>
+			</div>
+
+			<div class="main-container-inner" th:if="${ #strings.isEmpty(topUrl)}">
+				<a class="menu-toggler" id="menu-toggler" href="#">
+					<span class="menu-text"></span>
+				</a>
+
+				<div class="sidebar" id="sidebar">
+					<script th:inline="javascript">
+						try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
+					</script>
+
+					<div class="sidebar-shortcuts" id="sidebar-shortcuts">
+						<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+							<button th:if="${UserUtil.isSystemAdmin(user)}" class="btn shortcuts-button btn-success" data-rel="tooltip" title="权限管理管理" 
+							th:attr="data-href=@{/sys/group/groupModuleList.do},data-code='351'">
+								<i class="icon-signal"></i>
+							</button>
+
+							<button th:if="${UserUtil.isSystemAdmin(user)}" class="btn shortcuts-button btn-info" data-rel="tooltip" title="功能模块管理" 
+							th:attr="data-href=@{/sys/module/list.do},data-code='352'">
+								<i class="icon-pencil"></i>
+							</button>
+
+							<button th:if="${UserUtil.isSystemAdmin(user)}" class="btn shortcuts-button btn-warning" data-rel="tooltip" title="组织机构管理" 
+							th:attr="data-href=@{/sys/organization/list.do},data-code='org'">
+								<i class="icon-group"></i>
+							</button>
+
+							<button th:if="${UserUtil.isSystemAdmin(user)}" class="btn shortcuts-button btn-danger"  data-rel="tooltip" title="代码生成"  
+							th:attr="data-href=@{/sys/codeGen/chooseTable.do},data-code='codeGen'">
+								<i class="icon-cogs"></i>
+							</button>
+						</div>
+
+						<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+							<span class="btn btn-success"></span>
+
+							<span class="btn btn-info"></span>
+
+							<span class="btn btn-warning"></span>
+
+							<span class="btn btn-danger"></span>
+						</div>
+					</div><!-- #sidebar-shortcuts -->
+
+					<ul class="nav nav-list">
+						<li class="active">
+							<a title="首页" data-id="home" data-code="0" class="menu-item" th:href="@{/sys/welcome.do}">
+								<i class="icon-dashboard"></i>
+								<span class="menu-text"> 首页 </span>
+							</a>
+						</li>
+						
+						<li th:each="module : ${moduleList}" >
+							<a  th:title="${module.name }" th:href="@{${module.forwardUrl == null or 1 > #strings.length(module.forwardUrl)} ?'#':${module.forwardUrl} }" 
+								th:attr="data-id=${module.id},data-code=${module.id}" 
+							 	th:class="${#lists.isEmpty(module.subModuleList) ? 'menu-item':'menu-item dropdown-toggle' }">
+								<i th:class="${module.icon == null or module.icon == '' ? 'icon-desktop':'icon-' + module.icon }"></i>
+								<span class="menu-text" th:text="${module.name }">  </span>
+								<b class="arrow icon-angle-down" th:if="${#lists.size(module.subModuleList)}"></b>
+							</a>
+							<ul class="submenu" th:if="${#lists.size(module.subModuleList)}" th:include="sys/menuFragment :: menuFragment(${module.subModuleList})">
+							</ul>
+						</li>
+					</ul><!-- /.nav-list -->
+
+					<div class="sidebar-collapse" id="sidebar-collapse">
+						<i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
+					</div>
+
+					<script th:inline="javascript">
+						try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}
+					</script>
+				</div>
+
+				<div class="main-content">
+					<div class="breadcrumbs" id="breadcrumbs" style="height: 30px;">
+						<a id="task-pre" class="task-changebt">←</a>
+						<div id="task-content">
+							<ul class="macro-component-tab" id="task-content-inner">
+								<li class="macro-component-tabitem noclose" app-id="0" app-url="{:U('main/index')}" app-name="首页">
+									<span class="macro-tabs-item-text">首页</span>
+								</li>
+							</ul>
+							<div style="clear:both;"></div>
+						</div>
+						<a id="task-next" class="task-changebt">→</a>
+					</div>
+					
+					<script th:inline="javascript">
+						/*<![CDATA[*/
+							try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+						/*]]>*/
+						</script>
+					<div class="page-iframe" id="content">
+						<iframe th:src="@{/sys/welcome.do}" style="width:100%;height: 100%; background-color: white;border:0px;scrolling:auto;" id="appiframe-0" class="appiframe"></iframe>
+					</div>
+				</div>
+				<!-- LCY_TODO -->
+				<div class="ace-settings-container" id="ace-settings-container" style="display:none;">
+					<div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
+						<i class="icon-cog bigger-150"></i>
+					</div>
+
+					<div class="ace-settings-box" id="ace-settings-box">
+						<div>
+							<div class="pull-left">
+								<select id="skin-colorpicker" class="hide">
+									<option data-skin="default" value="#438EB9">#438EB9</option>
+									<option data-skin="skin-1" value="#222A2D">#222A2D</option>
+									<option data-skin="skin-2" value="#C6487E">#C6487E</option>
+									<option data-skin="skin-3" value="#D0D0D0">#D0D0D0</option>
+								</select>
+							</div>
+							<span>&nbsp; 选择皮肤</span>
+						</div>
+
+						<div>
+							<input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-navbar" />
+							<label class="lbl" for="ace-settings-navbar"> 固定导航条</label>
+						</div>
+
+						<div>
+							<input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-sidebar" />
+							<label class="lbl" for="ace-settings-sidebar"> 固定滑动条</label>
+						</div>
+
+						<div>
+							<input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-breadcrumbs" />
+							<label class="lbl" for="ace-settings-breadcrumbs">固定面包屑</label>
+						</div>
+
+						<div>
+							<input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-rtl" />
+							<label class="lbl" for="ace-settings-rtl">切换到左边</label>
+						</div>
+
+						<div>
+							<input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-add-container" />
+							<label class="lbl" for="ace-settings-add-container">
+								切换窄屏
+								<b></b>
+							</label>
+						</div>
+					</div>
+				</div><!-- /#ace-settings-container -->
+			</div><!-- /.main-container-inner -->
+		</div><!-- /.main-container -->
+
+		<!-- basic scripts -->
+		<script src="../resources/js/jquery.mobile.custom.min.js"></script>
+		<script src="../resources/bootstrap-3.3.2/js/bootstrap.min.js"></script>
+		<!-- page specific plugin scripts -->
+
+		<!-- ace scripts -->
+		<script src="../resources/ace/js/ace-elements.min.js"></script>
+		<script src="../resources/ace/js/ace.min.js"></script>
+		<script src="../resources/ace/js/openApp.js"></script>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			jQuery(function($){
+			
+				$('[data-rel="tooltip"]').tooltip();
+				$('.shortcuts-button').on("click",function (e){
+					e.preventDefault();
+					var $_this = this,
+			            $this = $($_this),
+			            title = $this.attr('data-original-title'),
+			            href = $this.attr('data-href'),
+			            code = $this.attr('data-code');
+					if(title == null || title == ""){
+			    			title = $this.attr('title');
+			    		}
+					openapp(href,code,title);
+				});
+				
+				$('.menu-item').on("click",function (e){
+					e.preventDefault();
+					var $_this = this,
+			            $this = $($_this),
+			            title = $this.attr('data-original-title'),
+			            href = $this.attr('href'),
+			            code = $this.attr('data-code');
+					if(href == null || href == "" || href == "#"){
+						return true;
+					}
+			    		if(title == null || title == ""){
+			    			title = $this.attr('title');
+			    		}
+			    		$(".active").removeClass("active");
+			    		$this.parents("li").addClass("active");
+					openapp(href,code,title);
+				});
+			});
+			
+		/*]]>*/
+		</script>
+	</body>
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>我的客栈</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+
+	</head>
+
+	<body>
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+				
+				<div class="main-content" style="margin-left:5px;">
+
+					<div class="page-content">
+						<div class="page-header">
+							<h1>
+								我的客栈
+								<small>
+									<i class="icon-double-angle-right"></i>
+								</small>
+								
+								<a class=" pull-right" th:href="@{/myHotel/add.do}" data-rel="tooltip" data-placement="left"  title="添加客栈">
+									<i class="icon-plus bigger-120"></i>
+								</a>
+							</h1>
+						</div><!-- /.page-header -->
+						<div th:if="${myHotelList == null OR #lists.isEmpty(myHotelList)}" class="row">
+							<div class="col-xs-12">
+								<span>
+									尊敬的掌柜，你还没有添加任何客栈！
+									<br/>请点击右上角的 <i class="icon-plus bigger-160"></i> 按钮开始你的客栈管理工作！
+								</span>
+							</div>
+						</div>
+						<div th:if="${myHotelList != null AND NOT #lists.isEmpty(myHotelList) }" class="row">
+							<div th:each="hotel : ${myHotelList}" class="col-xs-6 col-sm-6 pricing-box">
+								<div class="widget-box">
+									<div class="widget-header " 
+									th:attrappend="class=${hotel.status == HotelStatus.OPENING} ?'header-color-blue':'header-color-dark'">
+										<h5 class="bigger lighter" >
+											<a th:href="@{/hotel/view.do(id=${hotel.id})}" th:text="${hotel.name}" style="color: white;">客栈名称</a>
+										</h5>
+									</div>
+
+									<div class="widget-body">
+										<div class="widget-main">
+											<ul class="list-unstyled spaced2">
+												<li style="text-align:center;">	
+													<img th:src="@{${ResourceUtil.getPath(hotel.logo,'/resources/images/hotel_default.png')}}" class="hotel-img" />
+												</li>
+
+												<li>
+													<i class="icon-tag green"></i>
+													掌柜：<a th:href="@{/shopkeeper/view.do(id=${hotel.shopkeeper.id})}" th:text="${hotel.shopkeeper.name}" class="action-buttons"></a>
+												</li>
+
+												<li>
+													<i class="icon-info-sign green"></i>
+													<span >总房间：<label th:attr="data-allRoom=${hotel.id}" >读取中...</label> 间 </span>
+												</li>
+												<li>
+													<i class="icon-info-sign green"></i>
+													<span >空房：<label th:attr="data-vacantRoom=${hotel.id}" >读取中...</label> 间 </span>
+												</li>
+											</ul>
+
+											<hr style="margin:10px 0px;"/>
+											<div class="price action-buttons" style="font-size: 14px;">
+												<a th:href="@{/hotel/roomType/list.do(hotelId=${hotel.id})}"
+													class="pull-left purple" data-rel="tooltip" title="设置房型">
+													<i class="icon-home bigger-80"></i>
+													<span >设置房型</span>
+												</a>
+												
+												<a style="margin-left:15px;" th:href="@{/sys/resource/com.wiwi.freego.hotel.model.Hotel/list.do(primaryKey=${hotel.id},title=${hotel.name}+' 相册管理')}"
+													class="pull-left purple" data-rel="tooltip" title="相册维护">
+													<i class="icon-camera bigger-80"></i>
+													<span >相册</span>
+												</a>
+												
+												<a style="margin-left:15px;" th:if="${UserUtil.isSystemAdmin(user)}" th:href="@{/myHotel/deleteAction.do(id=${hotel.id})}"
+													class="pull-right blue row_del_button" data-rel="tooltip" title="删除">
+													<i class="icon-remove bigger-80"></i>
+													<span >删除</span>
+												</a>
+												
+												<a style="margin-left:15px;" th:href="@{/myHotel/edit.do(id=${hotel.id})}"
+													class="pull-right blue" data-rel="tooltip" title="修改">
+													<i class="icon-edit bigger-80"></i>
+													<span >修改</span>
+												</a>
+													
+												<a style="margin-left:15px;" th:href="@{/myHotel/myHotelUserList.do(hotelId=${hotel.id})}"
+													class="pull-right blue" data-rel="tooltip" title="设置管理账号">
+													<i class="icon-user bigger-80"></i>
+													<span >设置管理账号</span>
+												</a>
+												
+												<a style="margin-left:15px;" th:href="@{/roomBoard/list.do(hotelId=${hotel.id},dayNumber=10,modal=normal)}"
+													class="pull-right blue" data-rel="tooltip" title="房态">
+													<i class="icon-coffee bigger-80"></i>
+													<span >房态</span>
+												</a>
+											</div>
+											
+										</div>
+										<div>
+											<a th:if="${hotel.status == HotelStatus.EDIT}" th:href="@{/myHotel/openAction.do(id=${hotel.id})}" class="btn btn-block btn-inverse">
+												<i class="icon-play bigger-110"></i>
+												<span>开业</span>
+											</a>
+											
+											<a th:if="${hotel.status == HotelStatus.OPENING}" href="#" class="btn btn-block btn-primary">
+												<span>营业中</span>
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="icon-double-angle-up icon-only bigger-110"></i>
+			</a>
+		</div><!-- /.main-container -->
+
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+		
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			jQuery(function($){
+				getRoomNumber(getIds('data-allRoom'));
+				getVacantRoomNumber(getIds('data-vacantRoom'));
+			});
+		
+		
+			function getIds(attributeName){
+				var hotelCodes = "";
+				$("["+attributeName+"]").each(function (e){
+					hotelCodes = hotelCodes + ","+$(this).attr(attributeName);
+				});
+				return hotelCodes;
+			}
+
+			function getRoomNumber(allIds){
+				if(allIds == null || allIds=="")return;
+				var href=[[@{/hotel/getHotelRoomNumber.do}]];
+				//alert("allIds=="+allIds);
+				$.ajax({
+					url: href, 
+					context: document.body, 
+					type : "POST", 
+				    dataType:"text",
+				    contentType:'application/json;charset=UTF-8',
+				    data : JSON.stringify({
+				    		"allIds": allIds
+				    }),
+					success: function(resultDataText){
+						var resultData = JSON.parse(resultDataText);
+						//alert("客栈房间数=="+resultData.length);
+						//alert(JSON.stringify(resultDataText));
+						if( resultData.length > 0){
+							for(var i = 0;i < resultData.length;i++){
+								$("[data-allRoom='"+resultData[i].hotelId+"']").each(function (index){
+									$(this).text(resultData[i].roomNumber);
+								});
+							}
+						}
+		      		},
+				    error:function(xhr,status,error){
+				    		$(".message-tab").text("读取客栈总房间数量失败，请检查！error="+error);
+				    	  	return false;
+				    }
+				});
+			}
+			
+			function getVacantRoomNumber(allIds){
+				if(allIds == null || allIds=="")return;
+				var href=[[@{/hotel/getHotelVacantRoomNumber.do}]];
+				//alert("allIds=="+allIds);
+				$.ajax({
+					url: href, 
+					context: document.body, 
+					type : "POST", 
+				    dataType:"text",
+				    contentType:'application/json;charset=UTF-8',
+				    data : JSON.stringify({
+				    		"allIds": allIds
+				    }),
+					success: function(resultDataText){
+						var resultData = JSON.parse(resultDataText);
+						//alert("客栈空房间数=="+resultData.length);
+						if( resultData.length > 0){
+							for(var i = 0;i < resultData.length;i++){
+								$("[data-vacantRoom='"+resultData[i].hotelId+"']").each(function (index){
+									$(this).text(resultData[i].vacantRoomNumber);
+								});
+							}
+						}
+		      		},
+				    error:function(xhr,status,error){
+				    		$(".message-tab").text("读取客栈空房间数量失败，请检查！error="+error);
+				    	  	return false;
+				    }
+				});
+			}
+			
+		/*]]>*/
+		</script>
+	</body>
+</html>

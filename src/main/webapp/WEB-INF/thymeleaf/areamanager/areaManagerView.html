@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>客栈区域管理---查看</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+	</head>
+
+	<body style="background-color: white;">
+		<!-- PAGE CONTENT BEGINS -->
+		<div class="row page-content">
+			<div class="col-xs-12 tabbable">
+				<div class="tab-content">
+					<div class="tab-pane in active">
+						<form action="#" class="form-horizontal" role="form">
+							<input type="hidden"  th:field="${instance.id}"/>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> id </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.id}' placeholder='id' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> hotelId </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.hotelId}' placeholder='hotelId' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> scene </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.scene}' placeholder='scene' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> longitude </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.longitude}' placeholder='longitude' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> latitude </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.latitude}' placeholder='latitude' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							
+						</form>
+					</div>
+				</div>
+			</div><!-- /.col -->
+		</div><!-- /.row -->
+	
+		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+			<i class="icon-double-angle-up icon-only bigger-110"></i>
+		</a>
+	</body>
+</html>

@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title th:text="${appName+'工作台'}">工作台</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link href="../resources/bootstrap-3.3.2/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../resources/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet" />
+		<link href="../resources/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../resources/ace/css/ace.min.css" />
+		<link rel="stylesheet" href="../resources/ace/css/ace-rtl.min.css" />
+		<link rel="stylesheet" href="../resources/ace/css/ace-skins.min.css" />
+		<link rel="stylesheet" href="../resources/ace/css/openApp.css" />
+		
+		<script src="../resources/js/jquery-2.0.3.min.js"></script>
+		<script src="../resources/ace/js/ace-extra.min.js"></script>
+
+	</head>
+
+	<body>
+		
+		<ul th:fragment="menuFragment(menuList)" class="nav nav-list">
+			<li th:fragment="menuTree" th:each="module : ${menuList}"  th:class="${#lists.isEmpty(module.subModuleList) ? '':'menu-li' }" >
+				<a  th:title="${module.name }" th:href="@{${module.forwardUrl == null or 1 > #strings.length(module.forwardUrl)} ?'#':${module.forwardUrl} }" 
+					th:attr="data-id=${module.id},data-code=${module.id}" 
+				 	th:class="${#lists.isEmpty(module.subModuleList) ? 'menu-item':'menu-item dropdown-toggle' }">
+					<i th:class="${#lists.isEmpty(module.subModuleList)  ? (module.icon == null or 1 > #strings.length(module.icon) ?'icon-pencil' : 'icon-' + module.icon):'icon-double-angle-right' }"></i>
+					<span class="menu-text" th:text="${module.name }">  </span>
+					<b class="arrow icon-angle-down" th:if="${#lists.size(module.subModuleList)}"></b>
+				</a>
+				<ul class="submenu" th:if="${#lists.size(module.subModuleList)}" th:include="sys/menuFragment :: menuFragment(${module.subModuleList})">
+				</ul>
+			</li>
+		</ul><!-- /.nav-list -->
+	</body>
+</html>

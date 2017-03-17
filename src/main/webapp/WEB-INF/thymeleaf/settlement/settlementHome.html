@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>结算工作台</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+		<style>
+		.widget-main{
+			height: 200px;
+		}
+		.add-button{
+			display: block;
+			width: 200px;
+			height:200px;
+			font-size: 120px;
+			background-color: blue;
+		}
+		.totalSettlementPrice{
+			font-size:26px !important;
+			color:red !important;
+		}
+		</style>
+	</head>
+
+	<body>
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+				
+				<div class="main-content" style="margin-left:5px;">
+
+					<div class="page-content">
+						<div class="page-header">
+							<h1>
+								结算
+								<small>
+									<i class="icon-double-angle-right"></i>
+									账单日：每月<span th:text="${PlatformPropertyUtil.getIntegerValue('settlementPeriod')}"></span>号
+									结算比率：<span th:text="${#numbers.formatDecimal(PlatformPropertyUtil.getDoubleValue('hotelPercentage')*100,2,0)}"></span>%
+									
+									<span class="label label-info" th:if="${currentMonthHadData}">本月账单已经生成</span>
+								</small>
+							</h1>
+						</div><!-- /.page-header -->
+						<div class="row">
+						
+							<div th:if="${not currentMonthHadData}" class="col-xs-6 col-sm-3 pricing-box">
+								<div class="widget-box">
+									<div class="widget-body" style="height: 240px;border-top:1px solid #CCCCCC;">
+										<div class="widget-main">
+											<a th:if="${span gt 0}" href="#" class="btn btn-app disabled"
+											style="width:300px;height: 220px;cursor: not-allowed;">
+												<i class="icon-plus " style="font-size:200px;line-height:170px;cursor: not-allowed;"></i>
+												还有<span th:text="${span}"></span>天才到结账日
+											</a>
+											
+											<a th:if="${span le 0}" th:href="@{/settlement/genSettlementDetailsAction.do}" class="btn btn-app"
+											style="width:300px;height: 220px;">
+												<i class="icon-plus " style="font-size:200px;line-height:170px;"></i>
+												生成结算账单
+											</a>
+											
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div th:each="periodName : ${periodMap.keySet()}" class="col-xs-6 col-sm-3 pricing-box ">
+								<div class="widget-box">
+									<div class="widget-header header-color-blue" >
+										<h5 class="bigger lighter" >
+											<a th:href="@{/settlement/settlementPeriodHome.do(periodDate=${periodName})}" 
+											th:text="${'账期：'+periodName}" style="color: white;">账期</a>
+										</h5>
+									</div>
+
+									<div class="widget-body">
+										<div class="widget-main">
+											<ul class="list-unstyled spaced2">
+												<li>	
+													<div>
+														<h2 style="padding:0px 20px 0px 20px;">
+														 结算总额：<span class="price totalSettlementPrice" >￥1000.00</span>
+														</h2>
+													</div>
+												</li>
+												<li th:each="period : ${periodMap.get(periodName)}">
+													<i class="icon-tag green"></i>
+													<span th:if="${JSONUtil.getIntValue(period,'status')==0}">待付款</span>
+													<span th:if="${JSONUtil.getIntValue(period,'status')==1}">已付款</span>
+													<span th:if="${JSONUtil.getIntValue(period,'status')==2}">已确认收入</span>
+													
+													数量：<span th:text="${JSONUtil.getLongValue(period,'supplierCount')}">8</span>
+													金额：<span class="price status-price" 
+													th:attr="data-price=${JSONUtil.getDoubleValue(period,'settlementAmount')}" th:text="${JSONUtil.getDoubleValue(period,'settlementAmount')}">￥800.00</span>
+												</li>
+											</ul>
+
+											<hr />
+											<div class="price action-buttons" style="font-size: 18px;">
+												<a th:href="@{/settlement/settlementPeriodHome.do(periodDate=${periodName})}"
+													class="pull-right blue" data-rel="tooltip" title="查看">
+													<i class="icon-zoom-in bigger-80"></i>
+												</a>
+											</div>
+											
+										</div>
+									</div>
+								</div>
+							</div>
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+		</div><!-- /.main-container -->
+
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+		
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			jQuery(function($){
+				computeTotalPrice();
+			});
+		
+			function computeTotalPrice(){
+				
+				$('.totalSettlementPrice').each(function (){
+					var totalSettlementPrice = 0.0;
+					var parentUl = $(this).closest("ul");
+					$(parentUl).find(".status-price").each(function(){
+						totalSettlementPrice = totalSettlementPrice + parseFloat($(this).attr("data-price"));
+					});
+					$(this).text("￥"+totalSettlementPrice);
+				});
+			}
+			
+		/*]]>*/
+		</script>
+	</body>
+</html>

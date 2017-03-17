@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>文章管理---查看</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<link th:href="@{/resources/js/kindeditor/themes/default/default.css}" rel="stylesheet"/>
+		<link th:href="@{/resources/js/kindeditor/plugins/code/prettify.css}" rel="stylesheet"/>
+	</head>
+
+	<body style="background-color: white;">
+		<!-- PAGE CONTENT BEGINS -->
+		<div class="row page-content">
+			<div class="col-xs-12 tabbable">
+				<ul th:include="fragment :: topTab('view','文章管理','/cms/articles/')" class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab" ></ul>
+				<div class="tab-content">
+					<div class="tab-pane in active">
+						<form action="#" class="form-horizontal" role="form">
+							<input type="hidden"  th:field="${instance.id}"/>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 栏目 *  </label>
+								<div class='col-sm-9'>
+									<select th:field='${instance.type.id}'>
+										<option value="0">请选择栏目</option>
+										<option th:each="obj:${list}"
+                         				th:value="${obj.id}" 
+										th:text="${obj.name}"></option>
+									</select>
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 标题 *  </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.title}' placeholder='标题' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 关键字 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.keywords}' placeholder='关键字' class='col-xs-10 col-sm-5' />
+									（请以英文逗号分隔）
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 来源 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.source}' placeholder='来源' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 摘要 </label>
+								<div class='col-sm-9'>
+									<textarea rows="5" cols="10" th:field='${instance.excerpt}' placeholder='摘要' class='col-xs-10 col-sm-5'></textarea>
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 是否置顶 </label>
+								<div class='col-sm-9'>
+									<input type='radio' th:field='${instance.istop}' value='1'/>是
+									<input type='radio' th:field='${instance.istop}' value='0' checked="checked"/>否
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 内容 *  </label>
+								<div class='col-sm-9'>
+									<textarea rows="30" cols="100" th:field='${instance.content}' 
+									placeholder='内容' class='col-xs-10 col-sm-5'
+									style="width:100%;"></textarea>
+								</div>
+							</div>
+							<div class="clearfix form-actions">
+								<div class="col-md-offset-3 col-md-9">
+									<a th:href="@{/cms/articles/list.do(method=${method})}" class="btn btn-prev">
+										<i class="icon-arrow-left"></i>
+										返回
+									</a>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div><!-- /.col -->
+		</div><!-- /.row -->
+	
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/js/kindeditor/kindeditor.js}"></script>
+		<script th:src="@{/resources/js/kindeditor/lang/zh_CN.js}"></script>
+		<script th:src="@{/resources/js/kindeditor/plugins/code/prettify.js}"></script>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		 jQuery(function($) {
+			 KindEditor.ready(function(K) {
+					window.editor1 = K.create('textarea[name="content"]', {
+						cssPath : '@{/resources/js/kindeditor/plugins/code/prettify.css}',
+						allowFileManager : true,
+						afterCreate : function() {
+							var self = this;
+							K.ctrl(document, 13, function() {
+								self.sync();
+								document.forms['example'].submit();
+							});
+							K.ctrl(self.edit.doc, 13, function() {
+								self.sync();
+								document.forms['example'].submit();
+							});
+						}
+					});
+					prettyPrint();
+				});
+		 });
+		
+		/*]]>*/
+		</script>
+	</body>
+</html>

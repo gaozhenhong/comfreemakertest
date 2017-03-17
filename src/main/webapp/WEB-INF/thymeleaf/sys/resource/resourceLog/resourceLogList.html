@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	 	<meta charset="utf-8" />
+		<title>资源访问日志</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		 
+	 	<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+	<body style="background-color: white;">
+		<div class="page-content">
+			<!-- PAGE CONTENT BEGINS -->
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="tabbable">
+						<ul th:include="fragment :: noAddTopTab('list','资源访问日志','/sys/resource/resourceLog/')" class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab" ></ul>
+						<div class="tab-content padding-4">
+							<div class="tab-pane in active">
+								<form id="queryForm"  action="#" th:action="@{/sys/resource/resourceLog/list.do}" th:object="${query}" class="form-horizontal" role="form">
+									<input type="hidden"  th:field="${query.currentPage}"/>
+									<input type="hidden"  th:field="${query.orderByProperty}"/>
+									<input type="hidden"  th:field="${query.orderByKind}"/>
+									<div class="container">
+										<div class="row">
+											<div class='col-xs-3'>
+												操作人：<input type='text' th:field='${query.userId}' placeholder='操作人' />
+											</div>
+											<div class='col-xs-3'>
+												类型：<input type='text' th:field='${query.operateType}' placeholder='类型' />
+											</div>
+											<div class='col-xs-3'>
+												资源：<input type='text' th:field='${query.resourceId}' placeholder='资源' />
+											</div>
+											<div class='col-xs-3  no-padding-left' style='text-align: left;'>
+												<button class='btn btn-sm' type='submit'>
+													<i class='icon-search nav-search-icon'></i>
+													查询
+												</button>
+											</div>
+										</div>
+
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<div>
+						<table id="list-table" class="table table-striped table-bordered table-hover" style="margin-bottom: 0px;">
+							<thead>
+								<tr>
+									<th class="center">
+										<label>
+											<input id="checkAll" type="checkbox" class="ace" />
+											<span class="lbl"></span>
+										</label>
+									</th>
+									<th id='userId' class="table-order-column">操作用户</th>
+									<th id='operateTime' class="table-order-column">操作时间</th>
+									<th id='operateType' class="table-order-column">操作类型</th>
+									<th id='resourceId' class="table-order-column">资源</th>
+
+									<th></th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr th:each="obj:${list}">
+									<td class="center">
+										<label>
+											<input type="checkbox" name="rowId" th:value="${obj.id}" class="ace" />
+											<span class="lbl"></span>
+										</label>
+									</td>
+									<td th:text="${obj.userId}">userId</td>
+									<td th:text="${#dates.format(obj.operateTime,'yyyy-MM-dd HH:ss')}">operateTime</td>
+									<td >
+										<div th:switch="${obj.operateType}">
+									        <span th:case="'download'">下载</span>
+									        <span th:case="'read'">阅读</span>
+									      </div>
+									</td>
+									<td th:text="${obj.resourceId}">resourceId</td>
+
+									<td th:include="fragment ::actionTd(baseUrl='/sys/resource/resourceLog/',haveView='false',haveEdit='false',haveDelete='true')"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					
+					<div class="wiwi-pagination">
+						<div class="batch_button_div">
+							<button class="btn btn-primary btn-xs batch_operate_button" type="button" th:attr="data-action=@{/sys/resource/resourceLog/batchDeleteAction.do}" >删除</button>
+						</div>
+						<ul th:replace="fragment :: pagination">
+						</ul>
+					</div>
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+		</div><!-- /.page-content -->
+
+		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+			<i class="icon-double-angle-up icon-only bigger-110"></i>
+		</a>
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		<!-- 表格排序 分页绑定JS --> 
+		<script th:src="@{/resources/jsoil/js/jsoil.common.table.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+	</body>
+</html>

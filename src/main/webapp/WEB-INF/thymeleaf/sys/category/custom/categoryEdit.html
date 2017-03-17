@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>分类---修改</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/ace/css/chosen.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+
+	<body>
+		<!-- PAGE CONTENT BEGINS -->
+		<div class="row page-content">
+			<div class="col-xs-12 tabbable">
+				<ul th:include="fragment :: topTab('edit',${customCategory.name},'/sys/category/'+${customCategory.code}+'/')" class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab" ></ul>
+				<div class="tab-content">
+					<div class="tab-pane in active">
+						<form id="validation-form"  action="#" th:action="@{'/sys/category/'+${customCategory.code}+'/editAction.do'}" th:object="${instance}" class="form-horizontal" role="form">
+							<input type="hidden"  th:field="${instance.id}"/>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 分类名称 *  </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.name}' placeholder='分类名称' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 父结点 </label>
+								<div class='col-sm-9'>
+									<select id="parentCategory" class="width-40 chosen-select" th:field='${instance.parentCategory.id}' data-placeholder="请选择父结点...">
+										<option th:value="${customCategory.id}" th:text="${customCategory.name + '['+customCategory.code+']'}">顶级分类</option>
+										<option th:each="category:${categoryList}" th:value="${category.id}" 
+										th:text="${category.name+'['+category.code+']'}"
+										th:attr="data-code=${category.code}">Tables</option>
+									</select>
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 分类编码 *  </label>
+								<div class='col-sm-9'>
+									<input id="categoryCode" type='text' th:field='${instance.code}' placeholder='分类编码' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 排序号 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.categoryIndex}' placeholder='排序号' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 图标 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.logoId}' placeholder='图标' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 备注 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.remark}' placeholder='备注' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> viewUrl </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.viewUrl}' placeholder='viewUrl' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							
+							<div class="clearfix form-actions">
+								<div class="col-md-offset-3 col-md-9">
+									<button class="btn btn-info" type="submit">
+										<i class="icon-ok bigger-110"></i>
+										提交
+									</button>
+	
+									<button class="btn" type="reset">
+										<i class="icon-undo bigger-110"></i>
+										重置
+									</button>
+									
+									<a th:href="@{'/sys/category/'+${customCategory.code}+'/list.do'}" class="btn btn-prev">
+										<i class="icon-arrow-left"></i>
+										返回
+									</a>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div><!-- /.col -->
+		</div><!-- /.row -->
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<script th:src="@{/resources/js/jquery.validate.min.js}"></script>
+		<script th:src="@{/resources/js/jquery.messages_zh.js}"></script>
+		<script th:src="@{/resources/ace/js/chosen.jquery.min.js}"></script>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		 $(".chosen-select").chosen(); 
+		 jQuery(function($) {
+			 $("#validation-form").validate({
+		        rules: {
+					categoryName: "required",
+					code: "required",
+
+		        }
+			});
+			 $("#parentCategory").on("change", function (){
+				 $("#categoryCode").val($(this).find("option:checked").attr("data-code"));
+			 });
+		 });
+		/*]]>*/
+		</script>
+	</body>
+</html>

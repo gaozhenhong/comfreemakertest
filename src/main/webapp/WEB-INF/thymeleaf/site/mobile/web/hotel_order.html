@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
+<title th:text="${hotel.name}">流浪狗</title>
+<link href="../../../../../resources/mobile/css/bootstrap.min.css" th:href="@{/resources/mobile/css/bootstrap.min.css}"  rel="stylesheet"/>
+<link href="../../../../../resources/mobile/css/app.css" th:href="@{/resources/mobile/css/app.css}"  rel="stylesheet"/>
+<script src="../../../../../resources/mobile/js/jquery.min.js" th:src="@{/resources/mobile/js/jquery.min.js}" ></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/iscroll.js" th:src="@{/resources/mobile/js/iscroll.js}"></script>
+<script src="../../../../../resources/mobile/js/bootstrap.min.js" th:src="@{/resources/mobile/js/bootstrap.min.js}" ></script>
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+ var myScroll;
+function loaded () {myScroll = new IScroll('#wrapper', { mouseWheel: true,click:true });}
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);         
+  
+   $(document).ready(function() {  
+	  $("#orderNumber").change(priceHotelOrder);
+  }); 
+function priceHotelOrder(){
+	//if(columnId == null || columnId == "") return false;
+	var houseTypeId=[[${roomType.Id}]];
+	var startDate=[[${#dates.format(startDate,'yyyy-MM-dd')}]];
+	var consumeDay=[[${consumeDay}]];
+	
+	var orderNumber=$("#orderNumber").val();
+	var href= [[@{'/site/mobile/web/'+${siteCode}+'/hotel/priceOrder'}]];
+	href=href+"?houseTypeId="+houseTypeId+"&startDate="+startDate+"&consumeDay="+consumeDay+"&orderNumber="+orderNumber;
+	$.ajax({ 
+		url: href, 
+		context: document.body, 
+		type : "POST", 
+	    dataType:"text",
+	    contentType:'application/json;charset=UTF-8',
+	    data : {},
+		success: function(resultData){
+			var priceObj=JSON.parse(resultData);
+			var totalPrice=priceObj.totalPrice;
+			//resultData = resultData.substring(5,resultData.length-6);
+			//alert(totalPrice);
+			$("#totalPrice").html(totalPrice);
+		},
+	    error:function(xhr,status,error){
+	    	  	alert("异常：error=" + error);
+	    }
+	});
+}
+
+function submitOrder(){
+	var houseTypeId=[[${roomType.Id}]];
+	var startDate=[[${#dates.format(startDate,'yyyy-MM-dd')}]];
+	var endDate=[[${#dates.format(endDate,'yyyy-MM-dd')}]];
+	var consumeDay=[[${consumeDay}]];
+	var orderNumber=$("#orderNumber").val();
+	var totalPrice=$("#totalPrice").text();
+	var href= [[@{'/site/mobile/web/'+${siteCode}+'/hotel/submitOrder'}]];
+	href=href+"?houseTypeId="+houseTypeId+"&startDate="+startDate+"&endDate="+endDate+"&consumeDay="+consumeDay+"&orderNumber="+orderNumber+"&totalPrice="+totalPrice;
+	href = href + "&orderName="+$("#orderName").val();
+	href = href + "&orderTelephone="+$("#orderTelephone").val();
+	//alert(href);
+	window.location.href=href;
+}
+
+/*]]>*/
+</script>
+</head>
+
+<body onload="loaded()">
+<!-- <div id="header">标题</div> -->
+
+<div id="wrapper">
+	<div id="scroller">
+	<!-- 开始主体内容 -->
+
+<div class="row">
+	<ul class="inninfo">
+		<li><h3 th:text="${hotel.name}">大理双廊别想那只大象海景客栈</h3></li>
+		<li><h4><span th:text="${#dates.format(startDate,'yyyy-MM-dd')}">12月20日</span>至<span th:text="${#dates.format(endDate,'yyyy-MM-dd')}">12月22日</span> 共<span th:text="${consumeDay}">2</span>晚</h4></li>
+		<li><h5>房型：<span  th:text="${roomType.name}">海景大床房</span> 在线支付</h5></li>
+		<li><h5>床型：<span  th:text="${roomType.bedType}">大床房</span></h5></li>
+		<li><h5>每间最多可入住人数：<span  th:text="${roomType.availableNumber}">2</span>人</h5></li>
+	</ul>
+
+	<ul class="payinfo list-group">
+
+<!-- 	  <li class="list-group-item">
+		<div id="staydate">2015/11/05 入住<br>
+		2015/11/07 离店
+		</div>
+		<div id="staydays"> —— 共2晚
+		</div>
+	  </li> -->
+
+	  <li class="list-group-item" >
+		<span class="list-group-item-heading">选择房间数据量</span>
+		<select th:if="${ roomCount !=0}" id="orderNumber" name="select" >
+			<option  th:each="i : ${#numbers.sequence( 1, roomCount)}" th:value="${i}" th:text="${i}">0</option>
+		</select>
+		<span th:if="${ roomCount ==0}" class="list-group-item-heading" style="color:red;">已没有房间</span>
+	  </li>
+	  <li class="list-group-item">
+		<span class="list-group-item-heading">到店时间</span>
+		<select name="select" num="1">
+		<option value="1">12:00</option>
+		<option value="2">13:00</option>
+		<option value="3">14:00</option>
+		<option value="4">15:00</option>
+		<option value="5">16:00</option>
+		<option value="6">17:00</option>
+		<option value="7">18:00</option>
+		<option value="8">19:00</option>
+		<option value="9">20:00</option>
+		<option value="10">21:00</option>
+		<option value="11">22:00</option>
+		<option value="12">23:00</option>
+		<option value="13">00:00</option>
+		</select>
+	  </li>
+
+	  <li class="list-group-item">
+		<span class="list-group-item-heading">入住人</span>
+		<input type="text" id="orderName" name="memberName" th:value="${member.name}" value="" placeholder="入住人姓名" />
+	  </li>
+
+	  <li class="list-group-item">
+		<span class="list-group-item-heading">手机号码</span>
+		<input type="text" id="orderTelephone" name="memberTelphone" th:value="${member.telphone}" value="" placeholder="有效手机号码" />
+	  </li>
+
+	  <li class="list-group-item">
+		<span class="list-group-item-heading">订单金额</span>
+		<span class="price">¥<i id="totalPrice" style="padding:5px;" th:text="${totalPrice}">0.00</i>元</span>
+	  </li>
+
+      <li class="list-group-item">
+        <h4 class="list-group-item-heading">客栈电话：<i th:text="${hotel.telphone}">13888022777</i></h4>
+        <a href="#" class="list_icon"><i class="glyphicon glyphicon-earphone" aria-hidden="true"></i>拨号</a>
+      </li>
+      <li class="list-group-item lib">
+        <h4 class="list-group-item-heading"  style="padding-right:60px;">地址：<i  th:text="${hotel.address}">大理市双廊镇大建旁村安置地103号</i></h4>
+        <a href="#" class="list_icon"><i class="glyphicon glyphicon-map-marker" aria-hidden="true"></i>导航</a>
+      </li>
+
+	</ul>
+		<a class="info" href="#" th:href="@{/site/mobile/member/center/order/cancelRule}"><span><i class="glyphicon glyphicon-exclamation-sign" aria-hidden="true" style="margin-top:20px"></i> 取消规则</span></a>
+		<a href="javascript:submitOrder()"  class="nextbtn btn btn-primary btn-lg center-block" role="button" style="margin-top:60px;margin-bottom:40px">提交订单</a>
+	</div>
+	<!-- 结束主体内容 -->
+	</div>
+</div>
+<div id="footer" th:include="site/mobile/web/fragment/navFragment :: navTab(2)">
+		<div class="btn-group btn-group-justified" role="group">
+			<div class="btn-group" role="group">
+				<a href="index.html" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-home"></i> <br/>主页
+				</a>
+			</div>
+			<div class="btn-group" role="group">
+				<a href="zb.html" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-map-marker"></i> <br/>周边
+				</a>
+			</div>
+			<div class="btn-group" role="group">
+				<a href="my.html" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-user"></i> <br/>我的
+				</a>
+			</div>
+		</div>
+</div>
+
+</body>
+</html>

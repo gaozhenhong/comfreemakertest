@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
+<title>流浪狗</title>
+<link href="../../../../../resources/mobile/css/bootstrap.min.css" th:href="@{/resources/mobile/css/bootstrap.min.css}" rel="stylesheet"/>
+<link href="../../../../../resources/mobile/css/app.css" th:href="@{/resources/mobile/css/app.css}" rel="stylesheet"/>
+<script src="../../../../../resources/mobile/js/jquery.min.js" th:src="@{resources/mobile/js/jquery.min.js}"></script>
+<script src="../../../../../resources/mobile/js/bootstrap.min.js" th:src="@{/resources/mobile/js/bootstrap.min.js}"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/iscroll.js" th:src="@{/resources/mobile/js/iscroll.js}"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/jquery.bcSwipe.min.js" th:src="@{/resources/mobile/js/jquery.bcSwipe.min.js}"></script>
+<script type="text/javascript">
+var myScroll;
+function loaded () {myScroll = new IScroll('#wrapper', { mouseWheel: true,click:true });}
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+  $(document).ready(function() {  
+       $('.carousel').bcSwipe({ threshold: 50 }); 
+  }); 
+</script>
+</head>
+
+<body onload="loaded()">
+<!-- <div id="header">标题</div> -->
+
+<div id="wrapper">
+	<div id="scroller">
+	<!-- 开始主体内容 -->
+
+<div class="row">
+  <!-- 客栈滚动图 -->
+  <div id="myCarousel" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+
+      <div class="item active">
+        <img src="../../../../../resources/mobile/images/kezhan.png" th:src="@{/resources/mobile/images/kezhan.png}"/>
+        <div class="carousel-caption">
+          图片描述2
+        </div>
+      </div>
+
+      <div class="item">
+      <img src="../../../../../resources/mobile/images/kezhan.png" th:src="@{/resources/mobile/images/kezhan.png}"/>
+      <div class="carousel-caption">
+          图片描述2
+        </div>
+    </div>
+
+    </div>
+    <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+      <span class="glyphicon glyphicon-chevron-left"></span>
+    </a>
+    <a class="right carousel-control" href="#myCarousel" data-slide="next">
+      <span class="glyphicon glyphicon-chevron-right"></span>
+    </a>
+  </div>
+  <!-- 客栈滚动图结束 -->
+
+  <!-- 客栈3选按钮 -->
+  <div id="inn_btn" class="btn-group btn-group-justified" role="group">
+     <div class="btn-group" role="group">
+	    <a href="hotel_index.html"  th:href="@{'/site/mobile/web/'+${siteCode}+'/hotel/home'}"  type="button" class="btn btn-default">客栈印象</a>
+	  </div>
+	  <div class="btn-group" role="group">
+	    <a href="hotel_house.html"  th:href="@{'/site/mobile/web/'+${siteCode}+'/hotel/house'}" type="button" class="btn btn-default">房型房价</a>
+	  </div>
+	  <div class="btn-group" role="group">
+	    <a href="hotel_product.html"  th:href="@{'/site/mobile/web/'+${siteCode}+'/hotel/product'}"  type="button" class="btn btn-default active">推荐</a>
+	  </div>
+  </div>
+  <!-- 客栈3选按钮结束 -->
+
+    <div class="innthumb col-sm-12 thumbnail">
+      <img src="../../../../../resources/mobile/images/food.jpg" th:src="@{/resources/mobile/images/food.jpg}"/>
+      <div class="caption">
+      <h3>大理乳扇</h3>
+      <h3 class="price">¥498元</h3>
+      <a class="order_btn" href="#">预定</a>
+      </div>
+    </div>
+
+    <div class="innthumb col-sm-12 thumbnail">
+      <img src="../../../../../resources/mobile/images/food.jpg" th:src="@{/resources/mobile/images/food.jpg}"/>
+      <div class="caption">
+      <h3>大理乳扇</h3>
+      <h3 class="price">¥498元</h3>
+      <a class="order_btn" href="#">预定</a>
+      </div>
+    </div>
+
+    <div class="innthumb col-sm-12 thumbnail">
+      <img src="../../../../../resources/mobile/images/food.jpg" th:src="@{/resources/mobile/images/food.jpg}"/>
+      <div class="caption">
+      <h3>大理乳扇</h3>
+      <h3 class="price">¥498元</h3>
+      <a class="order_btn" href="#">预定</a>
+      </div>
+    </div>
+
+    <div class="innthumb col-sm-12 thumbnail">
+      <img src="../../../../../resources/mobile/images/food.jpg" th:src="@{/resources/mobile/images/food.jpg}"/>
+      <div class="caption">
+      <h3>大理乳扇</h3>
+      <h3 class="price">¥498元</h3>
+      <a class="order_btn" href="#">预定</a>
+      </div>
+    </div>
+
+    <div class="innthumb col-sm-12 thumbnail">
+      <img src="../../../../../resources/mobile/images/food.jpg" th:src="@{/resources/mobile/images/food.jpg}"/>
+      <div class="caption">
+      <h3>大理乳扇</h3>
+      <h3 class="price">¥498元</h3>
+      <a class="order_btn" href="#">预定</a>
+      </div>
+    </div>
+
+    <div class="innthumb col-sm-12 thumbnail">
+      <img src="../../../../../resources/mobile/images/food.jpg" th:src="@{/resources/mobile/images/food.jpg}"/>
+      <div class="caption">
+      <h3>大理乳扇</h3>
+      <h3 class="price">¥498元</h3>
+      <a class="order_btn" href="#">预定</a>
+      </div>
+    </div>        
+
+</div>
+
+	<!-- 结束主体内容 -->
+	</div>
+</div>
+
+	<div id="footer" th:include="site/mobile/web/fragment/navFragment :: navTab(2)">
+			<div class="btn-group btn-group-justified" role="group">
+				<div class="btn-group" role="group">
+					<a href="index.html" type="button" class="btn btn-default"> <i
+						class="glyphicon glyphicon-home"></i> <br/>主页
+					</a>
+				</div>
+				<div class="btn-group" role="group">
+					<a href="zb.html" type="button" class="btn btn-default"> <i
+						class="glyphicon glyphicon-map-marker"></i> <br/>周边
+					</a>
+				</div>
+				<div class="btn-group" role="group">
+					<a href="my.html" type="button" class="btn btn-default"> <i
+						class="glyphicon glyphicon-user"></i> <br/>我的
+					</a>
+				</div>
+			</div>
+	</div>
+
+</body>
+</html>

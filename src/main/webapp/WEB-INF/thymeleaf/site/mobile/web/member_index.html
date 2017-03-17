@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
+<title>会员中心</title>
+<link href="../../../../../resources/mobile/css/bootstrap.min.css" th:href="@{/resources/mobile/css/bootstrap.min.css}" rel="stylesheet"/>
+<link href="../../../../../resources/mobile/css/app.css" th:href="@{/resources/mobile/css/app.css}" rel="stylesheet"/>
+<script src="../../../../../resources/mobile/js/jquery.min.js" th:src="@{/resources/mobile/js/jquery.min.js}"></script>
+<script src="../../../../../resources/mobile/js/bootstrap.min.js" th:src="@{/resources/mobile/js/bootstrap.min.js}"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/iscroll.js" th:src="@{/resources/mobile/js/iscroll.js}"></script>
+<script type="text/javascript">
+var myScroll;
+function loaded () {myScroll = new IScroll('#wrapper', { mouseWheel: true,click:true });}
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+</script>
+</head>
+
+<body onload="loaded()">
+<!-- <div id="header">标题</div> -->
+
+<div class="userpage" id="wrapper">
+	<div id="scroller">
+	<!-- 开始主体内容 -->
+
+    <div class="user thumbnail">
+      <img id="boss" style="height:100px;" src="../../../../../resources/mobile/images/user.jpg" th:src="@{${member.logoId}==0?${member.wxLogoUrl}:${ResourceUtil.getPath(member.logoId,'/resources/mobile/images/logo-default-2.png')}}" class="img-circle"/>
+      <div class="caption">
+        <h4 th:text="${member.nickName}" style="text-align:center">西门吹雪</h4>
+        <a href="my_edit.html" th:href="@{/site/mobile/member/center/baseinfoEdit}" id="edituser" style="bottom:15px"><i class="glyphicon glyphicon-cog" aria-hidden="true"></i> 编辑资料</a>
+      </div>
+ 		<!-- <small id="info_icon"><i class="glyphicon glyphicon-envelope" aria-hidden="true"></i> 消息中心</small> -->
+    </div>
+
+
+	<div id="user_center" class="list-group">
+		<ul class="member-index-ul">
+		    <li class="list-group-item-li">
+		      <a href="my_order.html" th:href="@{/site/mobile/member/center/orderList}" style="display:block;width:100%;">
+		      	  <i class="glyphicon glyphicon-file" aria-hidden="true" style="top:5px;left:8px;"></i>
+		      	  <span style="line-height:60px;font-size:18px;padding-left:15px"> 我的订单</span>
+			      <i class="glyphicon glyphicon-menu-right" aria-hidden="true" style="float:right;line-height:60px;font-size:14px;"></i>
+		      </a>
+		    </li>
+		    <li class="list-group-item-li" style="disable:none">
+		      <a href="#" style="display:block;width:100%;">
+		      	  <i class="glyphicon glyphicon-gift" aria-hidden="true" style="top:5px;left:8px;"></i>
+		      	  <span style="line-height:60px;font-size:18px;padding-left:15px">微信卡卷</span>
+			      <i class="glyphicon glyphicon-menu-right" aria-hidden="true" style="float:right;line-height:60px;font-size:14px;"></i>
+		      </a>
+		    </li>
+		    <li class="list-group-item-li" style="disable:none">
+		      <a href="#" style="display:block;width:100%;">
+		      	  <i class="glyphicon glyphicon-comment" aria-hidden="true" style="top:5px;left:8px;"></i>
+		      	  <span style="line-height:60px;font-size:18px;padding-left:15px">消息中心</span>
+			      <i class="glyphicon glyphicon-menu-right" aria-hidden="true" style="float:right;line-height:60px;font-size:14px;"></i>
+		      </a>
+		    </li>	        
+		    <li class="list-group-item-li">
+		      <a href="#" style="display:block;width:100%;">
+		      	  <i class="glyphicon glyphicon-user" aria-hidden="true" style="top:5px;left:8px;"></i>
+		      	  <span style="line-height:60px;font-size:18px;padding-left:15px">客服中心</span>
+			      <i class="glyphicon glyphicon-menu-right" aria-hidden="true" style="float:right;line-height:60px;font-size:14px;"></i>
+		      </a>
+		    </li>
+		    <li class="list-group-item-li">
+		      <a href="about.html" th:href="@{/site/mobile/member/center/about}" style="display:block;width:100%;">
+		      	  <i class="glyphicon glyphicon-edit" aria-hidden="true" style="top:5px;left:8px;"></i>
+		      	  <span style="line-height:60px;font-size:18px;padding-left:15px">关于流浪狗</span>
+			      <i class="glyphicon glyphicon-menu-right" aria-hidden="true" style="float:right;line-height:60px;font-size:14px;"></i>
+		      </a>
+		    </li>
+		    <li class="list-group-item-li">
+		       <a href="#" th:href="@{/site/mobile/member/logoutAction}" style="display:block;width:100%;">
+		      	  <i class="glyphicon glyphicon-cog" aria-hidden="true" style="top:5px;left:8px;"></i>
+		      	  <span style="line-height:60px;font-size:18px;padding-left:15px">退出登录</span>
+			      <i class="glyphicon glyphicon-menu-right" aria-hidden="true" style="float:right;line-height:60px;font-size:14px;"></i>
+		       </a>
+		    </li>
+	    </ul>
+	</div>
+
+
+	<!-- 结束主体内容 -->
+	</div>
+</div>
+
+	<div id="footer" th:include="site/mobile/web/fragment/navFragment :: navTab(2)">
+			<div class="btn-group btn-group-justified" role="group">
+				<div class="btn-group" role="group">
+					<a href="index.html" type="button" class="btn btn-default"> <i
+						class="glyphicon glyphicon-home"></i> <br/>主页
+					</a>
+				</div>
+				<div class="btn-group" role="group">
+					<a href="zb.html" type="button" class="btn btn-default"> <i
+						class="glyphicon glyphicon-map-marker"></i> <br/>周边
+					</a>
+				</div>
+				<div class="btn-group" role="group">
+					<a href="my.html" type="button" class="btn btn-default"> <i
+						class="glyphicon glyphicon-user"></i> <br/>我的
+					</a>
+				</div>
+			</div>
+	</div>
+
+</body>
+</html>

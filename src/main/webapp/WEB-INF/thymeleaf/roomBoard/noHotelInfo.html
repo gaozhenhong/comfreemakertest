@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title th:text="${AppConstants.APP_NAME+'工作台'}">工作台</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link href="../resources/bootstrap-3.3.2/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="../resources/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet" />
+		<link href="../resources/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../resources/ace/css/ace.min.css" />
+		<link rel="stylesheet" href="../resources/ace/css/ace-rtl.min.css" />
+		<link rel="stylesheet" href="../resources/ace/css/ace-skins.min.css" />
+		<link rel="stylesheet" href="../resources/ace/css/openApp.css" />
+		
+		<script src="../resources/js/jquery-2.0.3.min.js"></script>
+		<script src="../resources/ace/js/ace-extra.min.js"></script>
+		<style>
+			.logo{
+				width: 32px;
+				height: 32px;
+			}
+			.message-info{
+				font-size: 16px;
+				margin:10px 10px 10px 20px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="main-container" id="main-container" >
+			<div class="message-info">
+				尊敬的掌柜，你还没有添加任何客栈！
+				<div class="space4"></div>
+				请首先到客栈管理模块添加客栈！
+			</div>
+		</div><!-- /.main-container -->
+	</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
+<title th:text="${hotel.name}">流浪狗</title>
+<link href="../../../../../resources/mobile/css/bootstrap.min.css" th:href="@{/resources/mobile/css/bootstrap.min.css}"  rel="stylesheet"/>
+<link href="../../../../../resources/mobile/css/app.css" th:href="@{/resources/mobile/css/app.css}"  rel="stylesheet"/>
+<script src="../../../../../resources/mobile/js/jquery.min.js" th:src="@{/resources/mobile/js/jquery.min.js}" ></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/iscroll.js" th:src="@{/resources/mobile/js/iscroll.js}"></script>
+<script src="../../../../../resources/mobile/js/bootstrap.min.js" th:src="@{/resources/mobile/js/bootstrap.min.js}" ></script>
+<script type="text/javascript">
+var myScroll;
+function loaded () {myScroll = new IScroll('#wrapper', { mouseWheel: true,click:true });}
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);  
+</script>
+</head>
+<body onload="loaded()">
+<div class="userpage" id="wrapper">
+	<div id="scroller">
+	<!-- 开始主体内容 -->
+      <div class="order jumbotron">
+        <div>
+          <h3>温馨提示</h3>
+          <h2>该房间已经没有了</h2>
+        </div>
+        <div class="order_main">
+          <h3 th:text="${hotel.name}">别想那只大象客栈</h3>
+          <h3 th:text="${roomType.name}">海景大床房</h3>
+          <div class="otime center-block">
+            <div>入住<br/><span th:text="${#dates.format(startDate,'yyyy-MM-dd')}">10月28日</span></div>
+            <div class="otimeall"><span th:text="共+${consumeDay}+晚"></span></div>
+            <div>离店<br/><span th:text="${#dates.format(endDate,'yyyy-MM-dd')}">10月30日</span></div>
+          </div>
+          <div class="otime center-block">
+           	 <div style="float:left;width:100%;height:30px;text-align:left;">房间数：1间</div>
+             <div style="float:left;width:100%;height:30px;text-align:left;">预订人：<span th:text="${member.name}">西门吹雪</span></div>
+          </div>
+        </div>
+        <div class="order_more" style="font-size:14px;">
+           <div style="float:left;width:100%;height:40px;">
+	           <h4 style="float:left;">联系电话：<span th:text="${hotel.telphone}">18588335566</span></h4> 
+	           <span style="float:right"><i class="glyphicon glyphicon-earphone" aria-hidden="true"></i>拨号</span>
+           </div>
+           <div style="float:left;width:100%;height:40px;">
+	           <h4 style="float:left">客栈地址：<span th:text="${hotel.address}">大理市双廊镇大建旁村103号</span></h4> 
+	           <span style="float:right"><i class="glyphicon glyphicon-map-marker" aria-hidden="true"></i>导航</span>
+            </div>
+        </div>
+      </div>
+      <a href="hotel_house.html"  th:href="@{'/site/mobile/web/'+${siteCode}+'/hotel/house'(hotelId=${hotel.id},startDate=${#dates.format(startDate,'yyyy-MM-dd')},endDate=${#dates.format(endDate,'yyyy-MM-dd')})}"  class="nextbtn btn btn-primary btn-lg center-block" role="button" style="margin-bottom:20px;">返回</a>
+	</div>
+</div>
+<div id="footer" th:include="site/mobile/web/fragment/navFragment :: navTab(2)">
+		<div class="btn-group btn-group-justified" role="group">
+			<div class="btn-group" role="group">
+				<a href="index.html" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-home"></i> <br/>主页
+				</a>
+			</div>
+			<div class="btn-group" role="group">
+				<a href="zb.html" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-map-marker"></i> <br/>周边
+				</a>
+			</div>
+			<div class="btn-group" role="group">
+				<a href="my.html" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-user"></i> <br/>我的
+				</a>
+			</div>
+		</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	 	<meta charset="utf-8" />
+		<title>订单详情</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		 
+	 	<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+	<body style="background-color: white;">
+		<div class="page-content">
+			<!-- PAGE CONTENT BEGINS -->
+			<div class="row">
+				<div class="col-xs-12">
+					<div id="top-tabbable" class="tabbable">
+						<ul th:include="fragment :: topTab('list','订单详情','/orderDetails')" class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab" ></ul>
+						<div class="tab-content padding-4">
+							<div id="tab-list" class="tab-pane in active" style="margin-left:-4px;margin-right:-4px;">
+								<form id="queryForm"  action="#" th:action="@{/orderDetailslist.do}" th:object="${query}" class="form-horizontal" role="form">
+									<input type="hidden"  th:field="${query.currentPage}"/>
+									<input type="hidden"  th:field="${query.orderByProperty}"/>
+									<input type="hidden"  th:field="${query.orderByKind}"/>
+									<div class="container">
+																				<div class="row">
+											<div class='col-xs-3'>
+												orderId：<input type='text' th:field='${query.orderId}' placeholder='orderId' />
+											</div>
+											<div class='col-xs-3'>
+												订单编号：<input type='text' th:field='${query.orderCode}' placeholder='订单编号' />
+											</div>
+											<div class='col-xs-3'>
+												会员：<input type='text' th:field='${query.memberId}' placeholder='会员' />
+											</div>
+											<div class='col-xs-3'>
+												产品名称：<input type='text' th:field='${query.productName}' placeholder='产品名称' />
+											</div>
+										</div>
+										<div class='space-4'></div>
+										<div class="row">
+											<div class='col-xs-3'>
+												供应商ID：<input type='text' th:field='${query.supplierId}' placeholder='供应商ID' />
+											</div>
+											<div class='col-xs-3'>
+												产品ID：<input type='text' th:field='${query.productId}' placeholder='产品ID' />
+											</div>
+											<div class='col-xs-3'>
+												消费开始时间：<input type='text' th:field='${query.consumeBeginTime}' placeholder='消费开始时间' />
+											</div>
+											<div class='col-xs-3'>
+												消费结束时间：<input type='text' th:field='${query.consumeEndTime}' placeholder='消费结束时间' />
+											</div>
+										</div>
+										<div class='space-4'></div>
+										<div class="row">
+											<div class='col-xs-12  no-padding-left' style='text-align: left;'>
+												<button class='btn btn-sm' type='submit'>
+													<i class='icon-search nav-search-icon'></i>
+													查询
+												</button>
+											</div>
+										</div>
+
+									</div>
+									<div class='space-2'></div>
+									<div>
+										<table id="list-table" class="table table-striped table-bordered table-hover" style="margin-bottom: 0px;">
+											<thead>
+												<tr>
+													<th class="center">
+														<label>
+															<input id="checkAll" type="checkbox" class="ace" />
+															<span class="lbl"></span>
+														</label>
+													</th>
+																						<th id='orderId' class="table-order-column">orderId</th>
+									<th id='orderCode' class="table-order-column">订单编号</th>
+									<th id='memberId' class="table-order-column">会员</th>
+									<th id='orderTime' class="table-order-column">订单时间</th>
+									<th id='orderPrice' class="table-order-column">订单单价</th>
+									<th id='orderNumber' class="table-order-column">订单数量</th>
+									<th id='totalPrice' class="table-order-column">总价</th>
+									<th id='productName' class="table-order-column">产品名称</th>
+									<th id='productType' class="table-order-column">产品类型</th>
+									<th id='supplierId' class="table-order-column">供应商ID</th>
+									<th id='productId' class="table-order-column">产品ID</th>
+									<th id='consumeBeginTime' class="table-order-column">消费开始时间</th>
+									<th id='consumeEndTime' class="table-order-column">消费结束时间</th>
+
+													<th></th>
+												</tr>
+											</thead>
+				
+											<tbody>
+												<tr th:each="obj:${list}">
+													<td class="center">
+														<label>
+															<input type="checkbox" name="rowId" th:value="${obj.id}" class="ace" />
+															<span class="lbl"></span>
+														</label>
+													</td>
+																						<td th:text="${obj.orderId}">orderId</td>
+									<td th:text="${obj.orderCode}">订单编号</td>
+									<td th:text="${obj.memberId}">会员</td>
+									<td th:text="${obj.orderTime}">订单时间</td>
+									<td th:text="${obj.orderPrice}">订单单价</td>
+									<td th:text="${obj.orderNumber}">订单数量</td>
+									<td th:text="${obj.totalPrice}">总价</td>
+									<td th:text="${obj.productName}">产品名称</td>
+									<td th:text="${obj.productType}">产品类型</td>
+									<td th:text="${obj.supplierId}">供应商ID</td>
+									<td th:text="${obj.productId}">产品ID</td>
+									<td th:text="${obj.consumeBeginTime}">消费开始时间</td>
+									<td th:text="${obj.consumeEndTime}">消费结束时间</td>
+
+													<td >
+														<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons row-action-buttons">
+															<a class="blue show-a" th:href="@{/orderDetailsview.do(id=${obj.id},isModal=false)}" data-rel="tooltip" title="查看">
+																<i class="icon-zoom-in bigger-130"></i>
+															</a>
+									
+															<a class="green" th:href="@{/orderDetailsedit.do(id=${obj.id})}" data-rel="tooltip" title="修改">
+																<i class="icon-pencil bigger-130"></i>
+															</a>
+									
+															<a class="red row_del_button" th:href="@{/orderDetailsdeleteAction.do(id=${obj.id})}" data-rel="tooltip" title="删除">
+																<i class="icon-trash bigger-130"></i>
+															</a>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div class="wiwi-pagination">
+										<div class="batch_button_div">
+											<button class="btn btn-primary btn-xs batch_operate_button" type="button" th:attr="data-action=@{/orderDetailsbatchDeleteAction.do}" >删除</button>
+										</div>
+										<ul th:replace="fragment :: pagination">
+										</ul>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+		</div><!-- /.page-content -->
+
+		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+			<i class="icon-double-angle-up icon-only bigger-110"></i>
+		</a>
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		<!-- 表格排序 分页绑定JS --> 
+		<script th:src="@{/resources/jsoil/js/jsoil.common.table.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+	</body>
+</html>

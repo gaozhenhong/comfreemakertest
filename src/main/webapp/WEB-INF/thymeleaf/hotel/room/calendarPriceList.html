@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>客栈房型价格维护</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/css/datetime/datepicker.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		<link th:href="@{/resources/ace/css/fullcalendar.css}" rel="stylesheet" />
+		<link th:href="@{/resources/project/css/room.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+
+	<body>
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+				<div class="main-content" style="margin-left:5px;">
+					<div  th:if="${not #lists.isEmpty(myHotelList)}" id="top-tabbable" class="tabbable">
+						<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab" >
+							<li th:each="hotelCyc : ${myHotelList}"
+							 th:class="${(hotelCyc.id == hotel.id)?'active':''}">
+								<a th:href="@{/hotel/roomType/calendarPriceList.do(hotelId=${hotelCyc.id},roomTypeId=${roomType.id})}" th:text="${hotelCyc.name}">客栈名称</a>
+							</li>
+							<li th:if="${modal=='normal'}" class="message-tab">
+								<a class="blue pull-right" style="padding-left:10px;" th:href="@{/myHotel/list.do}" data-rel="tooltip" data-placement="left"  title="返回">
+									<i class="icon-arrow-left bigger-120"></i>
+								</a>
+							</li>
+							<li class="message-tab">
+								<span th:text="${operationMessage}"></span>
+							</li>
+						</ul>
+						<div class="tab-content padding-4">
+							<div id="tab-list" class="tab-pane in active" style="margin-left:20px;margin-right:-4px;">
+								<div class="row" th:include="hotel/room/calendarPriceFragment :: calendarPrice">
+								</div><!-- /.row -->
+							</div>
+						</div>
+					</div>
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+		</div><!-- /.main-container -->
+	
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		<!-- datetime -->
+		<script th:src="@{/resources/js/date-time/bootstrap-datepicker.min.js}"></script>
+		<script th:src="@{/resources/js/date-time/bootstrap-datetimepicker.zh-CN.js}"></script>
+		<!-- 表格排序 分页绑定JS --> 
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+		
+		
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			jQuery(function($){
+			
+				$('.fc-day').on('click', function (e) {
+			    		e.preventDefault();
+			    		//alert("fc-day");
+			    		if($(this).hasClass("fc-past")){
+						return true;
+					}
+			    		$(this).toggleClass("fc-day-selected");
+			    		
+			    		/*
+			    		if($(this).hasClass("fc-day-selected")){
+			    			$(".fc-day-config").remove();
+				    		var configObj = "<div class='fc-day-config pull-right'><i class='icon-gear'></i></div>";
+				    		$(this).children().first().append(configObj);
+			    		}else{
+			    			return false;
+			    		}
+			    		*/
+		        });
+				
+
+			 	$('.date-picker').datepicker({autoclose:true}).next().on(ace.click_event, function(){
+					$(this).prev().focus();
+				});
+			 	
+				$('.fc-day').on('dblclick', function (e) {
+			    		e.preventDefault();
+			    		if($(this).hasClass("fc-past")){
+						return true;
+					}
+			    		$(this).addClass("fc-day-selected");
+			    		var $_this = this,
+			            $this = $($_this);
+			    		$.teninedialog({
+			
+			    	        title : '价格设置',
+			    	        css: 'width:450px;height:100px;',
+			    	        content: '<div style="margin-top:20px;">请输入价格：<span class="input-icon"><input type="text" id="specialPrice" name="specialPrice"/><i class="icon-jpy blue"></i></span></div>',
+			    	        url: "",//不支持跨域，如果url不为空，就会加载url的内容，content的内容忽略
+			    	        	showIframe : false,//是否是以iframe的模式打开
+			    	        showCloseButton:false,
+			    	        otherButtons:["确定","取消"],
+			    	        otherButtonStyles:['btn-primary','btn-primary'],
+			    	        bootstrapModalOption:{keyboard: true},
+			    	        clickButton:function(sender,modal,index){
+				    	        	if(index == 0){
+				    	        		//alert("specialPrice"+$("#specialPrice").val());
+				    	        		var roomTypeId = [[${roomType.id}]];
+						    		var specialTimeArray = new Array();
+				    	        		$('.fc-day-selected').each(function (){
+				    	        			specialTimeArray.push($(this).attr('data-date'));
+				    	        		});
+				    	        		//alert(specialTimeArray);
+				    	        		$.ajax({
+			    						url: [[@{/hotel/roomType/setSpecialTimePriceAction2.do}]], 
+			    						context: document.body, 
+			    						type : "POST", 
+			    					    dataType:"text",
+			    					    contentType:'application/x-www-form-urlencoded;charset=UTF-8',
+			    					    data : {
+								    		"roomTypeId" : roomTypeId,
+								    		"specialTime": specialTimeArray,
+								    		"price" : $("#specialPrice").val()
+								    },
+			    						success: function(resultData){
+			    							window.location.reload();
+			    			      		},
+			    					    error:function(xhr,status,error){
+			    					    	  	alert("价格设置失败，请检查！error="+error);
+			    					    	  	return false;
+			    					    }
+			    					});
+				    	        	}
+			    	            $(this).closeDialog(modal);
+			    	        }
+			    	    });
+		        });
+				
+			});
+		
+		/*]]>*/
+		</script>
+	</body>
+</html>

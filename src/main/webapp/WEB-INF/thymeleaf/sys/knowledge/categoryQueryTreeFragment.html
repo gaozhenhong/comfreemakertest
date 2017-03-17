@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>课程大纲树形结构</title>
+	</head>
+
+	<body >
+		<div th:fragment="treeTable(list,cateMap)" >
+				<div th:each="category : ${list}" class="tree-folder">
+					<div class="tree-folder-header " style="cursor: pointer;" th:attr="data-action=@{/sys/knowledge/queryList.do(categoryId=${category.id})}" >
+						<i class="icon-folder icon-folder-open"></i>
+						<div class="tree-folder-name " th:text="${category.name }" >Vehicles</div>
+						<!-- 
+						<span class="dd2-handle">
+							<i class="icon-file normal-icon blue smaller-40"></i>
+						</span>
+						<div class="pull-right action-buttons ">
+							<span class="lighter grey" >【知识：</span>
+							<span class="lighter grey" th:text="${#lists.size(list)}"></span>
+							<span class="lighter grey" > 】</span>
+						</div>
+						 -->
+					</div>
+					<div th:include="sys/knowledge/categoryQueryTreeFragment :: treeTable(${cateMap.get(category.id)},${cateMap})" class="tree-folder-content" style="display: block;">
+					</div>
+				</div>
+		</div>
+		
+	</body>
+</html>

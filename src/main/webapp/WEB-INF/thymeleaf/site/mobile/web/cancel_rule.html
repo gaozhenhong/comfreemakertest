@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
+<title>取消规则</title>
+<link href="../../../../../resources/mobile/css/bootstrap.min.css"  th:href="@{/resources/mobile/css/bootstrap.min.css}" rel="stylesheet"/>
+<link href="../../../../../resources/mobile/css/app.css" th:href="@{/resources/mobile/css/app.css}" rel="stylesheet"/>
+<script type="text/javascript" src="../../../../../resources/mobile/js/jquery.min.js" th:src="@{/resources/mobile/js/jquery.min.js}"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/bootstrap.min.js" th:src="@{/resources/mobile/js/bootstrap.min.js}"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/iscroll.js" th:src="@{/resources/mobile/js/iscroll.js}"></script>
+
+
+<script type="text/javascript">
+var myScroll;
+function loaded () {myScroll = new IScroll('#wrapper', { mouseWheel: true });}
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+</script>
+</head>
+
+<body onload="loaded()">
+<!-- <div id="header">标题</div> -->
+
+<div id="wrapper">
+	<div id="scroller" class="bf">
+	<!-- 开始主体内容 -->
+    <div id="alogo" class="thumbnail">
+      <img th:src="@{/resources/mobile/images/alogo.png}"/>
+      <div class="caption">
+         <h3>流浪狗旅行</h3>
+      </div>
+    </div>
+    <ul class="list-group">
+    	<li class="list-group-item">
+		    <h4 class="list-group-item-heading">取消规则</h4>
+		    <p class="list-group-item-text" style="font-size:16px;color:red;">订单确认后不可取消或变更。如未入住，扣除全部费用。</p>
+	  </li>
+	    <li class="list-group-item">
+		    <h4 class="list-group-item-heading">联系我们</h4>
+	    </li>
+	    <li class="list-group-item">
+		    <h4 class="list-group-item-heading">电话：0872-2506517</h4>
+		    <a href="#" class="list_icon"><i class="glyphicon glyphicon-earphone" aria-hidden="true"></i>拨号</a>
+	    </li>
+	    <li class="list-group-item">
+		    <h4 class="list-group-item-heading" style="margin-bottom:10px;">QQ/微信客服</h4>
+		    <a href="#"><img th:src="@{'/resources/mobile/images/qq.png'}"/> 流浪狗</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#"><img th:src="@{'/resources/mobile/images/wx.png'}"/></a> 流浪狗
+	    </li>
+    </ul>
+	<!-- 结束主体内容 -->
+	</div>
+</div>
+
+<div id="footer" th:include="site/mobile/web/fragment/navFragment :: navTab(2)">
+	<div class="btn-group btn-group-justified" role="group">
+		<div class="btn-group" role="group">
+			<a href="index.html" type="button" class="btn btn-default"> <i
+				class="glyphicon glyphicon-home"></i> <br/>主页
+			</a>
+		</div>
+		<div class="btn-group" role="group">
+			<a href="zb.html" type="button" class="btn btn-default"> <i
+				class="glyphicon glyphicon-map-marker"></i> <br/>周边
+			</a>
+		</div>
+		<div class="btn-group" role="group">
+			<a href="my.html" type="button" class="btn btn-default"> <i
+				class="glyphicon glyphicon-user"></i> <br/>我的
+			</a>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

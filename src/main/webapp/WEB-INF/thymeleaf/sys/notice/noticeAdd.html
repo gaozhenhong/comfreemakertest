@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>系统公告---添加</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/ace/css/chosen.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+
+	<body style="background-color: white;">
+		<!-- PAGE CONTENT BEGINS -->
+		<div class="row page-content">
+			<div class="col-xs-12 tabbable">
+				<ul th:include="fragment :: topTab('add','系统公告','/sys/notice/')" class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab" ></ul>
+				<div class="tab-content">
+					<div class="tab-pane in active">
+						<form id="validation-form"  action="#" th:action="@{/sys/notice/addAction.do}" th:object="${instance}" class="form-horizontal" role="form">
+							<input type="hidden"  th:field="${instance.id}"/>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 标题 *  </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.title}' placeholder='标题' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 内容 *  </label>
+								<div class='col-sm-9'>
+									<textarea th:field='${instance.content}' rows="5" placeholder='介绍' class='autosize-transition form-control' style="width:60%;"></textarea>
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 类型 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.type}' placeholder='类型' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 范围 *  </label>
+								<div class='col-sm-9'>
+									<select th:field='${instance.scope}' id="scope" class="width-40 chosen-select col-xs-10 col-sm-5" >
+										<option value="allUser">全部登录用户</option>
+										<option value="guest">未登录即可查看</option>
+										<option value="group">用户组</option>
+										<option value="org">组织机构</option>
+										<option value="user">指定用户</option>
+									</select>
+									<a class="btn btn-xs btn-group" style="display:none;" >
+										<i class="icon-group"></i>
+										选择用户组
+									</a>
+									<a class="btn btn-xs btn-user" style="display:none;"  >
+										<i class="icon-user"></i>
+										选择用户
+									</a>
+									<a class="btn btn-xs btn-org" style="display:none;"  >
+										<i class="icon-sitemap"></i>
+										选择组织机构
+									</a>
+									<div class="item-label template-label" style="display:none;">
+										<button type="button" class="close-label">
+											<i class="icon-remove"></i>
+										</button>
+										<div>
+											<input type="hidden" />
+											<label class="name">标签</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class='form-group ' id="scope-content" style="display:none;">
+								<label class='col-sm-3 control-label no-padding-right'> 范围内容  </label>
+								<div class='col-sm-9 choose-scope' >
+									
+								</div>
+							</div>
+							
+							<div class="clearfix form-actions">
+								<div class="col-md-offset-3 col-md-9">
+									<button class="btn btn-info" type="submit">
+										<i class="icon-ok bigger-110"></i>
+										提交
+									</button>
+	
+									<button class="btn" type="reset">
+										<i class="icon-undo bigger-110"></i>
+										重置
+									</button>
+									
+									<a th:href="@{/sys/notice/list.do}" class="btn btn-prev">
+										<i class="icon-arrow-left"></i>
+										返回
+									</a>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div><!-- /.col -->
+		</div><!-- /.row -->
+	
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<script th:src="@{/resources/js/jquery.validate.min.js}"></script>
+		<script th:src="@{/resources/js/jquery.messages_zh.js}"></script>
+		<script th:src="@{/resources/ace/js/chosen.jquery.min.js}"></script>
+		<!-- textarea 的自动宽度 -->
+		<script th:src="@{/resources/js/jquery.autosize.min.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+		
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		 jQuery(function($) {
+			 $("#validation-form").validate({
+		        rules: {
+					title: "required",
+					content: "required",
+					scope: "required",
+
+		        }
+			});
+			 
+			 $('.btn-group').on('click', function (e) {
+				 $.teninedialog({
+		    	        title : "请选择用户组",
+		    	        css: 'width:800px;height:350px;',
+		    	        content: '',//
+		    	        url: [[@{/sys/group/groupChooseList.do}]],//不支持跨域，如果url不为空，就会加载url的内容，content的内容忽略
+		
+		    	        	showIframe : true,//是否是以iframe的模式打开
+		    	        showCloseButton:true,
+		    	        bootstrapModalOption:{keyboard: true},
+		    	    });
+			 });
+			 
+			 $('.btn-org').on('click', function (e) {
+				 $.teninedialog({
+		    	        title : "请选择组织机构",
+		    	        css: 'width:800px;height:350px;',
+		    	        content: '',//
+		    	        url: [[@{/sys/organization/orgChooseList.do}]],//不支持跨域，如果url不为空，就会加载url的内容，content的内容忽略
+		
+		    	        	showIframe : true,//是否是以iframe的模式打开
+		    	        showCloseButton:true,
+		    	        bootstrapModalOption:{keyboard: true},
+		    	    });
+			 });
+			 
+			 $('.btn-user').on('click', function (e) {
+				 $.teninedialog({
+		    	        title : "请选择用户",
+		    	        css: 'width:800px;height:350px;',
+		    	        content: '',//
+		    	        url: [[@{/sys/user/userChooseList.do}]],//不支持跨域，如果url不为空，就会加载url的内容，content的内容忽略
+		
+		    	        	showIframe : true,//是否是以iframe的模式打开
+		    	        showCloseButton:true,
+		    	        bootstrapModalOption:{keyboard: true},
+		    	    });
+			 });
+			 
+			 
+			 $('#scope').on('change', function (e) {
+		    		e.preventDefault();
+		    		var $_this = this,
+		            $this = $($_this),
+		            type = $this.val();
+		    		//alert(type);
+		    		if(type == "group"){
+		    			$('.btn-user').css("display","none");
+		    			$('.btn-org').css("display","none");
+		    			$('.btn-group').css("display","");
+		    		}else if(type == "user"){
+		    			$('.btn-user').css("display","");
+		    			$('.btn-org').css("display","none");
+		    			$('.btn-group').css("display","none");
+		    		}else if(type == "org"){
+		    			$('.btn-user').css("display","none");
+		    			$('.btn-org').css("display","");
+		    			$('.btn-group').css("display","none");
+		    		}else{
+		    			$('.btn-user').css("display","none");
+		    			$('.btn-org').css("display","none");
+		    			$('.btn-group').css("display","none");
+		    		}
+		     });
+			 
+		 });
+		
+		
+		 function processChooseGroup(chooseGroup){
+			 if(chooseGroup.length > 0){
+				 $("#scope-content").css("display","");
+			 }
+			 alert(JSON.stringify(chooseGroup));
+			 for(var i =0; i < chooseGroup.length;i++){
+				 var obj = $(".template-label").clone().show();
+				 obj.find("input").attr("name","scope_content");
+				 obj.find("input").attr("value",chooseGroup[i].id);
+				 obj.find(".name").html(chooseGroup[i].name);
+				 obj.removeClass("template-label");
+				 $(".choose-scope").append(obj);
+			 }
+			 $('.close-label').on('click', function (e) {
+				 this.closest(".item-label").remove();
+			 });
+		  }
+		 
+		/*]]>*/
+		</script>
+	</body>
+</html>

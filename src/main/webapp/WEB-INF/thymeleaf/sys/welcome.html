@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>学员工作台</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+
+	</head>
+
+	<body>
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+				
+				<div class="main-content" style="margin-left:5px;">
+
+					<div class="page-content">
+						<div class="page-header">
+							<h1>
+								首页
+								<small>
+									<i class="icon-double-angle-right"></i>
+									<span th:if="${#lists.size(workbenchList)}">点击下列工作台开始工作：</span>
+								</small>
+							</h1>
+						</div><!-- /.page-header -->
+
+						<div class="row">
+							<div class="col-xs-12" style="text-align:center;">
+								<!-- PAGE CONTENT BEGINS -->
+									<button th:each="workbench : ${workbenchList}" class="btn btn-app btn-purple shortcuts-button"
+										data-rel="tooltip" title="点击进入工作台" 
+										th:attr="data-href=@{${workbench}},data-code='org'" style="margin:10px 50px;">
+										<i class="icon-share-alt bigger-200"></i>
+										<span th:text="${'第' + workbenchStat.count + '个工作台'}" style="font-size:16px;"></span>
+									</button>
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="icon-double-angle-up icon-only bigger-110"></i>
+			</a>
+		</div><!-- /.main-container -->
+
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		<!-- 表格排序 分页绑定JS --> 
+		<script th:src="@{/resources/jsoil/js/jsoil.common.table.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+		
+		<!-- 画图JS -->
+		<script th:src="@{/resources/js/jquery.easy-pie-chart.min.js}"></script>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			jQuery(function($){
+			
+				$('.shortcuts-button').on("click",function (e){
+					e.preventDefault();
+					var $_this = this,
+			            $this = $($_this),
+			            href = $this.attr('data-href');
+					window.location = href;	
+				});
+			});
+		
+		/*]]>*/
+		</script>
+	</body>
+</html>

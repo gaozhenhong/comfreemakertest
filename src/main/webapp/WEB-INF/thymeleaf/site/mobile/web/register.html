@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
+<title>会员注册</title>
+<link href="../../../../../resources/mobile/css/bootstrap.min.css"  th:href="@{/resources/mobile/css/bootstrap.min.css}" rel="stylesheet"/>
+<link href="../../../../../resources/mobile/css/app.css"  th:href="@{/resources/mobile/css/app.css}" rel="stylesheet"/>
+
+<style>
+.reg-form-input{
+	display:block;
+	width:100%;
+	height:46px;
+	-webkit-appearance:none;
+	margin-bottom: 20px;
+	font-size: 14px;
+	padding: 10px 16px;
+	line-height: 1.3333333;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #555;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+  	-o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  	transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+</style>
+</head>
+
+<body onload="loaded()">
+<!-- <div id="header">标题</div> -->
+
+<div id="wrapper">
+	<div id="scroller">
+	<!-- 开始主体内容 -->
+
+	<form id="form" th:action="@{/mobile/member/login/registerAction.do}" method="post" onsubmit="return sumbitValidate()">
+  	<div class="form-group"  >
+	    <input class="reg-form-input" placeholder="请输入手机号" id="loginName" name="loginName" type="text" th:value="${loginName}"/>
+	    <input class="reg-form-input"  placeholder="请输入昵称"  id="name" name="name" type="text" th:value="${name}"/>
+	    <input class="reg-form-input"  placeholder="请输入密码" id="password" name="password" type="password"/>
+	    <input class="reg-form-input"  placeholder="请再次输入密码" id="rePassword" name="rePassword" type="password"/>
+    	<input class="reg-form-input"  placeholder="短信验证码" id="verificationCode" name="verificationCode" type="text"/>
+		<span th:text="${message}" style="color: red;"></span>
+	    <div class="checkbox">
+	  		<button style="float:left;" type="button" onclick="getVerificationCode()">获取验证码</button>
+			<label >
+			    <input type="checkbox" id="blankCheckbox" value="option1" aria-label="我已看过并同意用户协议"/>&nbsp;我已阅读并同意
+			</label>
+		</div>
+
+		<button type="submit" class="nextbtn btn btn-primary btn-lg center-block" role="button">提交</button>
+
+	    <div class="thumbnail">
+	      <img src="../../../../../resources/mobile/images/weixin.png" th:src="@{/resources/mobile/images/weixin.png}"/>
+	      <div class="caption">
+	        <h4>微信登录</h4>
+	      </div>
+	    </div>
+	</div>
+	</form>
+	<!-- 结束主体内容 -->
+	</div>
+</div>
+<div id="footer" th:include="site/mobile/web/fragment/navFragment :: navTab(2)">
+		<div class="btn-group btn-group-justified" role="group">
+			<div class="btn-group" role="group">
+				<a href="index.html" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-home"></i> <br/>主页
+				</a>
+			</div>
+			<div class="btn-group" role="group">
+				<a href="zb.html" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-map-marker"></i> <br/>周边
+				</a>
+			</div>
+			<div class="btn-group" role="group">
+				<a href="my.html" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-user"></i> <br/>我的
+				</a>
+			</div>
+		</div>
+</div>
+
+<script src="../../../../../resources/mobile/js/jquery.min.js"  th:src="@{/resources/mobile/js/jquery.min.js}"></script>
+<script src="../../../../../resources/mobile/js/bootstrap.min.js"  th:src="@{/resources/mobile/js/bootstrap.min.js}"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/iscroll.js"  th:src="@{/resources/mobile/js/iscroll.js}"></script>
+<script th:inline="javascript">
+		/*<![CDATA[*/
+	var myScroll;
+	function loaded () {
+		myScroll = new IScroll('#wrapper', { mouseWheel: true });
+	}
+	
+	document.addEventListener('touchmove', function (e) { 
+		e.preventDefault(); }, false);
+	
+	function sumbitValidate(){
+		try{
+			if($('#loginName').val() == ''){
+				alert('请输入手机号');
+				return false;
+			}
+			
+			if($('#password').val() == ''){
+				alert('请输入密码');
+				return false;
+			}
+			
+			if($('#rePassword').val() == ''){
+				alert('请再次输入密码');
+				return false;
+			}
+			
+			if($('#rePassword').val() != $('#password').val()){
+				alert('2次输入的密码不一致');
+				return false;
+			}
+			
+			if($('#verificationCode').val() == ''){
+				alert('请输入验证码');
+				return false;
+			}
+			
+		}catch(e){
+			return false;
+		}
+	}
+	
+	function getVerificationCode(){
+		if($('#loginName').val() == ''){
+			alert('请输入手机号');
+			return false;
+		}
+		
+		$.ajax({ 
+			url: [[@{/site/mobile/member/getVerificationCode.do}]], 
+			context: document.body, 
+			type : "GET", 
+		    dataType:"text",
+		    contentType:'application/json;charset=UTF-8',
+		    data : {
+	    		'telphone':$('#loginName').val()
+		    },
+			success: function(resultData){
+				if(resultData != 'failed'){
+					alert('短信验证码已发送到您的手机，验证码将在5分钟后过期，请尽快完成验证!');
+				}else{
+					alert("验证码发送失败!");
+				}
+      		},
+		    error:function(){
+		    	  alert("验证码发送失败!");
+		    }
+		});
+	}
+/*]]>*/
+</script>
+</body>
+</html>

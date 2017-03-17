@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>房态</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		<link th:href="@{/resources/ace/css/fullcalendar.css}" rel="stylesheet" />
+		<link th:href="@{/resources/project/css/room.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+
+	<body>
+		
+						
+	<div  th:fragment="roomBoard()" class="row">
+		<div id="calendar" class="fc fc-ltr" style="margin-left:15px;">
+			<div class="fc-content" style="position: relative;">
+				<div class="fc-view fc-view-month fc-grid" style="position: relative" unselectable="on">
+					<table class="fc-border-separate" style="width: 100%" cellspacing="0"
+						th:with="firstDay = ${firstDay}">
+						<thead>
+							<tr class="fc-first fc-last" th:with="allRoomNumber = ${#lists.size(roomList)}" >
+								<th class="fc-day-header fc-widget-header fc-first" style="width:132px; height: 30px;" colspan="2">
+									<div class="pull-left fc-page pageup" th:attr="data-date=${#dates.format(DateUtils.addDay(firstDay,0-dayNumber),'yyyy-MM-dd')}" style="float:left;width: 20px;">
+										&lt;
+									</div>
+									<div class="fc-date-range" style="width: 92px;">
+										<div data-rel="tooltip" th:title="${'选择一个开始日期，显示后续'+dayNumber+'天房态'}" data-placement="bottom" >
+											<span th:text="${#dates.format(firstDay,'MM/dd') + ' ~ ' + #dates.format(DateUtils.addDay(firstDay,dayNumber-1),'MM/dd')}"></span>
+										</div>
+										<div>
+											<span th:text="${#dates.format(firstDay,'yyyy')}"></span>	
+										</div>
+									</div>
+									<div class="pull-right fc-page pagedown" th:attr="data-date=${#dates.format(DateUtils.addDay(firstDay,dayNumber),'yyyy-MM-dd')}" style="float:left;width: 20px;">
+										&gt;
+									</div>
+								</th>
+								<th th:each="dayCyc : ${#numbers.sequence(0,dayNumber-1)}" class="fc-day-header fc-widget-header" style="width: 87px;"
+									th:with="day = ${DateUtils.addDay(firstDay,dayCyc)}"
+									th:classappend='${dayCycStat.index == dayNumber-1 ?"fc-last":""}'
+									th:attr='data-date=${#dates.format(day,"yyyy-MM-dd")}'
+									>
+									<div class="fc-day-number " style="width:100%;" >
+										<div class="pull-left" th:text='${new java.text.SimpleDateFormat("M月d号").format(day)}'></div>
+										<div class="pull-right" th:text="${DateUtils.getWeekName(day)}">星期</div>
+									</div>
+									<div class="fc-day-content">
+										<span th:attr="data-vacantRoomNumber=${#dates.format(day,'yyyy-MM-dd')}" th:text="${allRoomNumber}">0</span> /
+										<span th:text="${allRoomNumber}">房间数</span>
+									</div>
+								</th>
+							</tr>
+						</thead>
+						<tbody th:remove="all-but-first">
+							<tr  th:each="room : ${roomList}" class="fc-week "
+								th:with="rows = ${#lists.size(roomList)},roomType = ${roomTypeMap.get(room.roomType.id)}"
+								th:classappend='${ roomStat.index == 0 ?"fc-first":(roomStat.index == (rows-1) ?"fc-last":"") }'
+							>
+								<td class="fc-day fc-widget-content fc-future fc-first fc-header-center" style="width:92px;">
+									
+									<div >
+										<div class="fc-day-content">
+											<div style="position: relative; height: 0px;"
+											th:text="${roomType == null?'':roomType.name}">房型</div>
+										</div>
+									</div>
+								</td>
+								
+								<td class="fc-day fc-widget-content fc-future fc-first fc-header-center" style="width:40px;" >
+									<div >
+										<div class="fc-day-content">
+											<div style="position: relative; height: 0px;"
+											th:text="${room.roomNo}">房号</div>
+										</div>
+									</div>
+								</td>
+								
+								<td th:each="dayCyc : ${#numbers.sequence(0,dayNumber-1)}" 
+									class="fc-day fc-widget-content fc-future "
+									th:with=" key = ${hotel.id+'_'+roomType.id+'_'+room.roomNo + '_' + #dates.format(DateUtils.addDay(firstDay,dayCyc),'yyyy-MM-dd')}"
+									th:classappend='${dayCycStat.index == dayNumber-1 ?"fc-last":""}'
+									th:attr='data-roomType=${roomType.id},data-room=${room.id},data-date=${#dates.format(DateUtils.addDay(firstDay,dayCyc),"yyyy-MM-dd")}'>
+										<div th:if="${#maps.containsKey(reservationRoomMap,key)}" class="fc-order"
+											th:with="reservationRoom =${reservationRoomMap.get(key)}, jsonOrder = ${reservationRoom.praseOrder()}"
+											th:classappend="${'fc-'+#strings.toLowerCase(reservationRoom.status)}"
+											th:attr="data-reservationRoomId=${reservationRoom.id},
+											data-orderId=${JSONUtil.getLongValue(jsonOrder,'id')},data-orderOrigin=${JSONUtil.getValue(jsonOrder,'origin')}"
+											 data-rel="tooltip" th:title="${JSONUtil.getValue(jsonOrder,'orderName','') + '  ' + JSONUtil.getValue(jsonOrder,'orderTelephone','') + ' ，￥' + JSONUtil.getDoubleValue(jsonOrder,'totalPrice')}"
+										>
+											<div class="${JSONUtil.getValue(jsonOrder,'status','')}" th:text="${JSONUtil.getValue(jsonOrder,'orderName','')+ '  ' + JSONUtil.getValue(jsonOrder,'orderTelephone','') }">&nbsp;</div>
+										</div>
+										<div th:if="${not #maps.containsKey(reservationRoomMap,key)}" class="fc-room" 
+										th:attr='data-key=${key},data-roomType=${roomType.id},data-room=${room.id},data-date=${new java.text.SimpleDateFormat("yyyy-MM-dd").format(DateUtils.addDay(firstDay,dayCyc))}'
+										 th:title="${roomType.name + '  ' + room.roomNo + '，￥' + roomType.getPrice(DateUtils.addDay(firstDay,dayCyc))}" data-rel="tooltip" >
+										</div>
+								</td>
+							</tr>
+							
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div><!-- /.row -->
+	</body>
+</html>

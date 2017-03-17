@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<base target="_parent"/>
+		<title>字典选项---添加</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/ul.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+
+	<body style="background-color: white;">
+		<!-- PAGE CONTENT BEGINS -->
+		<div class="row page-content">
+			<div class="col-xs-12 tabbable">
+				<div class="tab-content">
+					<div class="tab-pane in active">
+						<form id="validation-form"  action="#" th:action="@{/sys/dictionary/option/addAction.do}" th:object="${instance}" class="form-horizontal" role="form">
+							<input type="hidden"  th:field="${instance.id}"/>
+							<input type="hidden"  th:field="${instance.dictionaryId}"/>
+							<input type="hidden"  th:field="${instance.dictionaryCode}"/>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 名称 *  </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.name}' placeholder='名称' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 编码 *  </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.code}' placeholder='编码' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 排序号 *  </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.orderNo}' placeholder='排序号' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 颜色，用于显示 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.color}' placeholder='颜色，用于显示' class='col-xs-10 col-sm-5' />
+									<div class="list" style="display:none;">
+										 <div class="item"><span class="ofreshgreen" value="ofreshgreen" title="清新绿"></span>清新绿</div><div class="item"><span class="osapphireblue checked" value="osapphireblue" title="宝石蓝"></span>宝石蓝</div>
+										 <div class="item"><span class="oblue" value="oblue" title="蓝色"></span>蓝色</div>										 <div class="item"><span class="ocyan" value="ocyan" title="青绿色"></span>青绿色</div>										 <div class="item"><span class="ogreen" value="ogreen" title="绿色"></span>绿色</div>										 <div class="item"><span class="oyellow" value="oyellow" title="黄色"></span>黄色</div>										 <div class="item"><span class="oorange" value="oorange" title="橙色"></span>橙色</div>										 <div class="item"><span class="ored" value="ored" title="红色"></span>红色</div>										 <div class="item"><span class="oluxuryred" value="oluxuryred" title="奢华红"></span>奢华红</div>										 <div class="item"><span class="opurple" value="opurple" title="紫色"></span>紫色</div>									 
+									</div>
+								</div>
+							</div>
+							
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> logo图片 </label>
+								<div class='col-sm-9' th:include="meituFragment :: meiTuImgUpload('','hotel/logo')">
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 说明 </label>
+								<div class='col-sm-9'>
+									<textarea th:field='${instance.demo}' rows="5" placeholder='描述' class='autosize-transition form-control' style="width:60%;"></textarea>
+								</div>
+							</div>
+							
+							<div class="clearfix form-actions">
+								<div class="col-md-offset-3 col-md-9">
+									<button class="btn btn-info" type="submit">
+										<i class="icon-ok bigger-110"></i>
+										提交
+									</button>
+	
+									<button class="btn" type="reset">
+										<i class="icon-undo bigger-110"></i>
+										重置
+									</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div><!-- /.col -->
+		</div><!-- /.row -->
+	
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<script th:src="@{/resources/js/jquery.validate.min.js}"></script>
+		<script th:src="@{/resources/js/jquery.messages_zh.js}"></script>
+		
+		<!-- choose -->
+		<script th:src="@{/resources/ace/js/chosen.jquery.min.js}"></script>
+		<!-- meitu scripts -->
+		<script th:src="@{/resources/meiTu/js/layer/layer.min.js}"></script>
+		<script th:src="@{/resources/meiTu/js/meiTu.js}"></script>
+		<script th:src="@{/resources/meiTu/js/meiTuInit.js}"></script>
+		<!-- textarea 的自动宽度 -->
+		<script th:src="@{/resources/js/jquery.autosize.min.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+		
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		 jQuery(function($) {
+			 $("#validation-form").validate({
+		        rules: {
+					name: "required",
+					code: "required",
+					orderNo: {
+						required:true,
+						number:true
+					}
+		        }
+			});
+		 });
+		/*]]>*/
+		</script>
+	</body>
+</html>

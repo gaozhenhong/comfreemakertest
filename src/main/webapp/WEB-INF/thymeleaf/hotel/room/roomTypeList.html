@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>房型客栈</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+
+	</head>
+
+	<body>
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+				
+				<div class="main-content" style="margin-left:5px;">
+
+					<div class="page-content">
+						<div class="page-header">
+							<h1>
+								<span th:text="${hotel.name}">我的客栈</span> 房型设置
+								<small>
+									<i class="icon-double-angle-right"></i>
+								</small>
+								
+								<a class="blue pull-right" style="padding-left:10px;" th:href="@{/myHotel/list.do}" data-rel="tooltip" data-placement="left"  title="返回">
+									<i class="icon-arrow-left bigger-120"></i>
+								</a>
+								
+								<a class="blue pull-right open-a" data-height="550" data-width="1000" data-showIframe="true" th:href="@{/hotel/roomType/add.do(hotelId=${hotel.id})}" data-rel="tooltip" data-placement="left"  title="添加房型">
+									<i class="icon-plus bigger-120"></i>
+								</a>
+								
+							</h1>
+						</div><!-- /.page-header -->
+						
+						<div th:if="${roomTypeList == null OR #lists.isEmpty(roomTypeList)}" class="row">
+							<div class="col-xs-12">
+								<span>
+									尊敬的掌柜，该客栈还没有任何房间！
+									请点击右上角的 <i class="icon-plus bigger-160"></i> 按钮开始你的客栈管理工作！
+								</span>
+							</div>
+						</div>
+						
+						<div th:if="${roomTypeList != null AND NOT #lists.isEmpty(roomTypeList) }" class="row">
+							<div th:each="roomType : ${roomTypeList}" class="col-xs-6 col-sm-3 pricing-box">
+								<div class="widget-box">
+									<div class="widget-body">
+										<div class="widget-main" style="border-top:1px solid #CCCCCC;">
+											<ul class="list-unstyled spaced2">
+												<li>
+													<img th:src="@{${ResourceUtil.getPath(roomType.logo,'/resources/images/roomType.png')}}" class="hotel-img" />
+												</li>
+
+												<li>
+													<i class="icon-tag green"></i>
+													<span th:text="${roomType.name}"></span>
+													<span class="pull-right bigger-120" th:text="${'￥' + roomType.defaultPrice}"></span>
+												</li>
+											</ul>
+
+											<hr />
+											<div class="price action-buttons" style="font-size: 14px;" >
+												<a th:href="@{/sys/resource/com.wiwi.freego.hotel.model.RoomType/list.do(primaryKey=${roomType.id},title=${roomType.name}+' 相册管理')}"
+													class="pull-left purple" data-rel="tooltip" title="相册维护">
+													<i class="icon-camera bigger-80"></i>
+													<span >相册</span>
+												</a>
+												
+												<a th:if="${roomType.status == RoomTypeStatus.EDIT}" th:href="@{/hotel/roomType/openAction.do(id=${roomType.id},hotelId=${hotel.id})}"
+													class="pull-right blue" data-rel="tooltip" title="发布，发布后客户便可订房">
+													<i class="icon-eye-open bigger-80"></i>
+												</a>
+												
+												<a th:if="${roomType.status == RoomTypeStatus.OPENING}" th:href="@{/hotel/roomType/cancelOpenAction.do(id=${roomType.id},hotelId=${hotel.id})}" 
+													class="pull-right blue" data-rel="tooltip" title="取消发布，取消后客户便看不到该房型">
+													<i class="icon-eye-close bigger-80"></i>
+												</a>
+												
+												<a th:href="@{/hotel/roomType/deleteAction.do(id=${roomType.id},hotelId=${hotel.id})}"
+													class="pull-right blue row_del_button" data-rel="tooltip" title="删除">
+													<i class="icon-remove bigger-80"></i>
+												</a>
+												
+												<a th:href="@{/hotel/roomType/edit.do(id=${roomType.id},hotelId=${hotel.id})}"
+													class="pull-right blue open-a" data-height="550" data-width="1000" data-showIframe="true" data-rel="tooltip" title="修改">
+													<i class="icon-edit bigger-80"></i>
+												</a>
+												<a th:href="@{/hotel/roomType/calendarPriceList.do(roomTypeId=${roomType.id},hotelId=${hotel.id})}"
+													class="pull-right blue" data-rel="tooltip" title="日历设置价格">
+													<i class="icon-calendar bigger-80"></i>
+												</a>
+												
+												
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="icon-double-angle-up icon-only bigger-110"></i>
+			</a>
+		</div><!-- /.main-container -->
+
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		<!-- 画图JS -->
+		<script th:src="@{/resources/js/jquery.easy-pie-chart.min.js}"></script>
+		
+		<!-- 表格排序 分页绑定JS --> 
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+		
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			jQuery(function($){
+			
+				$('.play_button').on('click', function (e) {
+			    		e.preventDefault();
+			    		var $_this = this,
+			            $this = $($_this),
+			            title = $this.attr('data-original-title'),
+			            code = $this.attr('data-id'),
+			            href = $this.prop('href');
+			    		if(title == ""){
+			    			title = $this.attr('title');
+			    		}
+			    		window.open(href);
+			    		//parent.openapp(href, "studying-"+code, title);
+				});
+				
+			});
+		
+		/*]]>*/
+		</script>
+	</body>
+</html>

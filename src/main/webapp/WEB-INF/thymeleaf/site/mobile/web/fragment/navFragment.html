@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+</head>
+<body>
+	<div th:fragment="navTab(siteId)">
+		<div class="btn-group btn-group-justified" role="group">
+			<div class="btn-group" role="group">
+				<a href="index.html" th:href="@{'/site/mobile/web/'+${siteCode}+'/index'}" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-home"></i> <br />主页
+				</a>
+			</div>
+			<div class="btn-group" role="group">
+				<a href="zb_index.html" th:href="@{'/site/mobile/web/'+${siteCode}+'/nav_zb'}" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-map-marker"></i> <br />周边
+				</a>
+			</div>
+			<div class="btn-group" role="group">
+				<a href="my.html" th:href="@{/site/mobile/member/center/home(siteCode=${siteCode})}" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-user"></i> <br />我的
+				</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

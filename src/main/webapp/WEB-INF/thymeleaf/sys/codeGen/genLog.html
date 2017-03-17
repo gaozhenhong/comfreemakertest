@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>代码生成</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/ace/css/chosen.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+
+	<body>
+		<div class="page-content">
+			<div class="row-fluid">
+				<div class="span12">
+					<form  action="#" th:action="@{/sys/codeGen/genCode.do}" class="form-horizontal" role="form">
+						<div class="widget-box">
+							<div class="widget-header widget-header-blue widget-header-flat">
+								<h4 class="lighter">代码生成向导</h4>
+							</div>
+							<div class="widget-body">
+								<div class="widget-main">
+									<div id="fuelux-wizard" class="row-fluid" data-target="#step-container">
+										<ul class="wizard-steps">
+											<li data-target="#step1" class="complete">
+												<span class="step">1</span>
+												<span class="title">选择表</span>
+											</li>
+											<li data-target="#step2" class="complete">
+												<span class="step">2</span>
+												<span class="title">填写模块信息</span>
+											</li>
+	
+											<li data-target="#step3" class="complete">
+												<span class="step">3</span>
+												<span class="title">生成</span>
+											</li>
+										</ul>
+									</div>
+	
+									<hr />
+									<div class="step-content row-fluid position-relative" id="step-container">
+										<div class="step-pane active" id="step1">
+												生成成功！											
+										</div>
+									</div>
+	
+									<hr />
+									<div class="row-fluid wizard-actions">
+										<button class="btn btn-prev">
+											<i class="icon-arrow-left"></i>
+											上一步
+										</button>
+	
+										<a href="/jsoil/sys/codeGen/chooseTable.do" class="btn btn-success btn-next" data-last="Finish ">
+											重新生成
+											<i class="icon-arrow-right icon-on-right"></i>
+										</a>
+									</div>
+								</div><!-- /widget-main -->
+							</div><!-- /widget-body -->
+						</div>
+					</form>
+				</div>
+			</div>
+		</div><!-- /.page-content -->
+
+		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+			<i class="icon-double-angle-up icon-only bigger-110"></i>
+		</a>
+
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<script th:src="@{/resources/js/typeahead-bs2.min.js}"></script>
+		<script th:src="@{/resources/ace/js/chosen.jquery.min.js}"></script>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		
+		$(".chosen-select").chosen(); 
+		
+		/*]]>*/
+		</script>
+	</body>
+</html>

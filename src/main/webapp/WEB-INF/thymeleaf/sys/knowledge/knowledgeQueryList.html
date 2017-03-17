@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	 	<meta charset="utf-8" />
+		<title>知识库</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		 
+	 	<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+	<body style="margin: 0px 0px 0px 0px;background-color: white;">
+		<div class="page-content">
+			<!-- PAGE CONTENT BEGINS -->
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="tabbable">
+						<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" >
+							<li th:class="active">
+								<a >知识列表</a>
+							</li>
+							<li >
+								<span style="padding:8px 12px;" th:text="${ chooseCategory } ?'所属分类：'+${ chooseCategory.name}:''"></span>
+							</li>
+							<li class="message-tab">
+								<span th:text="${operationMessage}"></span>
+							</li>
+						</ul>
+						<div class="tab-content padding-4">
+							<div class="tab-pane in active">
+								<form id="queryForm"  action="#" th:action="@{/sys/knowledge/queryList.do}" th:object="${query}" class="form-horizontal" role="form">
+									<input type="hidden"  th:field="${query.currentPage}"/>
+									<input type="hidden"  th:field="${query.orderByProperty}"/>
+									<input type="hidden"  th:field="${query.orderByKind}"/>
+									<input type="hidden"  th:field="${query.categoryId}"/>
+									<div class="container">
+										<div class="row">
+											<div class='col-xs-4'>
+												名称：<input type='text' th:field='${query.name}' placeholder='名称' />
+											</div>
+											<div class='col-xs-4'>
+												标签：<input type='text' th:field='${query.labels}' placeholder='标签' />
+											</div>
+											<div class='col-xs-1  no-padding-left' style='text-align: left;'>
+												<button class='btn btn-sm' type='submit'>
+													<i class='icon-search nav-search-icon'></i>
+													查询
+												</button>
+											</div>
+										</div>
+
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<div>
+						<table id="list-table" class="table table-striped table-bordered table-hover" style="margin-bottom: 0px;">
+							<thead>
+								<tr>
+									<th id='name' class="table-order-column">名称</th>
+									<th id='categoryName' class="table-order-column">分类</th>
+									<th id='labels' class="table-order-column">标签</th>
+									<th id='fileType' class="table-order-column">文件类型</th>
+									<th id='browseCount' class="table-order-column">浏览次数</th>
+									<th id='downloadCount' class="table-order-column">下载次数</th>
+									<th id='lastModifyTime' class="table-order-column">最后修改时间</th>
+									<th></th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr th:each="obj:${list}">
+									<td th:text="${obj.name}">名称</td>
+									<td th:text="${obj.category.name}">分类</td>
+									<td th:text="${obj.labels}">标签</td>
+									<td th:text="${obj.fileType}">文件类型</td>
+									<td th:text="${obj.browseCount}">浏览次数</td>
+									<td th:text="${obj.downloadCount}">下载次数</td>
+									<td th:text="${obj.lastModifyTime}?${#dates.format(obj.lastModifyTime, 'yyyy-MM-dd HH:mm')}:''">最后修改时间</td>
+									
+									<td >
+										<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons row-action-buttons">
+											<a class="blue open-a" th:href="@{/sys/knowledge/view.do(id=${obj.id},chooseCategoryId=${ chooseCategory == null?0:chooseCategory.id},isModal=true)}" data-rel="tooltip"  title="查看">
+												<i class="icon-zoom-in bigger-130"></i>
+											</a>
+											
+											<a th:href="@{'/sys/collect/addAction.do'(title=${obj.name}
+															,collectBeanId=${obj.id}
+															,collectModule='com.eruipan.rstp.knowledge.model.Knowledge'
+															,redirectPath='/sys/knowledge/queryList.do'
+														)}" 
+												class="blue" data-rel="tooltip"  title="收藏">
+												<i class="icon-star bigger-130"></i>
+											</a>
+	
+											<a th:href="@{/sys/knowledge/downloadAction.do(id=${obj.id},resourceId=${obj.fileId})}" data-rel="tooltip"  title="下载">
+												<i class="icon-download bigger-130"></i>
+											</a>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					
+					<div class="wiwi-pagination">
+						<ul th:replace="fragment :: pagination">
+						</ul>
+					</div>
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+		</div><!-- /.page-content -->
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		<!-- 表格排序 分页绑定JS --> 
+		<script th:src="@{/resources/jsoil/js/jsoil.common.table.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+	</body>
+</html>

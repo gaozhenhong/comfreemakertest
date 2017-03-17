@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
+<title th:text="${hotel.name}">流浪狗</title>
+<link href="../../../../../resources/mobile/css/bootstrap.min.css" th:href="@{/resources/mobile/css/bootstrap.min.css}" rel="stylesheet"/>
+<link href="../../../../../resources/mobile/css/app.css" th:href="@{/resources/mobile/css/app.css}" rel="stylesheet"/>
+<link href="../../../../../resources/mobile/css/owl.carousel.css" th:href="@{/resources/mobile/css/owl.carousel.css}" rel="stylesheet"/>
+<link href="../../../../../resources/mobile/css/owl.theme.css" th:href="@{/resources/mobile/css/owl.theme.css}" rel="stylesheet"/>
+<link href="../../../../../resources/mobile/css/picker.css" th:href="@{/resources/mobile/css/picker.css}" rel="stylesheet"/>
+<script type="text/javascript" src="../../../../../resources/mobile/js/jquery.min.js" th:src="@{/resources/mobile/js/jquery.min.js}"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/bootstrap.min.js" th:src="@{/resources/mobile/js/bootstrap.min.js}"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/iscroll.js" th:src="@{/resources/mobile/js/iscroll.js}"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/jquery.bcSwipe.min.js" th:src="@{/resources/mobile/js/jquery.bcSwipe.min.js}"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/picker/picker.js" th:src="@{/resources/mobile/js/picker/picker.js}"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/picker/picker.date.js" th:src="@{/resources/mobile/js/picker/picker.date.js}"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/snap.js" th:src="@{/resources/mobile/js/snap.js}"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/owl.carousel.min.js" th:src="@{/resources/mobile/js/owl.carousel.min.js}"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/jquery.swipebox.js" th:src="@{/resources/mobile/js/jquery.swipebox.js}"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/framework.launcher.js" th:src="@{/resources/mobile/js/framework.launcher.js}"></script>
+<style>
+.default-background-1{
+	width:100%;
+	min-height:150px;
+	background-image:url('../../../../../resources/mobile/images/logo-default-1.png');
+	background-position:center center;
+	background-size:70% auto;
+	background-repeat: no-repeat;
+	background-color:#EDEDED
+}
+</style>
+<script th:inline="javascript">
+/*<![CDATA[*/
+var myScroll;
+function loaded () {myScroll = new IScroll('#wrapper', { mouseWheel: true,click:true });}
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+
+  $(document).ready(function() { 
+	  setImageSize();
+      $('.carousel').bcSwipe({ threshold: 50 }); 
+      $('.carousels').bcSwipe({ threshold: 50 }); 
+       initCalendar();
+  }); 
+  
+  function setImageSize(){
+	  var winWidth=$(window).width();
+	  //alert(winWidth);
+	  //alert(Math.floor((winWidth*2)/3));
+	  //alert($("#slider-image-main-div").find("img").attr("height"));
+	  $(".responsive-image").attr("height",Math.floor((winWidth*2)/3)+"px");
+  }
+  
+  var href= [[@{'/site/mobile/web/'+${siteCode}+'/hotel/house?hotelId='+${hotelId}}]];
+  function initCalendar(){
+	  var monthsFull = [ '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月' ];
+	  var weekdaysFull = [ '周日', '周一', '周二', '周三', '周四', '周五', '周六' ];
+	  // 初始化
+	  var stDateStr=[[${#dates.format(startDate,'yyyy-MM-dd')}]];
+	  var stDate = new Date(stDateStr);
+	  $("#start-date").val(stDateStr);
+      $("#select-start-date").text(stDateStr); //日期
+      $("#select-start-week").text(weekdaysFull[stDate.getDay()]); //星期
+      
+      var enDateStr=[[${#dates.format(endDate,'yyyy-MM-dd')}]];
+	  var enDate = new Date(enDateStr);
+      $("#end-date").val(enDateStr);
+      $("#select-end-date").text(enDateStr); //日期
+      $("#select-end-week").text(weekdaysFull[enDate.getDay()]); //星期
+      
+	  /*$("#start_date .dd").text(nowdate.getDate()); //日期
+	  $("#start_date .ww").text(nowdate[nowdate.getDay()]); //星期
+	  $("#start_date .mm").text(monthsFull[nowdate.getMonth()]); //月份
+
+	  $("#end_date .dd").text(nowdate.getDate()+1); //日期
+	  $("#end_date .ww").text(weekdaysFull[nowdate.getDay()+1]); //星期
+	  $("#end_date .mm").text(monthsFull[nowdate.getMonth()]); //月份*/
+	  var date_selected_1 = 0;
+	  var date_selected_2 = 0;
+
+	  $('#dateTime-select-start').pickadate({
+	    monthsFull: [ '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月' ],
+	    monthsShort: [ '一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二' ],
+	    weekdaysFull: [ '星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六' ],
+	    weekdaysShort: [ '日', '一', '二', '三', '四', '五', '六' ],
+	    today: '',
+	    clear: '',
+	    close: '',
+	    firstDay: 1,
+	    format: 'yyyy 年 mm 月 dd 日',
+	    formatSubmit: 'yyyy/mm/dd',
+	    container:"body",
+	    closeOnSelect: false,
+	    onRender: function() {
+	        $("#dateTime-select-start_root").find(".picker__header").html("<h3>请选择入住时间</h3>");
+	    },
+	    onSet: function( context ) {
+			if(context.select>0){
+				var dateStr=this.get( 'select', 'yyyy-mm-dd' );
+				var date =  new Date(dateStr);
+				if(date_selected_1== 0){
+		           //隐藏表单
+		           $("#start-date").val(dateStr);
+		           $("#select-start-date").text(dateStr); //日期
+		           $("#select-start-week").text(weekdaysFull[date.getDay()]); //星期
+		          
+		           date_selected_1 = 1;
+		           $("#dateTime-select-start_root").find(".picker__header h3").text("请选择离店时间");
+		           startDate=dateStr;
+				 } else if(date_selected_1== 1){
+					 $("#end-date").val(dateStr);
+		             $("#select-end-date").text(dateStr); //日期
+		             $("#select-end-week").text(weekdaysFull[date.getDay()]); //星期
+		             
+		             var startDate=$("#start-date").val();
+		             href=href+"&startDate="+startDate+"&endDate="+dateStr;
+			         window.location.href=href;
+					 date_selected_1 = 0;
+			         this.close();
+				 }
+	           
+		      }
+	    }
+	  });
+	  
+	  $('#dateTime-select-end').pickadate({
+		    monthsFull: [ '一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月' ],
+		    monthsShort: [ '一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二' ],
+		    weekdaysFull: [ '星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六' ],
+		    weekdaysShort: [ '日', '一', '二', '三', '四', '五', '六' ],
+		    today: '',
+		    clear: '',
+		    close: '',
+		    firstDay: 1,
+		    format: 'yyyy 年 mm 月 dd 日',
+		    formatSubmit: 'yyyy/mm/dd',
+		    container:"body",
+		    closeOnSelect: false,
+		    onRender: function() {
+		    	$("#dateTime-select-end_root").find(".picker__header").html("<h3>请选择离店时间</h3>");
+		    },
+		    onSet: function( context ) {
+				if(context.select>0){
+					var dateStr=this.get( 'select', 'yyyy-mm-dd' );
+					//alert(JSON.stringify(this.get( 'select', 'yyyy-mm-dd' )));
+			        var date =  new Date(dateStr);
+			        if(date_selected_2== 0){
+			           //隐藏表单
+			           $("#end-date").val(dateStr);
+			           $("#select-end-date").text(dateStr); //日期
+			           $("#select-end-week").text(weekdaysFull[date.getDay()]); //星期
+			           date_selected_2 = 1;
+			           $("#dateTime-select-end_root").find(".picker__header h3").text("请选择入住时间");
+			           
+			           //var startDate=$("#start-date").val();
+			           //window.location.href=href+"&startDate="+startDate+"&endDate="+dateStr;
+			        } else if(date_selected_2== 1){
+			        	 $("#start-date").val(dateStr);
+				         $("#select-start-date").text(dateStr); //日期
+				         $("#select-start-week").text(weekdaysFull[date.getDay()]); //星期
+				         
+				         var endDate=$("#end-date").val();
+			             href=href+"&startDate="+dateStr+"&endDate="+endDate;
+			            
+				         window.location.href=href;
+				         date_selected_2 = 0;
+				         this.close();
+			        }
+			      }
+		    }
+		  });
+  }
+  /*]]>*/
+</script>
+</head>
+
+<body onload="loaded()">
+<div id="wrapper">
+	<div id="scroller">
+	<!-- 开始主体内容 -->
+<div class="row"  style="margin-left:0px;margin-right:0px;">
+  <!-- 客栈滚动图 -->
+  <div class="default-background-1">
+	  <div id="slider-image-main-div" class="slider-controls" data-snap-ignore="true">                
+	       <div th:each="imageObj:${hotel.getImages(15)}">
+	           <img src="../../../../../resources/mobile/images/kezhan.png" th:src="@{${ResourceUtil.getPath(imageObj.id,'/resources/mobile/images/kezhan.png')}}" class="responsive-image" alt="img"/>
+	       </div>
+	   </div>
+   </div>
+  <!-- 客栈滚动图结束 -->
+
+  <!-- 客栈3选按钮 -->
+  <div id="inn_btn" class="btn-group btn-group-justified" role="group">
+     <div class="btn-group" role="group">
+	    <a id="bt-1" href="hotel_home.html"  th:href="@{'/site/mobile/web/'+${siteCode}+'/hotel/home'(hotelId=${hotel.id})}"  type="button" class="btn btn-default" style="font-size:18px;line-height:35px;border-radius: 0px">客栈印象</a>
+	  </div>
+	  <div class="btn-group" role="group">
+	    <a id="bt-2" href="hotel_house.html"  th:href="@{'/site/mobile/web/'+${siteCode}+'/hotel/house'(hotelId=${hotel.id})}" type="button" class="btn btn-default active" style="font-size:18px;line-height:35px;border-radius: 0px">房型房价</a>
+	  </div>
+	  <!-- 
+	  <div class="btn-group" role="group">
+	    <a id="bt-3" href="hotel_product.html"  th:href="@{'/site/mobile/web/'+${siteCode}+'/hotel/product'}"  type="button" class="btn btn-default">推荐</a>
+	  </div>
+	   -->
+  </div>
+  <!-- 客栈3选按钮结束 -->
+	<div id="date_btn" class="btn-group btn-group-justified" role="group">
+	  <div class="btn-group" role="group">
+	    <div class="btn btn-default dateTime-select" style="font-size:16px;border: 1px solid #ccc;">
+	    	<div id="dateTime-select-start" style="position:absolute;float:left;width:100%;height:100%"></div>
+	     	<span class="mcolor">入住时间<span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span></span>
+	     	<br/><span id="select-start-date">2015/11/02</span>（<span id="select-start-week">周一</span>）
+	    </div>
+	  	<input type="hidden" id="start-date" th:value="${startDate}"/>
+	  </div>
+	  <div class="btn-group" role="group" >
+   		 <div class="btn btn-default"  style="font-size:16px;border: 1px solid #ccc;border-left: 0px solid #ccc">
+   		 	<div id="dateTime-select-end" style="position:absolute;float:left;width:100%;height:100%"></div>
+   		   <span class="mcolor">离店时间<span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span></span><br/><span id="select-end-date">2015/11/02</span>（<span id="select-end-week">周二</span>）</div>
+	  	   <input type="hidden" id="end-date" th:value="${endDate}"/>
+	  </div>
+	</div>
+    <div th:each="houseType:${roomTypeSet}" class="innthumb col-sm-12 thumbnail" style="margin-bottom:0px;padding:0px;">
+     <div  class="default-background-1">
+       <div class="slider-controls" data-snap-ignore="true">                
+           <div th:each="resource:${houseType.getImages()}">
+               <img src="../../../../../resources/mobile/images/kezhan.png" th:src="@{${ResourceUtil.getPath(resource,'/resources/mobile/images/kezhan.png')}}" class="responsive-image"/>
+           </div>
+        </div>
+	  </div>
+      <div class="caption" style="padding:9px 9px 2px 9px">
+	      <h3 th:text="${houseType.name}">101海景露台标间</h3>
+	      <h3 class="price">¥<span th:text="${houseType.readCurrentPrice()}">498</span>元</h3>
+	      <a class="order_btn" href="hotel_order.html" th:href="@{'/site/mobile/web/'+${siteCode}+'/hotel/order'(houseTypeId=${houseType.id},startDate=${#dates.format(startDate,'yyyy-MM-dd')},endDate=${#dates.format(endDate,'yyyy-MM-dd')})}">预定</a>
+      </div>
+    </div>
+  </div>
+	<!-- 结束主体内容 -->
+	</div>
+</div>
+
+	<div id="footer" th:include="site/mobile/web/fragment/navFragment :: navTab(2)">
+			<div class="btn-group btn-group-justified" role="group">
+				<div class="btn-group" role="group">
+					<a href="index.html" type="button" class="btn btn-default"> <i
+						class="glyphicon glyphicon-home"></i> <br/>主页
+					</a>
+				</div>
+				<div class="btn-group" role="group">
+					<a href="zb.html" type="button" class="btn btn-default"> <i
+						class="glyphicon glyphicon-map-marker"></i> <br/>周边
+					</a>
+				</div>
+				<div class="btn-group" role="group">
+					<a href="my.html" type="button" class="btn btn-default"> <i
+						class="glyphicon glyphicon-user"></i> <br/>我的
+					</a>
+				</div>
+			</div>
+	</div>
+</body>
+</html>

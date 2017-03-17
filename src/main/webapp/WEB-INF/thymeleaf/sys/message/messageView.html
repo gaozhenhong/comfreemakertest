@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>消息查看---查看</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+	</head>
+
+	<body style="background-color: white;">
+		<div class="message-header clearfix">
+			<div class="pull-left">
+				<span class="blue bigger-125" th:text="${instance.messageTitle}"> 标题 </span>
+
+				<div class="space-4"></div>
+
+				<i class="icon-star orange2 mark-star"></i>
+
+				&nbsp;
+				<img class="middle" alt="John's Avatar" th:src="@{${instance.sentPerson}?'/uploadFile/portrait/'+${instance.sentPerson.logoId}+'.jpg':'/resources/images/default.jpg'}" width="32" />
+				&nbsp;
+				<a href="#" class="sender" th:text="${instance.sentPerson.name}" style="padding-left:10px;">John Doe</a>
+
+				&nbsp;
+				<i class="icon-time bigger-110 orange middle"></i>
+				<span class="time" th:text="${#dates.format(instance.sentTime,'yy-MM-dd HH:ss')}">Today, 7:15 pm</span>
+			</div>
+
+			<div class="action-buttons pull-right">
+			<!-- LCY_TODO 处理转发 -->
+				<a href="#">
+					<i class="icon-reply green icon-only bigger-130"></i>
+				</a>
+
+				<a href="#">
+					<i class="icon-mail-forward blue icon-only bigger-130"></i>
+				</a>
+
+				<a th:href="@{/sys/message/deleteAction.do(id=${instance.id})}">
+					<i class="icon-trash red icon-only bigger-130"></i>
+				</a>
+			</div>
+		</div>
+
+		<div class="hr hr-double"></div>
+		<div class="message-body" th:utext="${instance.message}" >
+			<p ></p>
+		</div>
+		<div th:if="${instance.resourceIds != null and #strings.length(instance.resourceIds) > 0}"  class="hr hr-double"></div>
+		<!-- LCY_TODO 处理附件 -->
+		<div th:if="${instance.resourceIds != null and #strings.length(instance.resourceIds) > 0}"  class="message-attachment clearfix">
+			<div class="attachment-title">
+				<span class="blue bolder bigger-110">附件</span>
+				&nbsp;
+				<span class="grey">(2 个文件，共 4.5 MB)</span>
+
+				<div class="inline position-relative">
+					<a href="#" data-toggle="dropdown" class="dropdown-toggle">
+						&nbsp;
+						<i class="icon-caret-down bigger-125 middle"></i>
+					</a>
+
+					<ul class="dropdown-menu dropdown-lighter">
+						<li>
+							<a href="#">打包下载</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			&nbsp;
+			<ul class="attachment-list pull-left list-unstyled">
+				<li>
+					<a href="#" class="attached-file inline">
+						<i class="icon-file-alt bigger-110 middle"></i>
+						<span class="attached-name middle">Document1.pdf</span>
+					</a>
+
+					<div class="action-buttons inline">
+						<a href="#">
+							<i class="icon-download-alt bigger-125 blue"></i>
+						</a>
+
+						<a href="#">
+							<i class="icon-zoom-in bigger-125 red"></i>
+						</a>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</body>
+</html>

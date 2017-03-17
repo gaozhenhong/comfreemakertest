@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	 	<meta charset="utf-8" />
+		<title>订单管理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		 
+	 	<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+	 	<link th:href="@{/resources/ace/css/chosen.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+	<body style="background-color: white;">
+		<div class="page-content">
+			<!-- PAGE CONTENT BEGINS -->
+			<div class="row">
+				<div class="col-xs-12">
+					<div id="top-tabbable" class="tabbable">
+						<ul th:include="order/myOrder/orderTabFragment :: myOrderTab('myWaitForConfirmOrderList')"
+							class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab"></ul>
+						<div class="tab-content padding-4">
+							<div id="tab-list" class="tab-pane in active" style="margin-left:-4px;margin-right:-4px;">
+								<form id="queryForm"  action="#" th:action="@{/order/myOrder/myWaitForConfirmOrderList.do}" th:object="${query}" class="form-horizontal" role="form">
+									<input type="hidden"  th:field="${query.currentPage}"/>
+									<input type="hidden"  th:field="${query.orderByProperty}"/>
+									<input type="hidden"  th:field="${query.orderByKind}"/>
+									<div class="query-container">
+										<div class='input-group'>
+											<span class='input-group-addon'>我的客栈：</span>
+											<select th:field="${query.hotelId}" class="chosen-select" style="width:160px;" >
+												<option value=""> 全部</option>
+												<option th:each="hotel : ${hotelList}" th:value="${hotel.id}" th:text="${hotel.name}"> </option>
+											</select>
+										</div>
+										<div class='input-group'>
+											<span class='input-group-addon'>订单编号：</span>
+											<input type='text' th:field='${query.orderCode}' placeholder='订单编号' />
+										</div>
+										<div class='input-group'>
+											<span class='input-group-addon'>支付状态：</span>
+											<select th:field='${query.payStatus}' class="chosen-select" style="width:80px;" >
+												<option value=""> 全部</option>
+												<option th:each="payStatus : ${PayStatus.values()}" th:value="${payStatus}" th:text="${payStatus.label}"> 未支付</option>
+											</select>
+										</div>
+										
+										<div class='input-group'>
+											<button class='btn btn-sm' type='submit'>
+												<i class='icon-search nav-search-icon'></i>
+												查询
+											</button>
+										</div>
+									</div>
+									<div class='space-2'></div>
+									<div>
+										<table id="list-table" class="table table-striped table-bordered table-hover" style="margin-bottom: 0px;">
+											<thead>
+												<tr>
+													<th class="center">
+														<label>
+															<input id="checkAll" type="checkbox" class="ace" />
+															<span class="lbl"></span>
+														</label>
+													</th>
+													<th id='orderCode' class="table-order-column">订单编号</th>
+													<th id='orderTime' class="table-order-column">下单时间</th>
+													<th id='totalPrice' class="table-order-column">总价</th>
+													<th id='payStatus' class="table-order-column">支付状态</th>
+													<th id='origin' class="table-order-column">订单来源</th>
+													<th >下单人</th>
+													<th id='isPosted' class="table-order-column">是否结算</th>
+													<th id='status' class="table-order-column">订单状态</th>
+													<th></th>
+												</tr>
+											</thead>
+				
+											<tbody>
+												<tr th:each="obj:${list}">
+													<td class="center">
+														<label>
+															<input type="checkbox" name="rowId" th:value="${obj.id}" class="ace" />
+															<span class="lbl"></span>
+														</label>
+													</td>
+													<td th:text="${obj.orderCode}">订单编号</td>
+													<td th:text="${#dates.format(obj.orderTime,'yy-MM-dd HH:mm')}">下单时间</td>
+													<td >
+														<i class="icon-jpy"></i>
+														<span th:text="${obj.totalPrice}"></span>
+													</td>
+													<td >
+														<div th:text="${obj.payStatus.label}" style="float:left;margin-right:10px;"></div>
+														<div th:if="${obj.totalPrice gt obj.payPrice}" style="float:left;">
+													        <span th:text="${'欠 '+( obj.totalPrice - obj.payPrice)}" class="label label-bigger label-danger">还有欠款</span>
+													    </div>
+													    <div th:if="${obj.totalPrice lt obj.payPrice}" style="float:left;">
+													        <span class="label" th:text="${'退 '+(obj.totalPrice - obj.payPrice)}">还需要退款</span>
+													    </div>
+													</td>
+													<td >
+														<span th:text="${DictionaryUtil.getOptionName(obj.origin).name}">自来客</span>
+														<span th:if="${obj.origin == Freego AND #strings.isEmpty(obj.originDetails)}" class="label" > 自来单 </span>
+														<div th:if="${obj.origin == Freego AND  not #strings.isEmpty(obj.originDetails)}">
+															<span class="label label-info arrowed-in-right arrowed" th:attr="data-hotelCode=${obj.originDetails}" th:text="${obj.originDetails}"> </span>
+														</div>
+													</td>
+													<td >
+														<span th:text="${obj.orderName}"></span>
+														<span th:text="${obj.orderTelephone}"></span>
+														<span th:if="${obj.memberId}">
+															<a th:href="@{/member/manager/view.do(id=${obj.memberId})}" class="open-a" title="会员信息">
+															<span th:text="${'会员ID：'+obj.memberId}"></span>
+															</a>
+														</span>
+													</td>
+													<td >
+														<div  th:if="${obj.origin == Freego}" th:switch="${obj.isSettlement}">
+													        <span th:case="1" >已结算</span>
+													        <span th:case="*" class="label label-sm label-danger">未结算</span>
+													    </div>
+													</td>
+													<td >
+														<div th:switch="${obj.status}">
+													        <span th:case="${OrderStatus.RESERVATION}" class="label label-sm label-danger" th:text="${obj.status.label}">申请预定</span>
+													        <span th:case="${OrderStatus.CONFIRM}" class="label label-sm label-success" th:text="${obj.status.label}">已确认</span>
+													        <span th:case="${OrderStatus.CHECKIN}" class="label label-sm label-" th:text="${obj.status.label}">已入住</span>
+													        <span th:case="${OrderStatus.CLOSED}" class="label label-sm" th:text="${obj.status.label}">已退房</span>
+													        <span th:case="${OrderStatus.CANCEL_RESERVATION}" class="label label-sm" th:text="${obj.status.label}">已取消</span>
+													        <span th:case="${OrderStatus.REJECT}" class="label label-sm" th:text="${obj.status.label}">已拒绝</span>
+													        <span th:case="${OrderStatus.CANCEL_ORDER}" class="label label-sm label-danger" th:text="${obj.status.label}">退单中</span>
+													        <span th:case="${OrderStatus.REFUND}" class="label label-sm" th:text="${obj.status.label}">已退单</span>
+													    </div>
+													</td>
+													
+													<td >
+														<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons row-action-buttons">
+															
+															<a class="blue cancel-order" data-showIframe="true" data-height="500" data-rel="tooltip" title="订单处理"
+																th:href="@{/order/payRecord/list.do(orderId=${obj.id})}" 
+																th:attr="data-orderId=${obj.id}">
+																<i class="icon-gears bigger-130"></i>
+															</a>
+															
+															<a class="blue show-a" th:href="@{/order/view.do(id=${obj.id},isModal=false)}" data-rel="tooltip" title="查看">
+																<i class="icon-zoom-in bigger-130"></i>
+															</a>
+									
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div class="wiwi-pagination">
+										<div  th:if="${UserUtil.isAdminByLoginName(user.loginName)}" class="batch_button_div">
+											<button class="btn btn-primary btn-xs batch_operate_button" type="button" th:attr="data-action=@{/order/batchDeleteAction.do}" >删除</button>
+										</div>
+										<ul th:replace="fragment :: pagination">
+										</ul>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+		</div><!-- /.page-content -->
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		
+		<!-- choose -->
+		<script th:src="@{/resources/ace/js/chosen.jquery.min.js}"></script>
+		
+		<!-- 表格排序 分页绑定JS --> 
+		<script th:src="@{/resources/jsoil/js/jsoil.common.table.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			jQuery(function($){
+				getCommentHotelName(getAllCommentHotelCode());
+				
+				
+				/*预定房间则可以确认*/
+				$('.cancel-order').on('click', function (e) {
+					e.preventDefault();
+			    		var $_this = this,
+			            $this = $($_this),
+			            orderId = $this.attr("data-orderId");
+			    		//alert(orderDate);
+			    		var href = [[@{/order/view.do}]];
+			    		href = href +"?id="+orderId;
+			    		//alert(href);
+			    		var otherButtons ,otherButtonStyles ;
+			    		$.teninedialog({
+			
+			    	        title : "订单详情",
+			    	        css: 'width:700px;height:400px;',
+			    	        content: '',//
+			    	        url: href,//不支持跨域，如果url不为空，就会加载url的内容，content的内容忽略
+			
+			    	        	showIframe : true,//是否是以iframe的模式打开
+			    	        showCloseButton: true,
+			    	        otherButtons: ["确认留房","取消订单"],
+			    	        otherButtonStyles: ["btn-primary pull-left","pull-left"],
+			    	        bootstrapModalOption:{keyboard: true},
+			    	        clickButton:function(sender,modal,index){
+				    	        	if(index == 0){
+				    	        		//如果选择确认留房按钮
+				    	        		confirmOrder(orderId);
+				    	        	}else if(index == 1){
+				    	        		//如果选择重新分配房间按钮
+				    	        		rejectOrder(orderId);
+				    	        	}
+			    	            $(this).closeDialog(modal);
+			    	        }
+			    	        
+			    	    });
+		        });
+				
+			});
+		
+		
+		//办理房间确认
+		function confirmOrder(orderId){
+			var href = [[@{/order/myOrder/confirmOrderAction.do}]];
+	    		href = href +"?orderId="+orderId;
+	    		
+	    		$.ajax({
+				url: href, 
+				context: document.body, 
+				type : "GET", 
+			    dataType:"text",
+			    contentType:'application/json;charset=UTF-8',
+			    data : {
+			    		"orderId": orderId
+			    },
+				success: function(resultData){
+					window.location.reload();
+	      		},
+			    error:function(xhr,status,error){
+			    	  	alert("确认失败，请检查！error="+error);
+			    	  	return false;
+			    }
+			});
+		}
+		
+		//拒绝订单
+		function rejectOrder(orderId){
+			var confirm = window.confirm("确认要取消订单么？");
+			if(!confirm){return };
+			var href = [[@{/order/myOrder/rejectOrderAction.do}]];
+	    		href = href +"?orderId="+orderId;
+	    		
+	    		$.ajax({
+				url: href, 
+				context: document.body, 
+				type : "GET", 
+			    dataType:"text",
+			    contentType:'application/json;charset=UTF-8',
+			    data : {
+			    		"orderId": orderId
+			    },
+				success: function(resultData){
+					window.location.reload();
+	      		},
+			    error:function(xhr,status,error){
+			    	  	alert("取消订单失败，请检查！error="+error);
+			    	  	return false;
+			    }
+			});
+		}
+		
+		
+		function getAllCommentHotelCode(){
+			var hotelCodes = "";
+			$("[data-hotelCode]").each(function (e){
+				hotelCodes = hotelCodes + ","+$(this).attr("data-hotelCode");
+			});
+			return hotelCodes;
+		}
+
+		function getCommentHotelName(hotelCodes){
+				var href=[[@{/hotel/getCommentHotels.do}]];
+				$.ajax({
+					url: href, 
+					context: document.body, 
+					type : "POST", 
+				    dataType:"json",
+				    contentType:'application/json;charset=UTF-8',
+				    data : JSON.stringify({
+				    		"hotelCodes": hotelCodes
+				    }),
+					success: function(resultData){
+						//alert("推荐客栈数=="+resultData.length);
+						if( resultData.length > 0){
+							for(var i = 0;i < resultData.length;i++){
+								$("[data-hotelCode='"+resultData[i].code+"']").each(function (index){
+									$(this).text(resultData[i].name);
+								});
+							}
+						}
+		      		},
+				    error:function(xhr,status,error){
+				    		$(".message-tab").text("读取来源客栈信息失败，请检查！error="+error);
+				    	  	return false;
+				    }
+				});
+			}
+		
+		/*]]>*/
+		</script>
+	</body>
+</html>

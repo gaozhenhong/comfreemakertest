@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	 	<meta charset="utf-8" />
+		<title>用户</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		 
+	 	<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+	<body style="background-color: white;">
+		<div class="page-content">
+			<!-- PAGE CONTENT BEGINS -->
+			<div class="row">
+				<div class="col-xs-12" >
+					<div class="tabbable">
+						<ul  class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab" >
+							<li th:class="active">
+								<a href="#" th:text="'用户列表'">列表</a>
+							</li>
+							<li >
+								<a class="open-a" data-showIframe="true" th:href="@{/myHotel/notHotelUserList.do(hotelId=${hotel.id})}">添加</a>
+							</li>
+							<li style="float: right !important;" class="btn-info">
+								<a style="background-color: transparent;" class="pull-right" th:href="@{/myHotel/list.do}" data-rel="tooltip" data-placement="left"  title="返回">
+									<i class="icon-arrow-left btn-info bigger-120"></i>
+								</a>
+							</li>
+							<li class="message-tab">
+								<span th:text="${operationMessage}"></span>
+							</li>
+						</ul>
+						<div class="tab-content padding-4">
+							<div class="tab-pane in active">
+								<form id="queryForm"  action="#" th:action="@{/myHotel/myHotelUserList.do}" th:object="${query}" class="form-horizontal" role="form">
+									<input type="hidden"  th:field="${query.currentPage}"/>
+									<input type="hidden"  th:field="${query.orderByProperty}"/>
+									<input type="hidden"  th:field="${query.orderByKind}"/>
+									<input type="hidden"  th:field="${query.groupId}"/>
+									<input type="hidden"  th:field="${query.status}"/>
+									<input type="hidden"  name="hotelId" th:value="${hotel.id}"/>
+									
+									<div class="container">
+										<div class="row">
+											<div class='col-sm-3'>
+												昵称：<input type='text' th:field='${query.name}' placeholder='昵称' />
+											</div>
+											<div class='col-xs-3'>
+												登录名：<input type='text' th:field='${query.loginName}' placeholder='登录名' />
+											</div>
+											<div class='col-xs-3'>
+												电话：<input type='text' th:field='${query.telephone}' placeholder='电话' />
+											</div>
+											<div class='col-xs-1  no-padding-left' style='text-align: left;'>
+												<button class='btn btn-sm' type='submit'>
+													<i class='icon-search nav-search-icon'></i>
+													查询
+												</button>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<div>
+						<table id="list-table" class="table table-striped table-bordered table-hover" style="margin-bottom: 0px;">
+							<thead>
+								<tr>
+									<th class="center">
+										<label>
+											<input id="checkAll" type="checkbox" class="ace" />
+											<span class="lbl"></span>
+										</label>
+									</th>
+									<th id='name' class='table-order-column'>昵称</th>
+									<th id='loginName' class='table-order-column'>登录名</th>
+									<th id='telephone' class='table-order-column'>电话</th>
+									<th></th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr th:each="obj:${userList}">
+									<td class="center">
+										<label>
+											<input type="checkbox" name="rowId" th:value="${obj.id}" class="ace" />
+											<span class="lbl"></span>
+										</label>
+									</td>
+									<td th:text='${obj.name}'>字段内容</td>
+									<td th:text='${obj.loginName}'>字段内容</td>
+									<td th:text='${obj.telephone}'>字段内容</td>
+
+									<td th:fragment="actionTd(baseUrl,haveView,haveEdit,haveDelete)">
+										<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons row-action-buttons">
+											<a class="blue open-a" th:href="@{/sys/user/view.do(id=${obj.id},idModal=true)}" title="用户查看">
+												<i class="icon-zoom-in bigger-130"></i>
+											</a>
+					
+											<a class="red row_del_button" th:href="@{/sys/group/removeUserFromGroupAction.do(ids=${obj.id},hotelId=${hotel.id})}">
+												<i class="icon-trash bigger-130"></i>
+											</a>
+										</div>
+					
+										<div class="visible-xs visible-sm hidden-md hidden-lg">
+											<div class="inline position-relative">
+												<button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown">
+													<i class="icon-caret-down icon-only bigger-120"></i>
+												</button>
+					
+												<ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">
+													<li>
+														<a th:href="@{/sys/user/view.do(id=${obj.id},idModal=true)}" class="tooltip-info open-a" data-rel="tooltip" title="View">
+															<span class="blue">
+																<i class="icon-zoom-in bigger-120"></i>
+															</span>
+														</a>
+													</li>
+					
+													<li>
+														<a th:href="@{/sys/group/removeUserFromGroupAction.do(ids=${obj.id},hotelId=${hotel.id})}" class="tooltip-error row_del_button" data-rel="tooltip" title="Delete">
+															<span class="red">
+																<i class="icon-trash bigger-120"></i>
+															</span>
+														</a>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</td>
+					
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="wiwi-pagination">
+						<div class="batch_button_div">
+							<button  class="btn btn-primary btn-xs batch_operate_button" type="button" 
+							th:attr="data-action=@{/sys/group/removeUserFromGroupAction.do(hotelId=${hotel.id})}" title="确定要把这些用户从该客栈中移除吗？">从该客栈中移除</button>
+						</div>
+						<ul th:replace="fragment :: pagination">
+						</ul>
+					</div>
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+		</div><!-- /.page-content -->
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		<!-- 表格排序 分页绑定JS --> 
+		<script th:src="@{/resources/jsoil/js/jsoil.common.table.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		 jQuery(function($) {
+	        $('#addUserToGroupButton').on('click', function (e) {
+		    		e.preventDefault();
+		    		var $_this = this,
+		            $this = $($_this),
+		            href = $this.prop('href');
+		    		$.teninedialog({
+		
+		    	        title:'未添加到该用户组的用户',
+		    	        css: 'width:800px;height:350px;',
+		    	        content:'',//
+		    	        url:href,//不支持跨域，如果url不为空，就会加载url的内容，content的内容忽略
+		    	        showIframe : true,
+		
+		    	        showCloseButton:true,
+		
+		
+		    	        bootstrapModalOption:{keyboard: true},
+		
+		    	        dialogShow:function(){
+		    	        },
+		
+		    	        dialogShown:function(){
+		    	        },
+		
+		    	        dialogHide:function(){
+		    	        },
+		
+		    	        dialogHidden:function(){
+		    	        }                 
+		    	    });
+	    		
+	        });
+	    });
+		           
+		/*]]>*/
+		</script>
+	</body>
+</html>

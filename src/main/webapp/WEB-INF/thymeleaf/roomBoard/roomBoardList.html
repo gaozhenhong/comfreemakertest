@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>房态</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		<link th:href="@{/resources/ace/css/fullcalendar.css}" rel="stylesheet" />
+		<link th:href="@{/resources/project/css/room.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+		<style>
+		.modal-header{
+			padding:5px 0px 5px 15px;
+		}
+		
+		.modal-footer{
+			padding-top:5px;
+			padding-bottom: 5px;
+		}
+		</style>
+	</head>
+
+	<body>
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+				<div class="main-content" style="margin-left:5px;">
+					<div  th:if="${not #lists.isEmpty(myHotelList)}" id="top-tabbable" class="tabbable">
+						<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab" >
+							<li th:each="hotelCyc : ${myHotelList}"
+							 th:class="${(hotelCyc.id == hotel.id)?'active':''}">
+								<a th:href="@{/roomBoard/list.do(hotelId=${hotelCyc.id},dayNumber=10)}" th:text="${hotelCyc.name}">客栈名称</a>
+							</li>
+							<li th:if="${modal=='normal'}" class="message-tab">
+								<a class="blue pull-right" style="padding-left:10px;" th:href="@{/myHotel/list.do}" data-rel="tooltip" data-placement="left"  title="返回">
+									<i class="icon-arrow-left bigger-120"></i>
+								</a>
+							</li>
+							<li class="message-tab">
+								<span th:text="${operationMessage}"></span>
+							</li>
+						</ul>
+						<div class="tab-content padding-4">
+							<div id="tab-list" class="tab-pane in active" style="margin-left:-4px;margin-right:-4px;">
+								<div class="row" th:include="roomBoard/roomBoardListFragment :: roomBoard">
+								</div><!-- /.row -->
+							</div>
+						</div>
+					</div>
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+		</div><!-- /.main-container -->
+	
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		
+		<!-- 表格排序 分页绑定JS --> 
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+		
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			jQuery(function($){
+				getVacantRoomNumber();
+				
+				$('.fc-room').on('click', function (e) {
+			    		e.preventDefault();
+			    		//alert("fc-day");
+			    		if($(this).hasClass("fc-past")){
+						return true;
+					}
+			    		$(this).toggleClass("fc-day-selected");
+			    		
+		        });
+				/*空白房间则可以预定*/
+				$('.fc-room').on('dblclick', function (e) {
+					e.preventDefault();
+					$(this).addClass("fc-day-selected");
+			    		var $_this = this,
+			            $this = $($_this);
+			    		var roomTypeIdArray = new Array();
+			    		var roomIdArray = new Array();
+			    		var orderDateArray = new Array();
+	    	        		$('.fc-day-selected').each(function (){
+	    	        			roomTypeIdArray.push($(this).attr('data-roomType'));
+	    	        			roomIdArray.push($(this).attr('data-room'));
+	    	        			orderDateArray.push($(this).attr('data-date'));
+	    	        		});
+	    	        		
+			    		reservation(roomIdArray,roomTypeIdArray,orderDateArray);
+		        });
+				
+				/*预定房间则可以确认*/
+				$('.fc-reservation').on('click', function (e) {
+					e.preventDefault();
+			    		var $_this = this,
+			            $this = $($_this),
+			            orderId = $this.attr("data-orderId"),
+			            reservationRoomId = $this.attr("data-reservationRoomId"),
+			        		orderDate = $this.closest("td").attr('data-date');
+			    		//alert(orderDate);
+			    		var href = [[@{/order/view.do(hotelId=${hotel.id})}]];
+			    		href = href +"&id="+orderId;
+			    		//alert(href);
+			    		var otherButtons ,otherButtonStyles ;
+			    		$.teninedialog({
+			
+			    	        title : "订单详情",
+			    	        css: 'width:700px;height:400px;',
+			    	        content: '',//
+			    	        url: href,//不支持跨域，如果url不为空，就会加载url的内容，content的内容忽略
+			
+			    	        	showIframe : true,//是否是以iframe的模式打开
+			    	        showCloseButton: true,
+			    	        otherButtons: ["确认留房","修改订单"],
+			    	        otherButtonStyles: ["btn-primary pull-left","btn-primary pull-left"],
+			    	        bootstrapModalOption:{keyboard: true},
+			    	        clickButton:function(sender,modal,index){
+				    	        	if(index == 0){
+				    	        		//如果选择确认留房按钮
+				    	        		confirmOrder(orderId);
+				    	        	}else if(index == 1){
+				    	        		//如果选择重新分配房间按钮
+				    	        		reapportion(orderId);
+				    	        	}
+			    	            $(this).closeDialog(modal);
+			    	        }
+			    	        
+			    	    });
+		        });
+				
+				/*已确认房间可办理入住*/
+				$('.fc-confirm').on('click', function (e) {
+					e.preventDefault();
+			    		var $_this = this,
+			            $this = $($_this),
+			            orderId = $this.attr("data-orderId"),
+			            reservationRoomId = $this.attr("data-reservationRoomId"),
+			            orderOrigin = $this.attr("data-orderOrigin"),
+			        		orderDate = $this.closest("td").attr('data-date');
+			    		//alert(orderDate);
+			    		var href = [[@{/order/view.do(hotelId=${hotel.id})}]];
+			    		href = href +"&id="+orderId;
+			    		//alert(href);
+			    		var buttonsArray = new Array();
+			    		var buttonsStylesArray = new Array();
+			    		if(orderDate == [[${#dates.format(#dates.createToday(),'yyyy-MM-dd')}]]){
+			    			buttonsArray.push("办理入住") ;
+			    			buttonsStylesArray.push("btn-primary pull-left");
+			    		}
+			    		if(orderOrigin != "orderOrigin#freego"){
+			    			buttonsArray.push( "删除") ;
+			    			buttonsStylesArray.push("pull-left");
+			    		}
+			    		$.teninedialog({
+			    	        title : "订单详情",
+			    	        css: 'width:700px;height:400px;',
+			    	        content: '',//
+			    	        url: href,//不支持跨域，如果url不为空，就会加载url的内容，content的内容忽略
+			    	        	showIframe : true,//是否是以iframe的模式打开
+			    	        showCloseButton: true,
+			    	        otherButtons: buttonsArray,
+			    	        otherButtonStyles: buttonsStylesArray,
+			    	        bootstrapModalOption:{keyboard: true},
+			    	        clickButton:function(sender,modal,index){
+			    	        		//因为按钮会根据上面 的逻辑有变化 ，所以下面采用按钮名称来处理，而不是序号	
+			    	        		var buttonName = sender.text();
+			    	        		if(buttonName == "删除"){
+			    	        			deleteOrder(orderId);
+			    	        		}else if(buttonName == "办理入住"){
+			    	        			//如果选择办理入住按钮
+				    	        		checkin(orderId,reservationRoomId);
+			    	        		}
+			    	            $(this).closeDialog(modal);
+			    	        }
+			    	    });
+		        });
+				
+				/*已入住房间可办理退房*/
+				$('.fc-checkin').on('click', function (e) {
+					e.preventDefault();
+			    		var $_this = this,
+			            $this = $($_this),
+			            orderId = $this.attr("data-orderId"),
+			            reservationRoomId = $this.attr("data-reservationRoomId"),
+			        		orderDate = $this.closest("td").attr('data-date');
+			    		//alert(orderDate);
+			    		var href = [[@{/order/view.do(hotelId=${hotel.id})}]];
+			    		href = href +"&id="+orderId;
+			    		$.teninedialog({
+			    	        title : "订单详情",
+			    	        css: 'width:700px;height:400px;',
+			    	        content: '',//
+			    	        url: href,//不支持跨域，如果url不为空，就会加载url的内容，content的内容忽略
+			    	        	showIframe : true,//是否是以iframe的模式打开
+			    	        showCloseButton: true,
+			    	        bootstrapModalOption:{keyboard: true},
+			    	        otherButtons: ["退房"],
+			    	        otherButtonStyles: ["btn-primary pull-left"],
+			    	        clickButton:function(sender,modal,index){
+				    	        	if(index == 0){
+				    	        		//如果选择办理退房按钮
+				    	        		checkout(orderId,reservationRoomId);
+				    	        	}
+			    	            $(this).closeDialog(modal);
+			    	        }
+			    	    });
+		        });
+				
+				
+				/*关闭状态只可查看、可预定*/
+				$('.fc-closed').on('click', function (e) {
+					e.preventDefault();
+			    		var $_this = this,
+			            $this = $($_this),
+			            orderId = $this.attr("data-orderId"),
+			            reservationRoomId = $this.attr("data-reservationRoomId"),
+			        		orderDate = $this.closest("td").attr('data-date');
+			    		//alert(orderDate);
+			    		var href = [[@{/order/view.do(hotelId=${hotel.id})}]];
+			    		href = href +"&id="+orderId;
+			    		var $parentTd = $this.closest("td");
+			    		var roomTypeId = $parentTd.attr("data-roomType") ,
+			            roomId = $parentTd.attr("data-room") ,
+			            	orderDate = $parentTd.attr('data-date');
+			    		$.teninedialog({
+			    	        title : "订单详情",
+			    	        css: 'width:700px;height:400px;',
+			    	        content: '',//
+			    	        url: href,//不支持跨域，如果url不为空，就会加载url的内容，content的内容忽略
+			    	        	showIframe : true,//是否是以iframe的模式打开
+			    	        showCloseButton: true,
+			    	        bootstrapModalOption:{keyboard: true},
+			    	        otherButtons: ["添加订单"],
+			    	        otherButtonStyles: ["btn-primary pull-left"],
+			    	        clickButton:function(sender,modal,index){
+			    	        	if(index == 0){
+			    	        		//如果选择办理入住按钮
+			    	        		reservation(roomId,roomTypeId,orderDate);
+			    	        	}
+		    	            $(this).closeDialog(modal);
+		    	        }
+			    	    });
+		        });
+				
+				
+				/*表格最左上角的时间选择*/
+				$('.fc-page').on('click', function (e) {
+					e.preventDefault();
+			    		var $_this = this,
+			            $this = $($_this),
+			            firstDay = $this.attr("data-date");
+			    		var href = [[@{/roomBoard/list.do(hotelId=${hotel.id},dayNumber=${dayNumber})}]];
+			    		href = href +"&firstDay="+firstDay;
+			    		window.self.location.href = href;
+		        });
+				
+				/*表头显示今天的样式*/
+				$("th[data-date=[[${#dates.format(new java.util.Date(),'yyyy-MM-dd')}]]]").addClass("fc-state-highlight");
+			});
+		
+		
+			function deleteOrder(orderId){
+				var confirm = window.confirm("确认删除本条订单?");
+				if(confirm){
+	    	        		//如果确定删除
+	    	        		var href = [[@{/roomBoard/deleteOrderAction.do(hotelId=${hotel.id})}]];
+			    		href = href +"&orderId="+orderId;
+			    		window.self.location = href;
+	    	        }
+			}
+			//办理房间确认
+			function confirmOrder(orderId){
+				var href = [[@{/roomBoard/confirmOrderAction.do(hotelId=${hotel.id})}]];
+		    		href = href +"&orderId="+orderId;
+		    		window.self.location = href;
+			}
+			//修改订单
+			function reapportion(orderId){
+				var href = [[@{/roomBoard/editOrder.do(hotelId=${hotel.id},modal=${modal})}]];
+		    		href = href +"&orderId="+orderId;
+		    		//alert(href);
+		    		$.teninedialog({
+		    	        title : "修改订单",
+		    	        css: 'width:700px;height:400px;',
+		    	        content: '',//
+		    	        url: href,//不支持跨域，如果url不为空，就会加载url的内容，content的内容忽略
+		    	        	showIframe : true,//是否是以iframe的模式打开
+		    	        showCloseButton:true,
+		    	        bootstrapModalOption:{keyboard: true},
+		    	    });
+			}
+			
+		
+			//办理房间预定
+			function reservation(roomIdArray,roomTypeIdArray,orderDateArray){
+				var href = [[@{/roomBoard/addOrder.do(hotelId=${hotel.id},modal=${modal})}]];
+				href = href + "&roomId=" + roomIdArray+"&roomTypeId="+roomTypeIdArray+"&consumeBeginDate="+orderDateArray;
+		    		//alert(href);
+		    		//alert("roomTypeIdArray="+roomTypeIdArray);
+		    		$.teninedialog({
+		    	        title : "预定",
+		    	        css: 'width:700px;height:400px;',
+		    	        content: '',//
+		    	        url: href,//不支持跨域，如果url不为空，就会加载url的内容，content的内容忽略
+		    	        	showIframe : true,//是否是以iframe的模式打开
+		    	        showCloseButton:true,
+		    	        bootstrapModalOption:{keyboard: true},
+		    	    });
+			}
+			
+			//办理登记入住手续
+			function checkin(orderId,reservationRoomId){
+				var href=[[@{/roomBoard/checkin.do(hotelId=${hotel.id},modal=${modal})}]];
+				href = href + "&orderId=" + orderId+"&reservationRoomId="+reservationRoomId
+				$.teninedialog({
+					
+		    	        title : "登记入住",
+		    	        css: 'width:700px;height:400px;',
+		    	        content: '',//
+		    	        url: href,//不支持跨域，如果url不为空，就会加载url的内容，content的内容忽略
+		
+		    	        	showIframe : true,//是否是以iframe的模式打开
+		    	        		 
+		    	        showCloseButton: true,
+		    	        
+		    	        bootstrapModalOption:{keyboard: true}
+		    	    });
+			}
+			//办理退房手续
+			function checkout(orderId,reservationRoomId){
+				var href=[[@{/roomBoard/checkout.do(hotelId=${hotel.id},modal=${modal})}]];
+				href = href + "&orderId=" + orderId+"&reservationRoomId="+reservationRoomId
+				$.teninedialog({
+		    	        title : "退房",
+		    	        css: 'width:700px;height:400px;',
+		    	        content: '',//
+		    	        url: href,//不支持跨域，如果url不为空，就会加载url的内容，content的内容忽略
+		    	        	showIframe : true,//是否是以iframe的模式打开
+		    	        showCloseButton: true,
+		    	        bootstrapModalOption:{keyboard: true}
+		    	    });
+			}
+			
+			function getVacantRoomNumber(){
+				var baseHref = [[@{/hotel/getHotelVacantRoomNumberOnDate.do(hotelId=${hotel.id})}]];
+				$("[data-vacantRoomNumber]").each(function (e){
+					var dateStr = $(this).attr("data-vacantRoomNumber");
+					var vacantRoomObj = $(this);
+					var href = baseHref + "&currentDate=" + dateStr;
+					//alert(e+"=="+href);
+					$.ajax({
+						url: href, 
+						context: document.body, 
+						type : "POST", 
+					    dataType:"text",
+					    contentType:'application/json;charset=UTF-8',
+					    data :{},
+						success: function(resultDataText){
+							var resultData = JSON.parse(resultDataText);
+							//alert("空房间数=="+resultData);
+							vacantRoomObj.text(resultData);
+			      		},
+					    error:function(xhr,status,error){
+					    		$(".message-tab").text("读取客栈某一时间段的空房间数量失败，请检查！error="+error);
+					    	  	return false;
+					    }
+					});
+				});
+			}
+			
+		/*]]>*/
+		</script>
+	</body>
+</html>

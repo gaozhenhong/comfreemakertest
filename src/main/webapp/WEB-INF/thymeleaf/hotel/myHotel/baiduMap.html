@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<style type="text/css">
+		body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+	</style>
+	<title>地址解析</title>
+</head>
+<body>
+	<div id="allmap"></div>
+
+<script th:src="@{http://api.map.baidu.com/api(v=2.0,ak=jnS1ccPEB8FFoFFu89RURUjQ)}"></script>
+<script th:inline="javascript">
+/*<![CDATA[*/
+	function getPoint(){
+		var address = parent.document.getElementById('address').value;
+		//经度
+		var longitude = parent.document.getElementById('longitude');
+		//纬度
+		var latitude = parent.document.getElementById('latitude');
+	
+		var map = new BMap.Map("allmap");
+		var point = new BMap.Point(116.331398,39.897445);
+		map.centerAndZoom(point,12);
+		// 创建地址解析器实例
+		var myGeo = new BMap.Geocoder();
+		// 将地址解析结果显示在地图上,并调整地图视野
+		myGeo.getPoint(address, function(point){
+			if (point) {
+				map.centerAndZoom(point, 16);
+				map.addOverlay(new BMap.Marker(point));
+				longitude.value = point.lng;
+				latitude.value = point.lat;
+			}else{
+				alert("您选择地址没有解析到结果!");
+			}
+		}, address);
+	}
+	getPoint();
+/*]]>*/
+</script>
+</body>
+</html>

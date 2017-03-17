@@ -1,0 +1,324 @@
+<krpano onstart="startup();">
+	<!-- <include url="%SWFPATH%/jove/720.xml" /> -->
+
+	<action name="startup" autorun="onstart">
+		init();if(startscene === null, copy(startscene,scene[0].name));loadscene(get(startscene), null, MERGE);copy(startscene,scene[1].name);showlog(false);
+	</action>
+	<scene name="scene_preview">
+		<view hlookat="73.604" vlookat="28.673" fovtype="MFOV" fov="95.000" maxpixelzoom="1" fovmin="70" fovmax="120"/>
+
+		<preview url="panos/01.tiles/preview.jpg" />
+	</scene>
+
+	
+	<scene name="scene_01" title="01" categoryIndex="1"  thumburl="panos/01.tiles/thumb.jpg">
+		<sound enabled="1" is_global="1" url="sound/bg.mp3"/>
+		<view hlookat="73.604" vlookat="28.673" fovtype="MFOV" fov="95.000" maxpixelzoom="1" fovmin="70" fovmax="120"/>
+
+		<preview url="panos/01.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/01.tiles/pano_%s.jpg" />
+			<mobile>
+				<cube url="panos/01.tiles/mobile_%s.jpg" />
+			</mobile>
+		</image>
+
+		<hotspots>
+		<!-- place your scene hotspots here -->
+		
+		<hotspot name="spot1" style="hotspot_44" ath="77.827" atv="30.297" linkedscene="scene_02" />
+		<hotspot name="spot2" style="hotspot_44" ath="43.582" atv="68.135" linkedscene="scene_03" />
+		<hotspot name="spot3" style="hotspot_44" ath="-170.954" atv="60.432" linkedscene="scene_04" />
+		<hotspot name="spot4" style="hotspot_44" ath="69.931" atv="23.185" linkedscene="scene_05" />
+		<hotspot name="spot5" style="hotspot_44" ath="14.882" atv="57.056" linkedscene="scene_06" />
+		<hotspot name="spot6" style="hotspot_44" ath="114.254" atv="41.105" linkedscene="scene_07" />
+		<hotspot name="spot7" style="hotspot_44" ath="54.320" atv="19.136" linkedscene="scene_08" />
+		<hotspot name="spot8" style="hotspot_44" ath="43.585" atv="12.655" linkedscene="scene_09" />
+		<hotspot name="spot9" style="hotspot_44" ath="-64.184" atv="25.883" linkedscene="scene_10" />
+		<hotspot name="spot10" style="hotspot_44" ath="-80.969" atv="14.011" linkedscene="scene_11" />
+		<hotspot name="spot11" style="hotspot_44" ath="-91.697" atv="7.505" linkedscene="scene_12" />
+		<hotspot name="spot12" style="hotspot_44" ath="-107.353" atv="3.113" linkedscene="scene_13" />
+		<hotspot name="spot13" style="hotspot_44" ath="82.809" atv="0.808" linkedscene="scene_14" />
+		</hotspots>
+	</scene>
+
+	<scene name="scene_02" title="02" categoryIndex="1"  thumburl="panos/02.tiles/thumb.jpg">
+		<sound enabled="1" is_global="1" url="sound/bg.mp3"/>
+		<view hlookat="-101.813" vlookat="21.249" fovtype="MFOV" fov="95.000" maxpixelzoom="1" fovmin="70" fovmax="120"/>
+
+		<preview url="panos/02.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/02.tiles/pano_%s.jpg" />
+			<mobile>
+				<cube url="panos/02.tiles/mobile_%s.jpg" />
+			</mobile>
+		</image>
+
+		<hotspots>
+		<!-- place your scene hotspots here -->
+		
+		<hotspot name="spot1" style="hotspot_44" ath="-68.123" atv="8.742" linkedscene="scene_03" />
+		<hotspot name="spot2" style="hotspot_44" ath="-123.001" atv="6.169" linkedscene="scene_07" />
+		</hotspots>
+	</scene>
+
+	<scene name="scene_03" title="03" categoryIndex="1"  thumburl="panos/03.tiles/thumb.jpg">
+		<sound enabled="1" is_global="1" url="sound/bg.mp3"/>
+		<view hlookat="56.731" vlookat="15.255" fovtype="MFOV" fov="95.000" maxpixelzoom="1" fovmin="70" fovmax="120"/>
+
+		<preview url="panos/03.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/03.tiles/pano_%s.jpg" />
+			<mobile>
+				<cube url="panos/03.tiles/mobile_%s.jpg" />
+			</mobile>
+		</image>
+
+		<hotspots>
+		<!-- place your scene hotspots here -->
+		
+		<hotspot name="spot1" style="hotspot_44" ath="70.389" atv="6.493" linkedscene="scene_02" />
+		<hotspot name="spot2" style="hotspot_44" ath="-144.292" atv="12.952" linkedscene="scene_04" />
+		<hotspot name="spot3" style="hotspot_44" ath="122.787" atv="9.044" linkedscene="scene_07" />
+		</hotspots>
+	</scene>
+
+	<scene name="scene_04" title="04" categoryIndex="1"  thumburl="panos/04.tiles/thumb.jpg">
+		<sound enabled="1" is_global="1" url="sound/bg.mp3"/>
+		<view hlookat="15.297" vlookat="59.373" fovtype="MFOV" fov="95.000" maxpixelzoom="1" fovmin="70" fovmax="120"/>
+
+		<preview url="panos/04.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/04.tiles/pano_%s.jpg" />
+			<mobile>
+				<cube url="panos/04.tiles/mobile_%s.jpg" />
+			</mobile>
+		</image>
+
+		<hotspots>
+		<!-- place your scene hotspots here -->
+		
+		<hotspot name="spot1" style="hotspot_44" ath="31.916" atv="9.157" linkedscene="scene_02" />
+		<hotspot name="spot2" style="hotspot_44" ath="97.831" atv="3.376" linkedscene="scene_07" />
+		</hotspots>
+	</scene>
+
+	<scene name="scene_05" title="05" categoryIndex="1"  thumburl="panos/05.tiles/thumb.jpg">
+		<sound enabled="1" is_global="1" url="sound/bg.mp3"/>
+		<view hlookat="0" vlookat="0" fovtype="MFOV" fov="95" maxpixelzoom="1" fovmin="70" fovmax="120"/>
+
+		<preview url="panos/05.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/05.tiles/pano_%s.jpg" />
+			<mobile>
+				<cube url="panos/05.tiles/mobile_%s.jpg" />
+			</mobile>
+		</image>
+
+		<hotspots>
+		<!-- place your scene hotspots here -->
+		
+		<hotspot name="spot1" style="hotspot_44" ath="-105.241" atv="16.522" linkedscene="scene_02" />
+		<hotspot name="spot2" style="hotspot_44" ath="-119.524" atv="1.483" linkedscene="scene_04" />
+		</hotspots>
+	</scene>
+
+	<scene name="scene_06" title="06" categoryIndex="1"  thumburl="panos/06.tiles/thumb.jpg">
+		<sound enabled="1" is_global="1" url="sound/bg.mp3"/>
+		<view hlookat="121.846" vlookat="41.592" fovtype="MFOV" fov="95.000" maxpixelzoom="1" fovmin="70" fovmax="120"/>
+
+		<preview url="panos/06.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/06.tiles/pano_%s.jpg" />
+			<mobile>
+				<cube url="panos/06.tiles/mobile_%s.jpg" />
+			</mobile>
+		</image>
+
+		<hotspots>
+		<!-- place your scene hotspots here -->
+		
+		<hotspot name="spot1" style="hotspot_44" ath="103.047" atv="3.911" linkedscene="scene_02" />
+		<hotspot name="spot2" style="hotspot_44" ath="-164.232" atv="5.732" linkedscene="scene_04" />
+		<hotspot name="spot3" style="hotspot_44" ath="144.899" atv="2.867" linkedscene="scene_07" />
+		</hotspots>
+	</scene>
+
+	<scene name="scene_07" title="07" categoryIndex="1"  thumburl="panos/07.tiles/thumb.jpg">
+		<sound enabled="1" is_global="1" url="sound/bg.mp3"/>
+		<view hlookat="-145.881" vlookat="46.795" fovtype="MFOV" fov="95.000" maxpixelzoom="1" fovmin="70" fovmax="120"/>
+
+		<preview url="panos/07.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/07.tiles/pano_%s.jpg" />
+			<mobile>
+				<cube url="panos/07.tiles/mobile_%s.jpg" />
+			</mobile>
+		</image>
+
+		<hotspots>
+		<!-- place your scene hotspots here -->
+		
+		<hotspot name="spot1" style="hotspot_44" ath="52.491" atv="11.800" linkedscene="scene_02" />
+		<hotspot name="spot2" style="hotspot_44" ath="-36.890" atv="11.382" linkedscene="scene_03" />
+		<hotspot name="spot3" style="hotspot_44" ath="-79.894" atv="6.935" linkedscene="scene_04" />
+		</hotspots>
+	</scene>
+
+	<scene name="scene_08" title="08" categoryIndex="1"  thumburl="panos/08.tiles/thumb.jpg">
+		<sound enabled="1" is_global="1" url="sound/bg.mp3"/>
+		<view hlookat="-209.322" vlookat="53.473" fovtype="MFOV" fov="95.000" maxpixelzoom="1" fovmin="70" fovmax="120"/>
+
+		<preview url="panos/08.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/08.tiles/pano_%s.jpg" />
+			<mobile>
+				<cube url="panos/08.tiles/mobile_%s.jpg" />
+			</mobile>
+		</image>
+
+		<hotspots>
+		<!-- place your scene hotspots here -->
+		
+		<hotspot name="spot1" style="hotspot_44" ath="-164.551" atv="10.602" linkedscene="scene_02" />
+		<hotspot name="spot2" style="hotspot_44" ath="158.188" atv="20.720" linkedscene="scene_05" />
+		</hotspots>
+	</scene>
+
+	<scene name="scene_09" title="09" categoryIndex="1"  thumburl="panos/09.tiles/thumb.jpg">
+		<sound enabled="1" is_global="1" url="sound/bg.mp3"/>
+		<view hlookat="-143.601" vlookat="17.316" fovtype="MFOV" fov="95.000" maxpixelzoom="1" fovmin="70" fovmax="120"/>
+
+		<preview url="panos/09.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/09.tiles/pano_%s.jpg" />
+			<mobile>
+				<cube url="panos/09.tiles/mobile_%s.jpg" />
+			</mobile>
+		</image>
+
+		<hotspots>
+		<!-- place your scene hotspots here -->
+		
+		<hotspot name="spot1" style="hotspot_44" ath="-152.051" atv="13.614" linkedscene="scene_08" />
+		<hotspot name="spot2" style="hotspot_44" ath="-164.112" atv="2.823" linkedscene="scene_05" />
+		</hotspots>
+	</scene>
+
+	<scene name="scene_10" title="10" categoryIndex="1"  thumburl="panos/10.tiles/thumb.jpg">
+		<sound enabled="1" is_global="1" url="sound/bg.mp3"/>
+		<view hlookat="-45.428" vlookat="22.576" fovtype="MFOV" fov="95.000" maxpixelzoom="1" fovmin="70" fovmax="120"/>
+
+		<preview url="panos/10.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/10.tiles/pano_%s.jpg" />
+			<mobile>
+				<cube url="panos/10.tiles/mobile_%s.jpg" />
+			</mobile>
+		</image>
+
+		<hotspots>
+		<!-- place your scene hotspots here -->
+		
+		<hotspot name="spot1" style="hotspot_44" ath="-28.704" atv="-1.050" linkedscene="scene_07" />
+		<hotspot name="spot2" style="hotspot_44" ath="-16.985" atv="2.992" linkedscene="scene_04" />
+		<hotspot name="spot3" style="hotspot_44" ath="115.996" atv="4.514" linkedscene="scene_11" />
+		</hotspots>
+	</scene>
+
+	<scene name="scene_11" title="11" categoryIndex="1"  thumburl="panos/11.tiles/thumb.jpg">
+		<sound enabled="1" is_global="1" url="sound/bg.mp3"/>
+		<view hlookat="-218.162" vlookat="19.718" fovtype="MFOV" fov="95.000" maxpixelzoom="1" fovmin="70" fovmax="120"/>
+
+		<preview url="panos/11.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/11.tiles/pano_%s.jpg" />
+			<mobile>
+				<cube url="panos/11.tiles/mobile_%s.jpg" />
+			</mobile>
+		</image>
+
+		<hotspots>
+		<!-- place your scene hotspots here -->
+		
+		<hotspot name="spot1" style="hotspot_44" ath="-70.288" atv="6.017" linkedscene="scene_10" />
+		</hotspots>
+	</scene>
+
+	<scene name="scene_12" title="12" categoryIndex="1"  thumburl="panos/12.tiles/thumb.jpg">
+		<sound enabled="1" is_global="1" url="sound/bg.mp3"/>
+		<view hlookat="-34.466" vlookat="5.826" fovtype="MFOV" fov="95.000" maxpixelzoom="1" fovmin="70" fovmax="120"/>
+
+		<preview url="panos/12.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/12.tiles/pano_%s.jpg" />
+			<mobile>
+				<cube url="panos/12.tiles/mobile_%s.jpg" />
+			</mobile>
+		</image>
+
+		<hotspots>
+		<!-- place your scene hotspots here -->
+		
+		<hotspot name="spot1" style="hotspot_44" ath="-39.232" atv="-0.996" linkedscene="scene_13" />
+		<hotspot name="spot2" style="hotspot_44" ath="125.897" atv="9.647" linkedscene="scene_11" />
+		<hotspot name="spot3" style="hotspot_44" ath="144.915" atv="2.482" linkedscene="scene_10" />
+		</hotspots>
+	</scene>
+
+	<scene name="scene_13" title="13" categoryIndex="1"  thumburl="panos/13.tiles/thumb.jpg">
+		<sound enabled="1" is_global="1" url="sound/bg.mp3"/>
+		<view hlookat="-122.447" vlookat="23.090" fovtype="MFOV" fov="95.000" maxpixelzoom="1" fovmin="70" fovmax="120"/>
+
+		<preview url="panos/13.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/13.tiles/pano_%s.jpg" />
+			<mobile>
+				<cube url="panos/13.tiles/mobile_%s.jpg" />
+			</mobile>
+		</image>
+
+		<hotspots>
+		<!-- place your scene hotspots here -->
+		
+		<hotspot name="spot1" style="hotspot_44" ath="17.519" atv="-3.523" linkedscene="scene_01" />
+		<hotspot name="spot2" style="hotspot_44" ath="42.870" atv="-4.062" linkedscene="scene_14" />
+		</hotspots>
+	</scene>
+
+	<scene name="scene_14" title="14" categoryIndex="1"  thumburl="panos/14.tiles/thumb.jpg">
+		<sound enabled="1" is_global="1" url="sound/bg.mp3"/>
+		<view hlookat="-36.948" vlookat="38.554" fovtype="MFOV" fov="95.000" maxpixelzoom="1" fovmin="70" fovmax="120"/>
+
+		<preview url="panos/14.tiles/preview.jpg" />
+
+		<image>
+			<cube url="panos/14.tiles/pano_%s.jpg" />
+			<mobile>
+				<cube url="panos/14.tiles/mobile_%s.jpg" />
+			</mobile>
+		</image>
+
+		<hotspots>
+		<!-- place your scene hotspots here -->
+		
+		<hotspot name="spot1" style="hotspot_44" ath="-136.342" atv="-5.236" linkedscene="scene_01" />
+		<hotspot name="spot2" style="hotspot_44" ath="-170.729" atv="-4.932" linkedscene="scene_13" />
+		</hotspots>
+	</scene>
+
+
+</krpano>

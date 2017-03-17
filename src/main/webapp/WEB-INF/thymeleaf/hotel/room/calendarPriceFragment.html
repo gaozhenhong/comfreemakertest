@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>房型客栈</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		<link th:href="@{/resources/ace/css/fullcalendar.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+
+	<body>
+		<div th:fragment="calendarPrice" class="row">
+			<div class="tabbable tabs-left">
+				<ul class="nav nav-tabs" id="myTab3">
+					<li th:each="roomTypeCyc : ${roomTypeList}" th:classappend="${roomTypeCyc.id == roomType.id?'active':''}">
+						<a th:href="@{/hotel/roomType/calendarPriceList.do(hotelId=${hotel.id},roomTypeId=${roomTypeCyc.id})}">
+							<i class="pink icon-dashboard bigger-110"></i>
+							<span th:text='${roomTypeCyc.name}'>标间</span>
+						</a>
+					</li>
+				</ul>
+	
+				<div class="tab-content">
+					<div class="tab-pane in active">
+						<div class='input-group pull-right' style="margin-bottom:5px; margin-top: -10px; float:right;">
+							<span class='input-group-addon'>
+								<i class="icon-calendar bigger-110"></i>
+							</span>
+								 
+							 <a th:each="monthIndex : ${#numbers.sequence(0,11)}"
+							 th:with="monthCyc = ${DateUtils.addMonth(#dates.createToday(),monthIndex)}"
+							 th:href="@{/hotel/roomType/calendarPriceList.do(hotelId=${hotel.id},roomTypeId=${roomType.id},month=${monthCyc})}"
+							 th:classappend='${#dates.format(monthCyc,"yyyy年MM月") == #dates.format(month,"yyyy年MM月") ?"btn-primary":""}'
+							 class="btn" >
+								<span th:text="${#dates.format(monthCyc,'yyyy年MM月')}"></span>
+							</a>
+						</div>
+						
+						<div id="calendar" class="fc fc-ltr">
+							<div class="fc-content" style="position: relative;">
+								<div class="fc-view fc-view-month fc-grid"
+									style="position: relative" unselectable="on">
+									<table class="fc-border-separate" style="width: 100%" cellspacing="0">
+										<thead>
+											<tr class="fc-first fc-last">
+												<th class="fc-day-header fc-sun fc-widget-header fc-first" style="width: 112px; height: 30px;">周一</th>
+												<th class="fc-day-header fc-mon fc-widget-header" style="width: 112px;">周二</th>
+												<th class="fc-day-header fc-tue fc-widget-header" style="width: 112px;">周三</th>
+												<th class="fc-day-header fc-wed fc-widget-header" style="width: 112px;">周四</th>
+												<th class="fc-day-header fc-thu fc-widget-header" style="width: 112px;">周五</th>
+												<th class="fc-day-header fc-fri fc-widget-header" style="width: 112px;">周六</th>
+												<th class="fc-day-header fc-sat fc-widget-header fc-last" style="width: 112px;">周日</th>
+											</tr>
+										</thead>
+										<tbody th:remove="all-but-first">
+											<tr th:each="week : ${#numbers.sequence(1,weeks)}" class="fc-week "
+											th:classappend='${ weekStat.index == 0 ?"fc-first":(weekStat.index == (weeks-1) ?"fc-last":"") }'
+											>
+												<td th:each="dayCyc : ${#numbers.sequence(0,6)}" th:with="day =${DateUtils.addDay(firstDay,dayCyc+(week-1)*7)}"
+													th:class="${'fc-day fc-widget-content '+CalendarUtils.getStyleClass(day)}"
+													th:classappend='${dayCycStat.index == 0 ?"fc-first":(dayCycStat.index == 6 ?"fc-last":"")}'
+													th:attr='data-date=${new java.text.SimpleDateFormat("yyyy-MM-dd").format(day)}'
+													data-date="2015-12-28">
+													<div style="min-height: 93.2px;">
+														<div class="fc-day-number" style="font-size: 16px;" th:text='${#dates.format(day,"MM-dd")}'>28</div>
+														<div class="fc-day-content">
+															<div style="position: relative; height: 0px; font-size: 20px;margin-top:20px;" th:text="${'￥'+roomType.getPrice(day)}">&nbsp;</div>
+														</div>
+														<!-- 
+														<div class="fc-day-config pull-right">
+															<i class="icon-gear"></i>
+														</div>
+														 -->
+													</div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						
+						
+					</div>
+				</div>
+			</div>
+		</div><!-- /.row -->
+		
+	</body>
+</html>

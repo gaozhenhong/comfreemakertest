@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	 	<meta charset="utf-8" />
+		<title>文章管理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		 
+	 	<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+	<body style="background-color: white;">
+		<div class="page-content">
+			<!-- PAGE CONTENT BEGINS -->
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="tabbable">
+						<ul th:include="fragment :: topTab('list','文章管理','/cms/articles/')" class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab" ></ul>
+						<div class="tab-content padding-4">
+							<div class="tab-pane in active">
+								<form id="queryForm"  action="#" th:action="@{/cms/articles/list.do}" th:object="${query}" class="form-horizontal" role="form">
+									<input type="hidden"  th:field="${query.currentPage}"/>
+									<input type="hidden"  th:field="${query.orderByProperty}"/>
+									<input type="hidden"  th:field="${query.orderByKind}"/>
+									<input type="hidden"  name="method" th:value="${method}"/>
+									<div class="container">
+										<div class="row">
+											<div class='col-xs-3'>
+												栏目：<select th:field='${query.type.id}'>
+													<option value="">请选择栏目</option>
+													<option th:each="obj:${typeList}"
+			                         				th:value="${obj.id}" 
+													th:text="${obj.name}"></option>
+												</select>
+											</div>
+											<div class='col-xs-3'>
+												标题：<input type='text' th:field='${query.title}' placeholder='标题' />
+											</div>
+											<div class='col-xs-3'>
+												内容：<input type='text' th:field='${query.content}' placeholder='内容' />
+											</div>
+											<div class='col-xs-3'>
+												状态：<select th:field='${query.status}'>
+													<option value="">请选择状态</option>
+													<option th:each="obj : ${new com.wiwi.jsoil.cms.util.CmsConstants().getStatusValues()}" 
+													th:value="${obj}"
+													th:text="${new com.wiwi.jsoil.cms.util.CmsConstants().getStatusZh(obj)}"></option>
+												</select>
+												
+												<button class='btn btn-sm' type='submit'>
+													<i class='icon-search nav-search-icon'></i>
+													查询
+												</button>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<div>
+						<table id="list-table" class="table table-striped table-bordered table-hover" style="margin-bottom: 0px;">
+							<thead>
+								<tr>
+									<th width="5%" class="center">
+										<label>
+											<input id="checkAll" type="checkbox" class="ace" />
+											<span class="lbl"></span>
+										</label>
+									</th>
+									<th width="10%" id='type' class='table-order-column'>栏目</th>
+									<th width="20%" id='title' class='table-order-column'>标题</th>
+									<th width="10%" id='authorName' class='table-order-column'>录入人</th>
+									<th width="10%" id='source' class='table-order-column'>来源</th>
+									<th width="10%" id='modified' class='table-order-column'>更新时间</th>
+									<th width="10%" id='status' class='table-order-column'>状态</th>
+									<th width="10%" id='hits' class='table-order-column'>点击次数</th>
+									<th width="15%">操作</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr th:each="obj:${list}">
+									<td class="center">
+										<label>
+											<input type="checkbox" name="rowId" th:value="${obj.id}" class="ace" />
+											<span class="lbl"></span>
+										</label>
+									</td>
+									<td th:text='${obj.type.name}'>字段内容</td>
+									<td th:text='${obj.title}'>字段内容</td>
+									<td th:text='${obj.author.name}'>字段内容</td>
+									<td th:text='${obj.source}'>字段内容</td>
+									<!-- <td th:text="*{obj.excerpt == ''} ? ${obj.excerpt} : ${#strings.substring(obj.excerpt,0,10)}">字段内容</td> -->
+									<td th:text="${#dates.format(obj.modified, 'yyyy-MM-dd HH:mm')}">字段内容</td>
+									<td th:text='${obj.statusZh()}'>字段内容</td>
+									<td th:text='${obj.hits}'>字段内容</td>
+									
+									<td >
+										<div style="float:left;margin-left:5px;">
+											<a class="blue" th:href="@{'view.do'(id=${obj.id},method=${method})}">
+												<i class="icon-zoom-in bigger-130"></i>
+											</a>
+											<a th:if="${@articlesService.isShowDeleteIcon(obj.status,obj.author)}"
+											class="red row_del_button" 
+											th:href="@{'deleteAction.do'(id=${obj.id},method=${method})}">
+												<i class="icon-trash bigger-130"></i>
+											</a>
+											<a th:if="${@articlesService.isShowEditIcon(obj.status,obj.author)}"
+											 class="green" th:href="@{'edit.do'(id=${obj.id},method=${method})}">
+												<i class="icon-pencil bigger-130"></i>
+											</a>
+											<a th:if="${@articlesService.isShowCommitIcon(obj.status,obj.author)}" 
+												class="green" 
+												th:href="@{'approveAction.do'(id=${obj.id},status=1,method=${method})}" 
+												title="提交审核">
+												<i class="fa fa-caret-square-o-up bigger-120"></i>
+											</a>
+											<a th:if="${@articlesService.isShowApprovedIcon(obj.status,obj.author,method)}" 
+											class="red"  
+											th:href="@{'approveAction.do'(id=${obj.id},status=3,method=${method})}" 
+												title="审核通过">
+												<i class="fa fa-check bigger-120"></i>
+											</a>
+											<a th:if="${@articlesService.isShowApprovedIcon(obj.status,obj.author,method)}" 
+											class="red" 
+											th:href="@{'approveAction.do'(id=${obj.id},status=2,method=${method})}" 
+												title="审核不通过">
+												<i class="fa fa-times bigger-120"></i>
+											</a>
+											<a th:if="${@articlesService.isShowConcelIcon(obj.status,obj.author,method)}" 
+											class="red" 
+											th:href="@{'approveAction.do'(id=${obj.id},status=1,method=${method})}" 
+												title="取消发布">
+												<i class="fa fa-caret-square-o-down bigger-120"></i>
+											</a>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					
+					<div class="wiwi-pagination">
+						<div class="batch_button_div">
+							<button class="btn btn-primary btn-xs batch_operate_button" type="button" th:attr="data-action=@{/cms/articles/batchDeleteAction.do}" >删除</button>
+						</div>
+						<ul th:replace="fragment :: pagination">
+						</ul>
+					</div>
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+		</div><!-- /.page-content -->
+
+		
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		<!-- 表格排序 分页绑定JS --> 
+		<script th:src="@{/resources/jsoil/js/jsoil.common.table.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+	</body>
+</html>

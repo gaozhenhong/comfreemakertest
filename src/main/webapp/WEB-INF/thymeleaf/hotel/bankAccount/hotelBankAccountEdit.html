@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>企业银行账号管理---修改</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/ul.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+		<style>
+			.dropdown-menu li>a:hover{
+			}
+		</style>
+	</head>
+
+	<body style="background-color: white;">
+		<!-- PAGE CONTENT BEGINS -->
+		<div class="row page-content">
+			<div th:if="not ${  chooseHotel}" class="col-xs-12 tabbable">
+				<div class="well">
+					尊敬的掌柜，你还没有添加任何客栈！
+					<div class="space4"></div>
+					请首先到客栈管理模块添加客栈！
+				</div>
+			</div>
+			<div th:if="${chooseHotel}" class="col-xs-12 tabbable">
+				<ul  class="nav nav-tabs padding-12 tab-color-blue background-blue" >
+					<li th:each="hotel : ${myHotelList}" th:class="${chooseHotel.id == hotel.id ?'active':''}">
+						<a th:href="@{/hotel/bankAccount/edit.do(hotelId=${hotel.id})}"
+						th:text="${hotel.name}"></a>
+					</li>
+					<li class="message-tab">
+						<span th:text="${operationMessage}"></span>
+					</li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane in active">
+						<h3 class="center">客栈银行账号维护</h3>
+						<hr/>
+						<form id="validation-form"  action="#" th:action="@{/hotel/bankAccount/editAction.do}" th:object="${instance}" class="form-horizontal" role="form">
+							<input type="hidden"  th:field="${instance.id}"/>
+							<input type="hidden"  th:field="${instance.hotel.id}"/>
+							
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 账号类型 </label>
+								<div id="accountTypeDiv" class='col-sm-9'>
+									<input id="type1" th:field="${instance.bankAccountType}" type="radio" class="ace" value="1" checked="checked"/>
+									<label class="lbl" for="type1"> 对公 </label>
+									
+									<input id="type2" th:field="${instance.bankAccountType}" type="radio" class="ace" value="2"/>
+									<label class="lbl" for="type2"> 对私</label>
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 开户银行 </label>
+								<div class='col-sm-9'>
+								
+									<input type='hidden' th:field='${instance.bank}' />
+									<input type='text' id="bankName" name="bankName" th:value="${instance.bank==null?'':instance.bank.label}" placeholder='银行名称' data-toggle="dropdown" class="dropdown-toggle col-xs-10 col-sm-5" />
+
+									<div class="dropdown-menu banklist " id="bankBox">
+										<a title="关闭" class="cls" href="javascript:;">×</a>
+										<ul >
+											<li th:each="bank : ${BANK.values()}">
+												<a title="中国农业银行" data-bank="中国农业银行" href="#" data-code="ABC" class="ico ABC"
+												   th:title="${bank.label}" th:attr="data-bank=${bank.label},data-code=${bank}"
+												   th:classappend="${bank}"></a>
+											</li>
+											<li><a title="中国农业银行" data-bank="中国农业银行" href="#" data-code="ABC" class="ico ABC"></a></li>
+										</ul>
+									</div>
+									* 开户银行、开户人姓名、卡号必须准确无误，否则无法结算。
+								</div>
+							</div>
+							
+							<div class="cityDiv" th:classappend="${instance.bankAccountType==2?'hide':''}">
+								<div class='form-group'>
+									<label class='col-sm-3 control-label no-padding-right'> 所在省 </label>
+									<div class='col-sm-9'>
+										<input type='hidden' id="provinceId" name="provinceId" th:value="${bankProvince == null ?'':bankProvince.id}"  />
+										<input type='text' id="provinceName" name="provinceName" th:value="${bankProvince == null ?'':bankProvince.name}" placeholder='所在省' data-toggle="dropdown" class="dropdown-toggle col-xs-10 col-sm-5" />
+										<div th:include="/sys/organization/cityFragment :: provinceList" id="provinceBox" class="dropdown-menu city-list" ></div>
+									</div>
+								</div>
+							
+								<div class='form-group'>
+									<label class='col-sm-3 control-label no-padding-right'> 所在市 </label>
+									<div class='col-sm-9'>
+										<input type='hidden' th:field="${instance.bankCityId}"  />
+										<input id="bankCityName" type='text' readonly="readonly" name="bankCityName" placeholder='所在市' data-toggle="dropdown"  class='city-dropdown col-xs-10 col-sm-5'
+											th:value="${bankCity == null ?'':bankCity.name}" />
+										<label class='label label-warning city-choose hide'>请先选择所属省份</label>
+									</div>
+								</div>
+								
+								<div class='form-group'>
+									<label class='col-sm-3 control-label no-padding-right'> 分行名称 </label>
+									<div class='col-sm-9'>
+										<input type='text' th:field='${instance.subsidiaryBank}' placeholder='分行名称' class='col-xs-10 col-sm-5' />
+									</div>
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'><span id="accountHolder" th:text="${instance.bankAccountType==2?'开户人姓名':'公司全称'}">公司全称</span>  </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.accountHolder}'  class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 卡号 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.accountNo}' placeholder='卡号' class='col-xs-10 col-sm-5' />
+									* 银行卡仅支持储蓄卡，请不要填写信用卡。
+								</div>
+							</div>
+							
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 确认卡号 </label>
+								<div class='col-sm-9'>
+									<input type='text' name="repeatAccountNo" placeholder='确认卡号' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							
+							<div class="clearfix form-actions">
+								<div class="col-md-offset-3 col-md-9">
+									<button class="btn btn-info" type="submit">
+										<i class="icon-save bigger-110"></i>
+										保存
+									</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div><!-- /.col -->
+		</div><!-- /.row -->
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<script th:src="@{/resources/js/jquery.validate.min.js}"></script>
+		<script th:src="@{/resources/js/jquery.messages_zh.js}"></script>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		 jQuery(function($) {
+			 $("#validation-form").validate({
+		        rules: {
+		        		bankName: { required : true },
+					accountHolder:{required:true},
+		       	 	accountNo: {
+						required : true
+					},
+					repeatAccountNo:{
+						required:true,
+						equalTo : "#accountNo"
+					}
+		        }
+			});
+			 
+			 $('.ico').on("click",function (){
+				 $("#bankName").val($(this).attr("data-bank"));
+				 $("#bank").val($(this).attr("data-code"));
+			 });
+			 
+			 $('.province').on("click",function (){
+				 $("#provinceName").val($(this).attr("data-provinceName"));
+				 $("#provinceId").val($(this).attr("data-provinceId"));
+			 });
+			 
+			 
+			 $('.city-dropdown').on("click",function (){
+				 $(".city-choose").toggle();
+				 ajaxLoadCity($(this),$("#provinceId").val());
+			 });
+			 
+			 $(document).on("click",'.city',function (){
+				 $("#bankCityName").val($(this).attr("data-cityName"));
+				 $("#bankCityId").val($(this).attr("data-cityId"));
+			 });
+			 
+			 
+			 $('#accountTypeDiv').on("click",function (){
+				 if($('#type1').is(":checked")){
+					 $(".cityDiv").removeClass("hide");
+					 $("#accountHolder").text("公司全称");
+				 }else {
+					 $(".cityDiv").addClass("hide");
+					 $("#accountHolder").text("开户人姓名");
+				 }
+			 });
+			 
+		 });
+		
+		 function ajaxLoadCity(obj,parentCityId){
+			if(parentCityId == null || parentCityId == ""){
+				alert("请先选择所在省！！");
+				$(".city-choose").toggle();
+				return ;
+			};
+			var href= [[@{/sys/city/getCityList.do}]];
+			href = href + "?parentCityId="+parentCityId;
+			//alert("href===" + href);
+			$.ajax({ 
+				url: href, 
+				context: document.body, 
+				type : "POST", 
+			    dataType:"text",
+			    contentType:'application/json;charset=UTF-8',
+			    data : {
+			    		"recordPerPage" : 6
+			    },
+				success: function(resultData){
+					//alert(resultData);
+					obj.parent().find(".city-list").remove();
+					obj.after(resultData);
+					$('.city-dropdown').dropdown();
+	      		},
+			    error:function(xhr,status,error){
+			    	  	alert("读取城市列表失败！异常：error=" + error);
+			    }
+			});
+		}
+
+		/*]]>*/
+		</script>
+	</body>
+</html>

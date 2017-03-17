@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>相册管理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+
+	</head>
+
+	<body>
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+				
+				<div class="main-content" style="margin-left:5px;">
+
+					<div class="page-content">
+						<div class="page-header">
+							<h1>
+								<span th:text="${title==null ?'相册管理':title}">相册管理</span>
+								<small>
+									<i class="icon-double-angle-right"></i>
+								</small>
+								<a class="blue pull-right" style="padding-left:10px;" th:href="@{/myHotel/list.do}" data-rel="tooltip" data-placement="left"  title="返回">
+									<i class="icon-arrow-left bigger-120"></i>
+								</a>
+								
+								<a class="blue pull-right open-a" th:href="@{'/sys/resource/'+${className}+'/add.do'(primaryKey=${primaryKey},title=${title})}"
+								 data-showIframe="true" data-height="500" data-rel="tooltip" data-placement="left"  title="添加照片">
+									<i class="icon-plus bigger-120"></i>
+								</a>
+							</h1>
+						</div><!-- /.page-header -->
+						<div th:if="${list == null OR #lists.isEmpty(list)}" class="row">
+							<div class="col-xs-12">
+								<span>
+									还没有添加任何相册！
+									请点击右上角的 <i class="icon-plus bigger-160"></i> 按钮开始你的客栈管理工作！
+								</span>
+							</div>
+						</div>
+						<div th:if="${list != null AND NOT #lists.isEmpty(list) }" class="row">
+							<div class="col-xs-12">
+							<!-- PAGE CONTENT BEGINS -->
+
+								<div class="row-fluid">
+									<ul class="ace-thumbnails" th:remove="all-but-first">
+									
+										<li th:each="resource : ${list}">
+											<a href="assets/images/gallery/image-3.jpg" 
+											th:href="@{${ResourceUtil.getPath(resource,'/resources/images/hotel_default.png')}}"
+											data-rel="colorbox" >
+												<img alt="600x400" src="assets/images/gallery/thumb-3.jpg" 
+												th:src="@{${ResourceUtil.getPath(resource,'/resources/images/hotel_default.png')}}"
+												style="width: 300px;height: 200px;"/>
+												<div class="text">
+													<div class="inner" ></div>
+												</div>
+											</a>
+	
+											<div class="tools tools-bottom">
+												<a class="open-a" data-showIframe="true" data-height="250"
+												th:href="@{'/sys/resource/'+${className}+'/edit.do'(id=${resource.id},primaryKey=${primaryKey},title=${title})}">
+													<i class="icon-pencil"></i>
+												</a>
+	
+												<a class="row_del_button" th:href="@{'/sys/resource/'+${className}+'/deleteAction.do'(id=${resource.id},primaryKey=${primaryKey},title=${title})}">
+													<i class="icon-remove red"></i>
+												</a>
+											</div>
+										</li>
+	
+										
+										<li>
+											<a href="assets/images/gallery/image-1.jpg" title="Photo Title" data-rel="colorbox">
+												<img alt="150x150" src="assets/images/gallery/thumb-1.jpg" />
+												<div class="tags">
+													<span class="label-holder">
+														<span class="label label-info">breakfast</span>
+													</span>
+	
+													<span class="label-holder">
+														<span class="label label-danger">fruits</span>
+													</span>
+	
+													<span class="label-holder">
+														<span class="label label-success">toast</span>
+													</span>
+	
+													<span class="label-holder">
+														<span class="label label-warning arrowed-in">diet</span>
+													</span>
+												</div>
+											</a>
+	
+											<div class="tools">
+												<a href="#">
+													<i class="icon-link"></i>
+												</a>
+	
+												<a href="#">
+													<i class="icon-paper-clip"></i>
+												</a>
+	
+												<a href="#">
+													<i class="icon-pencil"></i>
+												</a>
+	
+												<a href="#">
+													<i class="icon-remove red"></i>
+												</a>
+											</div>
+										</li>
+	
+										<li>
+											<a href="assets/images/gallery/image-2.jpg" data-rel="colorbox">
+												<img alt="150x150" src="assets/images/gallery/thumb-2.jpg" />
+												<div class="text">
+													<div class="inner">Sample Caption on Hover</div>
+												</div>
+											</a>
+										</li>
+	
+										<li>
+											<a href="assets/images/gallery/image-4.jpg" data-rel="colorbox">
+												<img alt="150x150" src="assets/images/gallery/thumb-4.jpg" />
+												<div class="tags">
+													<span class="label-holder">
+														<span class="label label-info arrowed">fountain</span>
+													</span>
+	
+													<span class="label-holder">
+														<span class="label label-danger">recreation</span>
+													</span>
+												</div>
+											</a>
+	
+											<div class="tools tools-top">
+												<a href="#">
+													<i class="icon-link"></i>
+												</a>
+	
+												<a href="#">
+													<i class="icon-paper-clip"></i>
+												</a>
+	
+												<a href="#">
+													<i class="icon-pencil"></i>
+												</a>
+	
+												<a href="#">
+													<i class="icon-remove red"></i>
+												</a>
+											</div>
+										</li>
+	
+										<li>
+											<div>
+												<img alt="150x150" src="assets/images/gallery/thumb-5.jpg" />
+												<div class="text">
+													<div class="inner">
+														<span>Some Title!</span>
+	
+														<br />
+														<a href="assets/images/gallery/image-5.jpg" data-rel="colorbox">
+															<i class="icon-zoom-in"></i>
+														</a>
+	
+														<a href="#">
+															<i class="icon-user"></i>
+														</a>
+	
+														<a href="#">
+															<i class="icon-share-alt"></i>
+														</a>
+													</div>
+												</div>
+											</div>
+										</li>
+	
+										<li>
+											<a href="assets/images/gallery/image-6.jpg" data-rel="colorbox">
+												<img alt="150x150" src="assets/images/gallery/thumb-6.jpg" />
+											</a>
+	
+											<div class="tools tools-right">
+												<a href="#">
+													<i class="icon-link"></i>
+												</a>
+	
+												<a href="#">
+													<i class="icon-paper-clip"></i>
+												</a>
+	
+												<a href="#">
+													<i class="icon-pencil"></i>
+												</a>
+	
+												<a href="#">
+													<i class="icon-remove red"></i>
+												</a>
+											</div>
+										</li>
+	
+										<li>
+											<a href="assets/images/gallery/image-1.jpg" data-rel="colorbox">
+												<img alt="150x150" src="assets/images/gallery/thumb-1.jpg" />
+											</a>
+	
+											<div class="tools">
+												<a href="#">
+													<i class="icon-link"></i>
+												</a>
+	
+												<a href="#">
+													<i class="icon-paper-clip"></i>
+												</a>
+	
+												<a href="#">
+													<i class="icon-pencil"></i>
+												</a>
+	
+												<a href="#">
+													<i class="icon-remove red"></i>
+												</a>
+											</div>
+										</li>
+	
+										<li>
+											<a href="assets/images/gallery/image-2.jpg" data-rel="colorbox">
+												<img alt="150x150" src="assets/images/gallery/thumb-2.jpg" />
+											</a>
+	
+											<div class="tools tools-top">
+												<a href="#">
+													<i class="icon-link"></i>
+												</a>
+	
+												<a href="#">
+													<i class="icon-paper-clip"></i>
+												</a>
+	
+												<a href="#">
+													<i class="icon-pencil"></i>
+												</a>
+	
+												<a href="#">
+													<i class="icon-remove red"></i>
+												</a>
+											</div>
+										</li>
+									</ul>
+								</div><!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+		</div><!-- /.main-container -->
+
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		
+		<script th:src="@{/resources/js/jquery.colorbox-min.js}"></script>
+		
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+		
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			jQuery(function($){
+			
+				var colorbox_params = {
+						reposition:true,
+						scalePhotos:true,
+						scrolling:false,
+						previous:'<i class="icon-arrow-left"></i>',
+						next:'<i class="icon-arrow-right"></i>',
+						close:'&times;',
+						current:'{current} of {total}',
+						maxWidth:'100%',
+						maxHeight:'100%',
+						onOpen:function(){
+							document.body.style.overflow = 'hidden';
+						},
+						onClosed:function(){
+							document.body.style.overflow = 'auto';
+						},
+						onComplete:function(){
+							$.colorbox.resize();
+						}
+					};
+
+					$('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
+					$("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");//let's add a custom loading icon
+				
+			});
+		
+		/*]]>*/
+		</script>
+	</body>
+</html>

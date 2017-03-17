@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>结算工作台</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+		<style>
+		.details{
+			width: 15px; 
+			max-width:15px;
+			word-wrap: break-word; 
+			display: block;
+			float:right;
+		}
+		
+		</style>
+	</head>
+
+	<body>
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+				
+				<div class="main-content" style="margin-left:5px;">
+
+					<div class="page-content">
+						<div class="page-header">
+							<h1>
+								结算周期
+								<small>
+									<i class="icon-double-angle-right"></i>
+								</small>
+								<span th:text="${#dates.format(periodDate,'yyyy-MM-dd')}"></span>
+								<a class=" pull-right" th:href="@{/settlement/settlementHome.do}" data-rel="tooltip" data-placement="left"  title="返回">
+									<i class="icon-arrow-left bigger-120"></i>
+								</a>
+							</h1>
+						</div><!-- /.page-header -->
+						<div th:if="${settlementMap == null OR #maps.isEmpty(settlementMap)}" class="row">
+							<div class="col-xs-12">
+								<span class="text-danger">
+									没有任何可结算的订单（即:截至<span th:text="${#dates.format(periodDate,'yyyy-MM-dd')}"></span> 没有任何已经处理结束但尚未结算的订单）！
+								</span>
+							</div>
+						</div>
+						
+						<div class="row" style="margin-left:10px;">
+							<div class="widget-box transparent" th:each="key : ${settlementMap.keySet()}">
+								<div class="widget-header widget-header-flat">
+									<h4 class="lighter">
+										<i class="icon-star orange"></i>
+										订单详情 公司：<span th:text="${key}"></span>
+									</h4>
+	
+									<div class="widget-toolbar">
+										<a th:href="${'#orderDetails'+ keyStat.index}" data-toggle="collapse" >
+											<i class="icon-chevron-up"></i>
+										</a>
+									</div>
+								</div>
+								<div th:id="${'orderDetails'+ keyStat.index}" class="widget-body collapse in">
+									<div class="widget-main no-padding">
+										<table class="table table-bordered ">
+											<thead class="thin-border-bottom">
+												<tr>
+													<th style="width:200px;">
+														<i class="icon-caret-right blue"></i>
+														供应商
+													</th>
+													<th>
+														<i class="icon-caret-right blue"></i>
+														结算名称
+													</th>
+													<th>
+														<i class="icon-caret-right blue"></i>
+														结算编号
+													</th>
+													<th>
+														<i class="icon-caret-right blue"></i>
+														金额
+													</th>
+												</tr>
+											</thead>
+											<tbody th:each="settlement : ${settlementMap.get(key)}">
+												<tr>
+													<td >
+														<a th:href="@{/hotel/view.do(id=${settlement.toSupplierId})}" class="open-a" data-showIframe="true" title="客栈信息查看" >
+															<span th:attr="data-hotelId=${settlement.toSupplierId}" th:text="${'ID:'+settlement.toSupplierId}" class="text-primary" > </span>
+														</a>
+													</td>
+													<td >
+														<span th:text="${settlement.settlementTitle}"></span>
+														<input type="hidden" name="settlementId" th:value="${settlement.id}"/>
+													</td>
+													<td >
+														<span th:text="${settlement.settlementCode}"></span>
+													</td>
+													<td>
+														<b class="green" th:text="${'￥'+ settlement.settlementAmount}">￥19.99</b>
+													</td>
+												</tr>
+												<tr	>
+													<td style="text-align: right;">
+														<span class="details">账单详情</span>
+													</td>
+													<td colspan="3">
+														<ol>
+															<li th:each="settlementDetails : ${settlementDetailsMap.get(settlement.id)}"  style="padding-bottom:10px;">
+																<ul class="list-inline">
+																	<li >
+																		<span th:text="${'订单号：' + settlementDetails.orderId}"></span>
+																		<input type="hidden" name="settlementDetailsId" th:value="${settlementDetails.id}"/>
+																		<input type="hidden" name="orderId" th:value="${settlementDetails.orderId}"/>
+																	</li>
+																	<li  >
+																		<span th:text="${'费用类型：' + settlementDetails.title}">房费</span>
+																	</li>
+																	<li >
+																		<b class="green" th:attr="data-feeType=${settlementDetails.feeType},data-price=${settlementDetails.amount}" th:text="${'￥' + settlementDetails.amount}">$19.99</b>
+																	</li>
+																</ul>
+															</li>
+														</ol>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div><!-- /widget-main -->
+								</div><!-- /widget-body -->
+							</div>
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="icon-double-angle-up icon-only bigger-110"></i>
+			</a>
+		</div><!-- /.main-container -->
+
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+		
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			jQuery(function($){
+				getCommentHotelName();
+			});
+		
+		
+			function getCommentHotelName(){
+				var hotelIds = "";
+				$("[data-hotelId]").each(function (e){
+					hotelIds = hotelIds + ","+$(this).attr("data-hotelId");
+				});
+				var href=[[@{/hotel/getHotelByIds.do}]];
+				$.ajax({
+					url: href, 
+					context: document.body, 
+					type : "POST", 
+				    dataType:"json",
+				    contentType:'application/json;charset=UTF-8',
+				    data : JSON.stringify({
+				    		"hotelIds": hotelIds
+				    }),
+					success: function(resultData){
+						//alert("推荐客栈数=="+resultData.length);
+						if( resultData.length > 0){
+							for(var i = 0;i < resultData.length;i++){
+								$("[data-hotelId='"+resultData[i].id+"']").each(function (index){
+									$(this).text(resultData[i].name);
+								});
+							}
+						}
+		      		},
+				    error:function(xhr,status,error){
+				    		$(".message-tab").text("读取供应商客栈信息失败，请检查！error="+error);
+				    	  	return false;
+				    }
+				});
+			}
+		/*]]>*/
+		</script>
+	</body>
+</html>

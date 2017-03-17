@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>订单管理---修改</title>
+		<base target="_parent"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/ace/css/chosen.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/css/datetime/datepicker.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+		<style>
+		.input-group{
+			padding-bottom: 10px;
+		}
+		.popover{
+			max-width: 1000px !important;
+			max-height: 500px;
+		}
+		.day-price{
+			width:260px;
+			padding-bottom: 10px;
+		}
+		
+		.day-price-input-div{
+			display: block;
+			width:120px;
+			padding-bottom: 5px;
+			padding-right:5px;
+			float:left;
+		}
+		
+		.day-price-input-div:last{
+			padding-bottom: 20px;
+		}
+		
+		</style>
+	</head>
+
+	<body style="background-color: white;">
+		<!-- PAGE CONTENT BEGINS -->
+		<div class="row page-content">
+			<div class="col-xs-12 tabbable">
+				<div class="tab-content">
+					<div class="tab-pane in active">
+						<form id="validation-form"  action="#" th:action="@{/roomBoard/editOrderAction.do}" th:object="${instance}" class="form-horizontal" role="form">
+							<input type="hidden"  th:field="${instance.id}"/>
+							<input type="hidden"  th:field="${instance.supplierId}"/>
+							<input type="hidden" name="modal" th:value="${modal}"/>
+							<div class='input-group'>
+								<span class='input-group-addon'> 预定人名称 </span>
+								<input type='text' th:field='${instance.orderName}' placeholder='预定人名称' class='form-control'
+								th:attr="readonly=${(instance.memberId==null OR instance.memberId==0)?'false':'readonly'}"
+								 />
+							</div>
+							
+							<div class='input-group'>
+								<span class='input-group-addon'> 预定人电话 </span>
+								<input type='text' th:field='${instance.orderTelephone}' placeholder='电话' class='form-control' 
+									th:attr="readonly=${(instance.memberId==null OR instance.memberId==0)?'false':'readonly'}"
+								 />
+							</div>
+							
+							<div class='input-group'>
+								<span class='input-group-addon'> 订单的来源 </span>
+								<select  class="width-180 chosen-select" 
+									th:attr="readonly=${(instance.memberId==null OR instance.memberId==0)?'false':'readonly'}"
+								  	th:field='${instance.origin}' style="min-width:180px;" data-placeholder="请选择...">
+									<option th:each="option : ${DictionaryUtil.getDictionaryOption('orderOrigin')}" th:value="${option.dictionaryCode+'#'+option.code}" th:text="${option.name}" />
+								</select>
+							</div>
+							
+							
+							<div class='form-group'>
+								<div class='col-sm-12'>
+									订单详情
+									<a class="blue add-room" data-rel="tooltip"  title="添加房间">
+										<i class="icon-plus bigger-160"></i>
+									</a>
+									<table id="course_table" class="table table-striped table-bordered table-hover" style="margin-bottom: 0px;width:100%;">
+										<thead>
+											<tr>
+												<th style="width:100px;" >入住时间</th>
+												<th style="width:200px;" >房号</th>
+												<th style="width:80px;" >入住几晚</th>
+												<th style="width:80px;" >小计</th>
+												<th style="max-width: 80px;"></th>
+											</tr>
+										</thead>
+			
+										<tbody id="tableBody">
+											<tr th:each="orderDetails : ${orderDetailsList}" id="template_row" >
+												<td >
+													<input type="text" name="consumeBeginTime" 
+													th:value='${new java.text.SimpleDateFormat("yyyy-MM-dd").format(orderDetails.consumeBeginTime)}' 
+													class="input-small date-picker" data-date-format="yyyy-mm-dd"/>
+												</td>
+												<td >
+													<select class="chosen-room"  style="width:200px;"  name="roomId" data-placeholder="请选择...">
+														<option th:each="room : ${roomList}" th:attr="data-roomTypeId=${room.roomType.id}" 
+														th:selected="${room.id == orderDetails.productId}" th:value="${room.id}" th:text="${room.roomType.name + ' '+ room.roomNo}">101</option>
+													</select>
+												</td>
+												<td >
+													<select class=" chosen-consumeDay" style="width:60px;"  name="consumeDay" data-placeholder="请选择...">
+														<option th:each="dayCyc : ${#numbers.sequence(1,10)}" th:value="${dayCyc}" th:text="${dayCyc+'晚'}"
+														th:selected="${dayCyc == orderDetails.orderNumber}" 
+														>1</option>
+													</select>
+												</td>
+												<td >
+													<div class="input-icon room-price-div">
+														<input id="roomTotalPrice" type='text'  name="roomTotalPrice" th:value="${orderDetails.totalPrice}" data-placement="top"
+														  class="input-small roomTotalPrice" data-toggle="dropdown"/>
+														<i class="icon-jpy"></i>
+														<div class="day-price-title-div hide">
+															<div style="height:25px;">
+																<div style="float:left;padding-top:5px;" th:text="${orderDetails.productName + '  平均价格:'}">301房间价格  平均价格:</div>
+																<div class="input-icon" style="float:left;font-size:20px;"> 
+																	<input type="text"  th:value="${orderDetails.totalPrice}" class="day-price-title" /> 
+																	<i class="icon-jpy"></i>
+																</div>
+															</div>
+														</div>
+														
+														<div th:id="${'room-div-'+orderDetails.productId}" class="day-price-content " >
+															
+															<div class="day-price ">
+																<div th:each="room : ${reservationRoomMap.get(orderDetails.id)}" class='input-group day-price-input-div '>
+																	<span class='input-group-addon' style="border-right: 1px solid #CCCCCC;"
+																		th:text="${#dates.format(room.consumeDate,'MM-dd') +'  '+ #dates.dayOfWeekNameShort(room.consumeDate)}"
+																	> 08-12 四 </span>
+																	<div class="input-icon">
+																		<input type='text' th:name="${'roomDayPrice-'+ orderDetails.productId}"
+																			th:value="${room.price}" class='day-price-input form-control' />
+																		<i class="icon-jpy"></i>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</td>
+												<td >
+													<div class="action-buttons">
+													</div>
+												</td>
+											</tr>
+											
+										</tbody>
+									</table>
+									
+								</div>
+							</div>
+							
+						  <div class='input-group '>
+								<span class='input-group-addon'> 总价 </span>
+								<div class="input-icon">
+									<input type='text' id="totalPrice" th:field='${instance.totalPrice}' readonly="readonly" placeholder='总价' class='col-xs-10 col-sm-5' />
+									<i class="icon-jpy"></i>
+								</div>
+							</div>
+							
+							<ul class="list-unstyled spaced">
+								<li>
+									<i class="icon-jpy bigger-110 green"></i>
+									已收款：<span th:text="${instance.payPrice}" style="padding-left:10px;"></span>
+									<a class="blue add-pay-price" data-rel="tooltip"  title="添加收款" style="padding-left:10px;" >
+										<i class="icon-plus bigger-160"></i>
+									</a>
+								</li>
+							</ul>
+							
+							<div class='input-group'>
+								<span class='input-group-addon'> 备注 </span>
+								<textarea class ="autosize-transition form-control" th:field='${instance.remark}' rows="3"></textarea>
+							</div>
+							
+							<div class="clearfix form-actions">
+								<div class="col-md-offset-3 col-md-9">
+									<button class="btn btn-info" type="submit">
+										<i class="icon-ok bigger-110"></i>
+										提交
+									</button>
+	
+									<button class="btn" type="reset">
+										<i class="icon-undo bigger-110"></i>
+										重置
+									</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div><!-- /.col -->
+		</div><!-- /.row -->
+
+
+		<div id="dapPriceInputDivTemplate" class='input-group day-price-input-div hide'>
+			<span class='input-group-addon' style="border-right: 1px solid #CCCCCC;"> 01-31 四 </span>
+			<div class="input-icon">
+				<input type='text'  class='day-price-input form-control' />
+				<i class="icon-jpy"></i>
+			</div>
+		</div>
+		
+		<div id="addPayPriceDiv" class='input-group hide' style="float:left;">
+			<span class='input-group-addon'> 收款 </span>
+			<div class="input-icon">
+				<input type='text' name='addPayPrice' placeholder='收款金额'  />
+				<i class="icon-jpy"></i>
+				<select  class="add-day-price-chosen-select" name='addPayType' style="width:100px;min-width:150px;float:left;" data-placeholder="请选择支付方式...">
+					<option th:each="option : ${DictionaryUtil.getDictionaryOption('payType')}" th:value="${option.dictionaryCode+'#'+option.code}" th:text="${option.name}" />
+				</select>
+			</div>
+		</div>
+		
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<script th:src="@{/resources/js/jquery.validate.min.js}"></script>
+		<script th:src="@{/resources/js/jquery.messages_zh.js}"></script>
+		
+		<!-- datetime -->
+		<script th:src="@{/resources/js/date-time/bootstrap-datepicker.min.js}"></script>
+		<!-- choose -->
+		<script th:src="@{/resources/ace/js/chosen.jquery.min.js}"></script>
+		
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+		
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		 jQuery(function($) {
+			 
+			 $("[data-toggle='popover']").popover();
+			 var dayPriceTitle = '';
+			/*
+			 $(document).on('click','.roomTotalPrice', function (e) {
+				 e.preventDefault();
+				 $(this).popover({ 
+					 html : true,
+					 title: function() {
+					  return getTempTitle($(this));
+					 },
+					 content: function() {
+					  return getTempDayPriceContentTemp($(this));
+					 }
+				 });
+			 });
+			 */
+			 $("#validation-form").validate({
+		        rules: {
+		        		orderTelephone : "required"
+		        }
+			});
+			
+		 	$('.date-picker').datepicker({autoclose:true}).next().on(ace.click_event, function(){
+				$(this).prev().focus();
+			});
+			 
+			 $(document).on('click','.add-pay-price', function (e) {
+				 e.preventDefault();
+				 var addPayPriceObj = $("#addPayPriceDiv").clone().removeClass("hide");
+				 addPayPriceObj.attr("id","");
+				 $(this).closest("ul").after(addPayPriceObj);
+				 addPayPriceObj.find(".add-day-price-chosen-select").chosen();
+			 });
+			 
+			 $('.add-room').on('click', function (e) {
+		    		e.preventDefault();
+		    		var deleteObj = '<a class="red del_row"  data-rel="tooltip" title="移除"> <i class="icon-trash bigger-130"></i></a>';
+				var courseRow = $('#tableBody tr').first().clone(false).show();
+				//这里有个巨坑，jquery clone()不能复制select与textarea对象的用户输入值，所以这里复制完成后，要去修改这两个控件的值
+				courseRow.find(".chosen-room").val($(".chosen-room:first").val());
+				courseRow.find(".chosen-consumeDay").val($(".chosen-consumeDay:first").val());
+				
+				courseRow.find(".action-buttons").append(deleteObj);
+
+				courseRow.find(".date-picker").datepicker({autoclose:true}).next().on(ace.click_event, function(){
+					$(this).prev().focus();
+				});
+				
+				$('#tableBody').last().append(courseRow);
+				sumAllPrice();	
+		     });
+			 
+			 $(document).on('click','.del_row', function (e) {
+		    		e.preventDefault();
+		    		var $_this = this,
+		            $this = $($_this);
+		    		$this.parentsUntil("tbody").remove();
+		    		sumAllPrice();
+		     });
+			 
+			//选择入住时间后，更新价格
+			 $(document).on('change','.date-picker', function (e) {
+				 	var courseRow = $(this).closest('#tableBody tr');
+				 	var roomTypeId = courseRow.find(".chosen-room").find("option:selected").attr("data-roomTypeId");
+					var orderDetails = {
+						"roomTypeId":roomTypeId,
+						"consumeDays":courseRow.find(".chosen-consumeDay").val(),
+						"consumeBeginDate":$(this).val()
+					};
+					computePrice(courseRow.find(".roomTotalPrice"),orderDetails);
+			 });
+			
+			
+			//选择入住房间后，更新价格
+			 $(document).on('change','.chosen-room', function (e) {
+				 	var courseRow = $(this).closest('#tableBody tr');
+				 	var roomTypeId = $(this).find("option:selected").attr("data-roomTypeId");
+					var orderDetails = {
+						"roomTypeId":roomTypeId,
+						"consumeDays":courseRow.find(".chosen-consumeDay").val(),
+						"consumeBeginDate":courseRow.find(".date-picker").val()
+					};
+					computePrice(courseRow.find(".roomTotalPrice"),orderDetails);
+			 });
+			
+			 //选择入住几晚后，修改价格
+			 $(document).on('change','.chosen-consumeDay', function (e) {
+				 	var courseRow = $(this).closest('#tableBody tr');
+				 	var roomTypeId = courseRow.find(".chosen-room").find("option:selected").attr("data-roomTypeId");
+					var orderDetails = {
+						"roomTypeId": roomTypeId,
+						"consumeDays":$(this).val(),
+						"consumeBeginDate":courseRow.find(".date-picker").val()
+					};
+					computePrice(courseRow.find(".roomTotalPrice"),orderDetails);
+			 });
+			 
+			 //手工修改价格后重新计算总价格
+			 $(document).on('change','.roomTotalPrice', function (e) {
+				 sumAllPrice();
+				 averageRoomDayPrice($(this));
+				 
+			 });
+			 
+			 
+			//手工修改每一个房间的价格后重新计算总价格
+			 $(document).on('change','.day-price-input', function (e) {
+				 //alert("修改了某一天的价");
+				 sumRoomTotalPrice($(this));//合计该房间的总体价格
+				 sumAllPrice();
+			 });
+			
+			
+			//手工修改房间的平均价格后重新计算总价格
+			 $(document).on('change','.day-price-title', function (e) {
+				// alert("修改了平均价");
+				 setRoomPrice($(this));
+				 sumAllPrice();
+			 });
+			
+			 
+		 });
+		
+		/*计算总价格*/
+		 function sumAllPrice(){
+			 if($('.roomTotalPrice').length){
+					var totalScore = 0;
+				    $('.roomTotalPrice').each(function(){
+				    		totalScore = totalScore + parseFloat($(this).val());
+					});
+				    $('#totalPrice').val(totalScore);
+			    }
+		 };
+		 
+		 /*如果单独设置了房间平均价格，则重新设置房间价格、房间合计价格、订单总价格*/
+		 function setRoomPrice(roomAveragePriceObj){
+			 	var $parentDiv = $(roomAveragePriceObj).closest(".room-price-div");
+			 	var roomTotalPrice = 0.0;
+			 	var averagePrice = parseFloat($(roomAveragePriceObj).val());
+			 	var $dayPriceInputs = $parentDiv.find(".day-price-input");
+			 	$dayPriceInputs.each(function (e){
+			 		roomTotalPrice = roomTotalPrice + averagePrice;
+			 		$(this).attr("value",averagePrice);
+				});
+			 	$parentDiv.find(".roomTotalPrice").attr("value",roomTotalPrice);
+				
+			 }
+		 
+		 /*如果单独设置了房间价格，则重新计算房间平均价格、房间合计价格、订单总价格*/
+		 function sumRoomTotalPrice(roomPriceDivChildObj){
+			 
+			var $parentDiv = $(roomPriceDivChildObj).closest(".room-price-div");
+		 	var roomTotalPrice = 0.0;
+		 	var $dayPriceInputs = $parentDiv.find(".day-price-input");
+		 	$dayPriceInputs.each(function (e){
+		 		roomTotalPrice = roomTotalPrice + parseFloat($(this).val());
+			});
+		 	$parentDiv.find(".roomTotalPrice").val(roomTotalPrice);
+			//设置平均价
+			/*
+			var dayNumber = $dayPriceInputs.length;
+			var averagePrice = roomTotalPrice/dayNumber;
+			averagePrice = averagePrice.toFixed(2);
+			var $title = $parentDiv.find(".day-price-title");
+			$title.attr("value",averagePrice);
+			*/
+		 }
+		 
+		 
+		 /*设置每一天的价格*/
+		 function averageRoomDayPrice(roomPriceDivChildObj){
+			var $parentDiv = $(roomPriceDivChildObj).closest(".room-price-div");
+			var roomTotalPrice = $parentDiv.find(".roomTotalPrice").val();
+			alert("roomTotalPrice="+roomTotalPrice);
+			var $dayPriceInputs = $parentDiv.find(".day-price-input");
+			var dayNumber = $dayPriceInputs.length;
+			alert("dayNumber="+dayNumber);
+			var averagePrice = roomTotalPrice/dayNumber;
+			alert("averagePrice="+averagePrice);
+			averagePrice = averagePrice.toFixed(2);
+			alert("toFixed averagePrice="+averagePrice);
+			var $title = $parentDiv.find(".day-price-title");
+			$title.attr("value",averagePrice);
+			$dayPriceInputs.each(function (e){
+				$(this).attr("value",averagePrice);
+			});
+		 }
+		
+		function computePrice(roomTotalPriceObj,orderDetails){
+			//alert(JSON.stringify(orderDetails));
+			var href=[[@{/order/getRoomTypePrice.do}]];
+			$.ajax({
+				url: href, 
+				context: document.body, 
+				type : "POST", 
+			    dataType:"json",
+			    contentType:'application/json;charset=UTF-8',
+			    data : JSON.stringify({
+			    		"roomTypeId": orderDetails.roomTypeId,
+			    		"consumeBeginDate": orderDetails.consumeBeginDate,
+			    		"consumeDay": orderDetails.consumeDays
+			    }),
+				success: function(resultData){
+					//alert("resultData.totalPrice=="+resultData.totalPrice);
+					$(roomTotalPriceObj).val(resultData.totalPrice);
+					processDayPrice(roomTotalPriceObj,resultData);
+					sumAllPrice();
+	      		},
+			    error:function(xhr,status,error){
+			    	  	alert("读取价格失败，请检查！error="+error);
+			    	  	return false;
+			    }
+			});
+		}
+		
+		function processDayPrice(roomTotalPriceObj,allRoomTotalPrice){
+			var roomTotalPrice = allRoomTotalPrice.totalPrice;
+			var $title = $(roomTotalPriceObj).closest(".room-price-div").find(".day-price-title");
+			var dayPriceList = allRoomTotalPrice.dayPriceList;//总天数
+			$title.attr("value",roomTotalPrice/dayPriceList.length);
+			var weekdaysFull = [ '周日', '周一', '周二', '周三', '周四', '周五', '周六' ];
+			var date ;
+			var $dayPriceDiv = roomTotalPriceObj.parent().find(".day-price");
+			$dayPriceDiv.empty();
+			
+			//$(".day-price-input-div").parent.clear();
+			var roomId = $(roomTotalPriceObj).closest("tr").find(".chosen-room").find("option:selected").val();
+			for(var i=0; i< dayPriceList.length ; i++){
+				//alert(JSON.stringify(dayPriceList[i]));
+				var newObj = $("#dapPriceInputDivTemplate").clone().show().removeClass("hide");
+				newObj.attr("id","");
+				date = new Date(dayPriceList[i].consumeDate);
+				var text = (date.getMonth()+1) + "-" + date.getDate() + "  " + weekdaysFull[ date.getDay()];
+				newObj.find(".input-group-addon").text(text);
+				newObj.find(".day-price-input").attr("name",'roomDayPrice-'+roomId);
+				newObj.find(".day-price-input").attr("value",dayPriceList[i].price);
+				//alert(roomTotalPriceObj.parent().find(".day-price").html());
+				$dayPriceDiv.append(newObj);
+			}
+		}
+		
+		function getTempTitle(roomTotalPriceObj){
+			 var html = roomTotalPriceObj.parent().find(".day-price-title-div").html();
+			 html = html.replace("day-price-title","day-price-title-temp");
+			 return html;
+		 }
+		 
+		 function getTempDayPriceContentTemp(roomTotalPriceObj){
+			 var html = roomTotalPriceObj.parent().find(".day-price-content").html();
+			 html = html.replace("day-price-input","day-price-input-temp");
+			 return html;
+		 }
+		/*]]>*/
+		</script>
+	</body>
+</html>

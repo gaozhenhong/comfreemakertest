@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head >
+	<meta charset="utf-8" />
+</head>	
+	<body>
+		<div th:fragment="installation()" >
+		
+		
+		<ul id="faclist" class="list clx">
+			<li class="has" name="wifi"><i></i><input type="checkbox"></li>
+			<li class="" name="airconditioning"><i></i><input type="checkbox">空调</li>
+			<li class="" name="hotwater"><i></i><input type="checkbox">24小时热水</li>
+			<li class="" name="wash"><i></i><input type="checkbox">洗漱用品</li>
+			<li class="" name="washingmachine"><i></i><input type="checkbox">洗衣机</li>
+			<li class="" name="bathtub"><i></i><input type="checkbox">浴缸</li>
+			<li class="" name="selfkitchen"><i></i><input type="checkbox">自助厨房</li>
+			<li class="" name="swimmingpool"><i></i><input type="checkbox">游泳池</li>
+			<li class="has" name="restaurant"><i></i><input type="checkbox">餐厅</li>
+			<li class="" name="swingcard"><i></i><input type="checkbox">可刷卡</li>
+			<li class="has" name="invoice"><i></i><input type="checkbox">提供发票</li>
+			<li class="has" name="shuttle"><i></i><input type="checkbox">接机接站</li>
+			<li class="has" name="travelservic"><i></i><input type="checkbox">旅游服务</li>
+			<li class="has" name="baggage"><i></i><input type="checkbox">行李寄存</li>
+			<li class="has" name="parking"><i></i><input type="checkbox">免费停车场</li>
+			<li class="" name="relaxzone"><i></i><input type="checkbox">休闲区</li>
+			<li class="has" name="bike"><i></i><input type="checkbox">租自行车</li>
+			<li class="has" name="pets"><i></i><input type="checkbox">可带宠物</li>
+		</ul>
+
+			<input id="type1" th:field="${instance.installation}" type="radio" class="ace" value="1" checked="checked"/>
+			<label class="lbl" for="type1"> 免费Wifi</label>
+			
+			
+			<input id="type2" th:field="${instance.type}" type="radio" class="ace" value="2"/>
+			<label class="lbl" for="type2"> 视频/音频课件</label>
+			
+			<input id="type3" th:field="${instance.type}" type="radio" class="ace" value="3"/>
+			<label class="lbl" for="type3"> Unity3D课件</label>
+			
+			<input id="type4" th:field="${instance.type}" type="radio" class="ace" value="4"/>
+			<label class="lbl" for="type4"> 第三方课件链接</label>
+			
+			<input id="type5" th:field="${instance.type}" type="radio" class="ace" value="5"/>
+			<label class="lbl" for="type5"> SCORM标准课件(暂未支持)</label>
+			
+			<input id="type10" th:field="${instance.type}" type="radio" class="ace" value="10"/>
+			<label class="lbl" for="type10"> 移动端网页课件(暂未支持)</label>
+		</div>
+	</body>
+</html>

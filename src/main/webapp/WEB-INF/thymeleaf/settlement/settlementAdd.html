@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>结算管理---添加</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+		<style>
+		.price-label{
+			padding-right:20px;
+		}
+		.price{
+			size: 16px;
+			color: #D52040;
+		}
+		</style>
+	</head>
+
+	<body style="background-color: white;">
+		<!-- PAGE CONTENT BEGINS -->
+		<div class="row page-content">
+			<div class="col-xs-12 tabbable">
+				<div class="tab-content">
+					<div class="tab-pane in active">
+						<form id="validation-form"  action="#" th:action="@{/settlement/addAction.do}" th:object="${instance}" class="form-horizontal" role="form">
+							<input type="hidden"  th:field="${instance.id}"/>
+							
+							<div class="profile-info-row pull-right" style="z-index: 999; background-color: white;height:150px;border:1px solid #CCCCCC;">
+								<div>
+									<h2 style="padding:0px 20px 0px 20px;">
+									 结算金额：<span class="price">￥1000.00</span>
+									</h2>
+								</div>
+								<div>
+									<h4 class="price-label pull-right">订单金额：<span class="price">￥800.00</span></h4>
+								</div>
+								<div>
+									<h4  class="price-label pull-right">返利金额：<span class="price">￥200.00</span></h4>
+								</div>
+							</div>
+							
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 供应商名称 </div>
+								<div class='profile-info-value'>
+									<span th:text="${JSONUtil.getValue(supplierSettlementInfo,'companyName')}">供应商名称</span>
+								</div>
+							</div>
+							
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 销售额 </div>
+								<div class='profile-info-value'>
+									<i class="icon-jpy"></i>
+									<span th:text="${JSONUtil.getLongValue(supplierSettlementInfo,'sales')}"></span>
+								</div>
+							</div>
+							
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 回款额 </div>
+								<div class='profile-info-value'>
+									<i class="icon-jpy"></i>
+									<span th:text="${JSONUtil.getLongValue(supplierSettlementInfo,'returnAmount')}"></span>
+								</div>
+							</div>
+							
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 订单数 </div>
+								<div class='profile-info-value'>
+									<a href="#">
+										<span th:text="${JSONUtil.getLongValue(supplierSettlementInfo,'orderNumber')}"></span>
+									</a>
+								</div>
+							</div>
+							
+							
+							<div id="orderList">
+								<div class="widget-box transparent">
+									<div class="widget-header widget-header-flat">
+										<h4 class="lighter">
+											<i class="icon-star orange"></i>
+											订单详情
+										</h4>
+		
+										<div class="widget-toolbar">
+											<a href="#orderDetails" data-toggle="collapse" >
+												<i class="icon-chevron-up"></i>
+											</a>
+										</div>
+									</div>
+									<div id="orderDetails" class="widget-body">
+										<div class="widget-main no-padding">
+											<table class="table table-bordered table-striped">
+												<thead class="thin-border-bottom">
+													<tr>
+														<th>
+															<i class="icon-caret-right blue"></i>
+															订单编号
+														</th>
+														<th>
+															<i class="icon-caret-right blue"></i>
+															订单来源
+														</th>
+														<th>
+															<i class="icon-caret-right blue"></i>
+															下单时间
+														</th>
+														<th>
+															<i class="icon-caret-right blue"></i>
+															结束时间
+														</th>
+														<th>
+															<i class="icon-caret-right blue"></i>
+															消费金额
+														</th>
+														<th>
+															<i class="icon-caret-right blue"></i>
+															回款金额
+														</th>
+													</tr>
+												</thead>
+												<tbody th:with="allTotalPrice=0.0, allPayPrice = 0.0">
+													<tr th:each="order : ${canSettlementOrderList}" >
+														<td >
+															<span th:text="${order.orderCode}"></span>
+															<input type="hidden" name="orderId" th:value="${order.id}"/>
+														</td>
+														<td >
+															<span th:text="${DictionaryUtil.getOptionName(order.origin).name}">自来客</span>
+															<span th:if="${order.origin == Freego AND #strings.isEmpty(order.originDetails)}" class="label" > 自来单 </span>
+															<div th:if="${order.origin == Freego AND  not #strings.isEmpty(order.originDetails)}">
+																<span class="label label-info arrowed-in-right arrowed" th:attr="data-hotelCode=${order.originDetails}" th:text="${order.originDetails}"> </span>
+															</div>
+														</td>
+														<td th:text="${#dates.format(order.orderTime,'yyyy-MM-dd')}">internet.com</td>
+														<td th:text="${#dates.format(order.finishTime,'yyyy-MM-dd')}">internet.com</td>
+		
+														<td>
+															<b class="green" th:text="${'￥'+order.totalPrice}">$19.99</b>
+														</td>
+														<td>
+															<b class="label label-success" th:text="${'￥'+order.payPrice}">$19.99</b>
+														</td>
+													</tr>
+		
+												</tbody>
+											</table>
+										</div><!-- /widget-main -->
+									</div><!-- /widget-body -->
+								</div>
+							</div>
+							<br/>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 结算名目 * </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.settlementTitle}' placeholder='结算标题' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 结算编号 *  </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.settlementCode}' placeholder='结算编号' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 结算金额 *  </label>
+								<div class='col-sm-9'>
+									<input type='text' name='settlementAmount' th:value="${JSONUtil.getLongValue(supplierSettlementInfo,'returnAmount')}" placeholder='结算金额' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 结算发起方 *  </label>
+								<div class='col-sm-9'>
+									<input type='hidden' name='fromOrg.id' th:value="${user.org.id}" placeholder='结算发起方' class='col-xs-10 col-sm-5' />
+									<input type='text' th:value="${user.org.name}" readonly="readonly" class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 结算收入方 *  </label>
+								<div class='col-sm-9'>
+									<input type='hidden' name="toOrg.id" th:value="${JSONUtil.getLongValue(supplierSettlementInfo,'companyId')}" class='col-xs-10 col-sm-5' />
+									<input type='text' th:value="${JSONUtil.getValue(supplierSettlementInfo,'companyName')}"  readonly="readonly" class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 结算周期开始时间 *  </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.settlementRangBeginTime}' placeholder='结算周期开始时间' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 结算周期结束时间 *  </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.settlementRangEndTime}' placeholder='结算周期结束时间' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 财务凭证 </label>
+								<div class='col-sm-9' th:include="meituFragment :: meiTuImgUpload('','settlement')">
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 备注 </label>
+								<div class='col-sm-9'>
+									<textarea th:field='${instance.remark}' rows="5" placeholder='描述' class='autosize-transition form-control' style="width:60%;"></textarea>
+								</div>
+							</div>
+							<div class="clearfix form-actions">
+								<div class="col-md-offset-3 col-md-9">
+									<button class="btn btn-info" type="submit">
+										<i class="icon-ok bigger-110"></i>
+										提交
+									</button>
+	
+									<button class="btn" type="reset">
+										<i class="icon-undo bigger-110"></i>
+										重置
+									</button>
+									
+									<a th:href="@{/settlement/list.do}" class="btn btn-prev">
+										<i class="icon-arrow-left"></i>
+										返回
+									</a>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div><!-- /.col -->
+		</div><!-- /.row -->
+	
+		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+			<i class="icon-double-angle-up icon-only bigger-110"></i>
+		</a>
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<script th:src="@{/resources/js/jquery.validate.min.js}"></script>
+		<!-- meitu scripts -->
+		<script th:src="@{/resources/meiTu/js/layer/layer.min.js}"></script>
+		<script th:src="@{/resources/meiTu/js/meiTu.js}"></script>
+		<script th:src="@{/resources/meiTu/js/meiTuInit.js}"></script>
+		
+		<!-- textarea 的自动宽度 -->
+		<script th:src="@{/resources/js/jquery.autosize.min.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+		
+		<script th:src="@{/resources/js/jquery.messages_zh.js}"></script>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		 jQuery(function($) {
+			 $("#validation-form").validate({
+		        rules: {
+					settlementCode: "required",
+					settlementUserId: "required",
+					settlementTime: "required",
+					settlementAmount: "required",
+					fromOrgId: "required",
+					toOrgId: "required",
+					settlementRangBeginTime: "required",
+					settlementRangEndTime: "required",
+					status: "required",
+
+		        }
+			});
+		 });
+		/*]]>*/
+		</script>
+	</body>
+</html>

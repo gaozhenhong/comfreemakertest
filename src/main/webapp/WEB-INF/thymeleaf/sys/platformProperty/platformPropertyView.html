@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>平台参数设置---查看</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+	</head>
+
+	<body style="background-color: white;">
+		<!-- PAGE CONTENT BEGINS -->
+		<div class="row page-content">
+			<div class="col-xs-12 tabbable">
+				<div class="tab-content">
+					<div class="tab-pane in active">
+						<form action="#" class="form-horizontal" role="form">
+							<input type="hidden"  th:field="${instance.id}"/>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> id </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.id}' placeholder='id' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 参数名称 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.name}' placeholder='参数名称' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 参数编码 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.code}' placeholder='参数编码' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 参数值 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.value}' placeholder='参数值' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> companyId </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.companyId}' placeholder='companyId' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> orgId </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.orgId}' placeholder='orgId' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> lastModifyTime </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.lastModifyTime}' placeholder='lastModifyTime' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> lastModifyUser </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.lastModifyUser}' placeholder='lastModifyUser' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> remark </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.remark}' placeholder='remark' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							
+							<div th:if="${!isModal}" class="clearfix form-actions">
+								<div class="col-md-offset-3 col-md-9">
+									<a th:href="@{/sys/platformProperty/list.do}" class="btn btn-prev">
+										<i class="icon-arrow-left"></i>
+										返回
+									</a>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div><!-- /.col -->
+		</div><!-- /.row -->
+	
+		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+			<i class="icon-double-angle-up icon-only bigger-110"></i>
+		</a>
+	</body>
+</html>

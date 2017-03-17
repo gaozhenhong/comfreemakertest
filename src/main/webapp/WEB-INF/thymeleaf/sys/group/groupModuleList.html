@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	 	<meta charset="utf-8" />
+		<title>用户组</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		 
+	 	<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+		
+		<style>
+		.tree .tree-folder-header .folder-choose  {
+			color: #f9e8ce;
+		    width: 13px;
+		    height: 13px;
+		    line-height: 13px;
+		    font-size: 11px;
+		    text-align: center;
+		    border-radius: 3px;
+		    -webkit-box-sizing: content-box;
+		    -moz-box-sizing: content-box;
+		    box-sizing: content-box;
+		    background-color: #fafafa;
+		    border: 1px solid #CCC;
+		    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    		}
+    		
+    		.tree .tree-folder-header .selected-icon {
+		    background-color: #f9a021;
+   			border-color: #f9a021;
+    			color: #FFF;
+    		}
+		</style>
+	</head>
+	<body style="background-color: white;">
+	
+		<div class="row-fluid">
+			<div class="span12">
+				<!-- PAGE CONTENT BEGINS -->
+				<div class="widget-box">
+					<div class="widget-header widget-header-blue widget-header-flat">
+						<h4 class="lighter">用户组管理</h4>
+					</div>
+					<div class="widget-body">
+						<div class="widget-main" style="min-height: 600px;height: 100%;padding: 0px;">
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="tabbable tabs-left" >
+										<ul class="nav nav-tabs" id="myTab3" style="width:200px;">
+											<li th:each="obj:${list}" th:class="${obj.id == chooseGroup.id?'active':''}" >
+												<a class="module-group" th:href="@{/sys/group/groupModuleList.do(groupId=${obj.id})}">
+													<i class="pink icon-dashboard bigger-110"></i>
+													<span th:text='${obj.name}'></span>
+												</a>
+											</li>
+										</ul>
+	
+										<div class="tab-content" style="border:1px solid #c5d0dc;padding: 0px 0px;">
+											<div id="home3" class="tab-pane in active">
+												<form th:action="@{/sys/group/addModuleToGroupAction.do}">
+													<div class="widget-box">
+														<div class="widget-header header-color-blue2">
+															<h4 class="lighter smaller">功能清单</h4>
+															<button class="btn btn-info" type="submit" style="float: right;">
+																<i class="icon-ok bigger-110"></i>
+																保存
+															</button>
+															<span th:text="${operationMessage}" style="float: right;color: orange;vertical-align: middle;"></span>
+														</div>
+														<div class="widget-body">
+															<input type="hidden"  name="chooseGroupId" id="chooseGroupId" th:value="${chooseGroup.id}"/>
+															<input type="hidden"  name="choosedNode" id="choosedNode"/>
+															<div class="widget-main padding-8">
+																<div id="tree1" class="tree">
+																	<div id="folder-template" class="tree-folder" style="display: none;">
+																		<div class="tree-folder-header">
+																			<i class="icon-minus"></i>
+																			<i class="icon-ok folder-choose"></i>
+																			<div class="tree-folder-name">Vehicles</div>
+																		</div>
+																		<div class="tree-folder-content" style="display: block;">
+																		</div>
+																	</div>
+																	<div id="item-template" class="tree-item" style="display: none;">
+																		<i class="icon-ok"></i>
+																		<div class="tree-item-name">SUVs</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div><!-- /.row -->
+				</div>
+			</div>
+		</div>
+		
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		<script th:src="@{/resources/ace/js/ace.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-elements.min.js}"></script>
+		
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		jQuery(function($) {
+			
+			$.ajax({ 
+				url: [[@{/sys/module/allModuleList2Json.do}]], 
+				context: document.body, 
+				type : "POST", 
+			    dataType:"json",
+			    contentType:'application/json;charset=UTF-8',
+				success: function(resultData){
+	        			initDataSource($('#tree1'),resultData);//输出全部功能模块树形结构
+	        			initChooseNode();//初始化已经选中的
+	      		},
+			    error:function(){
+			    	  alert("读取全部模块清单出错：error ");
+			    }
+			});
+			
+			/*初始化已经选中的*/
+			function initChooseNode(){
+				$.ajax({ 
+					url: [[@{/sys/module/userModuleList2Json.do}]], 
+					context: document.body, 
+					type : "POST", 
+				    dataType:"json",
+				    contentType:'application/json;charset=UTF-8',
+				    data : JSON.stringify({'id':$('#chooseGroupId').val()}),
+					success: function(resultData){
+						showChoosedItem(resultData);
+		      		},
+				    error:function(){
+				    	  alert("读取用户拥有权限的模块清单出错：error ");
+				    }
+				});
+			}
+			
+			/*把已经选择的勾上*/
+			function showChoosedItem(dataArray){
+				if(dataArray == null || dataArray == "")return ;
+				for(var i= 0 ;i < dataArray.length;i++){
+					$("#choosedNode").val($("#choosedNode").val()+","+dataArray[i].id)
+					if($('#'+dataArray[i].id).hasClass('tree-item')){
+						$('#'+dataArray[i].id).addClass("tree-selected");
+						$('#'+dataArray[i].id).find( "i").removeClass( "unselected-icon").addClass( "selected-icon");
+					}else{
+						$('#'+dataArray[i].id).find( "i:eq(1)").removeClass( "unselected-icon").addClass( "selected-icon");
+					}
+				}
+			}
+			
+			/*形成树形结构*/
+			function initDataSource(parentNode,dataArray){
+				//alert(JSON.stringify(dataArray));
+				for(var i= 0 ;i < dataArray.length;i++){
+					var wiwiTreeNode;
+					if(dataArray[i].subModuleList != null && dataArray[i].subModuleList.length > 0){
+						wiwiTreeNode = $('#folder-template').clone().show();
+						wiwiTreeNode.find(".tree-folder-name").html(dataArray[i].name);
+					}else{
+						wiwiTreeNode = $('#item-template').clone().show();
+						wiwiTreeNode.find(".tree-item-name").html(dataArray[i].name);
+					}
+					wiwiTreeNode.attr('id',dataArray[i].id)
+					
+					if(parentNode.hasClass("tree")){
+						parentNode.append(wiwiTreeNode);
+					}else{
+						parentNode.find('.tree-folder-content').first().append(wiwiTreeNode);
+					}
+					if(dataArray[i].subModuleList != null && dataArray[i].subModuleList.length > 0){
+						initDataSource(wiwiTreeNode,dataArray[i].subModuleList);
+					}
+				}
+			}
+			
+			
+			/*选中文件夹*/
+			$(document).on("click", ".folder-choose",function (evt) {
+				evt.stopPropagation();
+				var folderCheckbox = $(this);
+				var folder = $(this).parent().parent();
+				
+				if (folderCheckbox.hasClass("selected-icon")) {
+					folderCheckbox.removeClass( "selected-icon").addClass( "unselected-icon");
+					$("#choosedNode").val($("#choosedNode").val().replace(","+ folder.attr("id"),"" ))
+					/**取消下面的结点*/
+					folder.find(".tree-item").each(function (){
+						$(this).removeClass("tree-selected");
+						$("#choosedNode").val($("#choosedNode").val().replace(","+ $(this).attr("id"),"" ))
+					});
+					folder.find(".tree-item").find( "i").removeClass( "selected-icon").addClass( "unselected-icon");
+					/**取消下面的文件夹*/
+					folder.find(".tree-folder").each(function (){
+						$(this).find( "i:eq(1)").removeClass( "selected-icon").addClass( "unselected-icon");
+						$("#choosedNode").val($("#choosedNode").val().replace(","+ $(this).attr("id"),"" ));
+					});
+					
+				}else{
+					folderCheckbox.removeClass( "unselected-icon").addClass( "selected-icon");
+					$("#choosedNode").val($("#choosedNode").val()+"," + folder.attr("id"));
+					/**选中下面的结点*/
+					folder.find(".tree-item").each(function (){
+						$(this).addClass("tree-selected");
+						$("#choosedNode").val($("#choosedNode").val()+"," + $(this).attr("id"));
+					});
+					
+					folder.find(".tree-item").find( "i").removeClass( "unselected-icon").addClass( "selected-icon");
+					/**选中下面的文件夹*/
+					folder.find(".tree-folder").each(function (){
+						$(this).find( "i:eq(1)").removeClass( "unselected-icon").addClass( "selected-icon");
+						$("#choosedNode").val($("#choosedNode").val()+"," + $(this).attr("id"));
+					});
+				}
+				
+		    });
+			
+			/*展开文件夹*/
+			$(document).on("click", ".tree-folder",function (evt) {
+				evt.stopPropagation();
+				var folder = $(this);
+				if (folder.find("i:eq(0)").hasClass('icon-plus')) {
+					folder.find("i:eq(0)").removeClass( "icon-plus") .addClass( "icon-minus");
+					folder.find(".tree-folder-content:eq(0)").css('display','block');
+				}else{
+					folder.find("i:eq(0)").removeClass( "icon-minus") .addClass( "icon-plus");
+					folder.find(".tree-folder-content:eq(0)").css('display','none');
+				}
+		    });
+			
+			/*选中结点*/
+			$(document).on("click", ".tree-item",function (evt) {
+				evt.stopPropagation();
+				var item = $(this);
+				if (item.hasClass("tree-selected")) {
+					//取消的时候不考虑父结点，因为父结点也可能作为一个独立的菜单存在 
+					item.removeClass("tree-selected");
+					item.find( "i").removeClass( "selected-icon").addClass( "unselected-icon");
+					$("#choosedNode").val($("#choosedNode").val().replace(","+ item.attr("id"),"" ));
+					
+				}else{
+					item.addClass("tree-selected");
+					item.find( "i").removeClass( "unselected-icon").addClass( "selected-icon");
+					$("#choosedNode").val($("#choosedNode").val()+"," + item.attr("id"));
+					
+					/*选中父结点*/
+					item.parents().each(function (){
+						if($(this).hasClass("tree-folder") && !$(this).find( "i:eq(1)").hasClass("selected-icon")){
+							$(this).find( "i:eq(1)").removeClass( "unselected-icon").addClass( "selected-icon");
+							$("#choosedNode").val($("#choosedNode").val()+"," + $(this).attr("id"));
+						}
+					});
+					
+				}
+		    });
+			
+		 });
+		
+		/*]]>*/
+		</script>
+		
+		
+	</body>
+</html>

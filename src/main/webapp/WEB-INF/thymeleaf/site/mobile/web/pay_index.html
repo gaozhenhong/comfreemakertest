@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
+<title>流浪狗</title>
+<link href="../../../../../resources/mobile/css/bootstrap.min.css" th:href="@{/resources/mobile/css/bootstrap.min.css}"  rel="stylesheet"/>
+<link href="../../../../../resources/mobile/css/app.css" th:href="@{/resources/mobile/css/app.css}"  rel="stylesheet"/>
+<script src="../../../../../resources/mobile/js/jquery.min.js" th:src="@{/resources/mobile/js/jquery.min.js}" ></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/iscroll.js" th:src="@{/resources/mobile/js/iscroll.js}"></script>
+<script src="../../../../../resources/mobile/js/bootstrap.min.js" th:src="@{/resources/mobile/js/bootstrap.min.js}" ></script>
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+var myScroll;
+function loaded(){myScroll = new IScroll('#wrapper', { mouseWheel: true,click:true});}
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+
+function onBridgeReady(){
+	/*alert(JSON.stringify({"appId":[[${jsapiPar.getString("appId")}]],//公众号名称，由商户传入     
+	       "timeStamp":[[${jsapiPar.getString("timeStamp")}]],//时间戳，自1970年以来的秒数     
+	       "nonceStr":[[${jsapiPar.getString("nonceStr")}]], //随机串     
+	       "package":[[${jsapiPar.getString("package")}]],     
+	       "signType":[[${jsapiPar.getString("signType")}]],//微信签名方式     
+	       "paySign":[[${jsapiPar.getString("paySign")}]] //微信签名 
+	       }));*/
+   WeixinJSBridge.invoke(
+       'getBrandWCPayRequest',
+       {"appId":[[${jsapiPar.getString("appId")}]],//公众号名称，由商户传入     
+       "timeStamp":[[${jsapiPar.getString("timeStamp")}]],//时间戳，自1970年以来的秒数     
+       "nonceStr":[[${jsapiPar.getString("nonceStr")}]], //随机串     
+       "package":[[${jsapiPar.getString("package")}]],     
+       "signType":[[${jsapiPar.getString("signType")}]],//微信签名方式     
+       "paySign":[[${jsapiPar.getString("paySign")}]] //微信签名 
+       },
+       function(res){     
+           if(res.err_msg == "get_brand_wcpay_request:ok" ){// 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。 
+        	   		var href= [[@{'/site/mobile/member/center/order/pay/success?orderId='+${order.id}+'&payPrice='+${order.totalPrice}}]];
+       	   	   	window.location.href=href;
+           }else{
+        	   		$("#pay-message").show();
+           }
+       }
+   ); 
+}
+
+function payOrder(){
+	//订单验证成功
+	 if(checkOrder()){
+		if (typeof WeixinJSBridge == "undefined"){
+		   if( document.addEventListener ){
+		       document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+		   }else if (document.attachEvent){
+		       document.attachEvent('WeixinJSBridgeReady', onBridgeReady); 
+		       document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+		   }
+		}else{
+		   onBridgeReady();
+		}
+	//订单验证失败
+	 }else{
+		 $("#pay-check-message").show();
+	 }
+}
+
+function paySuccess(){
+	var href= [[@{'/site/mobile/member/center/order/pay/success?orderId='+${order.id}+'&payPrice='+${order.totalPrice}}]];
+	    window.location.href=href;
+}
+
+/**
+ * 支付前验证订单是否有效
+ */
+function checkOrder(){
+	//if(columnId == null || columnId == "") return false;
+	var orderId=[[${order.id}]];
+	var href= [[@{'/site/mobile/member/center/order/pay/checkOrder?orderId='+${order.id}}]];
+	$.ajax({ 
+		url: href, 
+		context: document.body, 
+		type : "POST", 
+	    dataType:"text",
+	    contentType:'application/json;charset=UTF-8',
+	    data : {},
+		success: function(resultData){
+			var checkObj=resultData;
+			if(checkObj){
+				return true;
+			}else{
+				return false;
+			}
+		},
+	    error:function(xhr,status,error){
+	    	  	$("#pay-check-message").text("订单检查异常：error=" + error);
+	    	  	$("#pay-check-message").show();
+	    	  	return false;
+	    }
+	});
+}
+/*]]>*/
+</script>
+</head>
+<body onload="loaded()">
+<div id="wrapper">
+	<div id="scroller">
+	<!-- 开始主体内容 -->
+
+<div>
+	<div>
+		<h3 th:text="${hotel.name}" style="background: #99d3d2;margin:0px;color:#fff;padding-left:10px;padding-top:20px;">大理双廊别想那只大象海景客栈</h3>
+	</div>
+	<ul class="inninfo" th:each="instance:${orderDetails}">
+		<li><h5 th:text="${#dates.format(instance.consumeBeginTime,'yyyy-MM-dd')}+至+${#dates.format(instance.consumeEndTime,'yyyy-MM-dd')}+共+${instance.orderNumber}+间+${DateUtils.compareDate(instance.consumeBeginTime, instance.consumeEndTime)}+晚">12月20日-12月22日 共2晚</h5></li>
+		<li><h5 th:text="房型：+${instance.productName}"></h5></li>
+		<li><h5 th:text="床型：+${romeService.get(instance.productId).roomType.bedType}"></h5></li>
+		<li><h5 th:text="每间最多可入住人数：+${romeService.get(instance.productId).roomType.availableNumber}+人"></h5></li>
+	</ul>
+
+	<ul class="paydiv list-group">
+	 <li class="list-group-item" style="border-top:0px;">
+		<span class="list-group-item-heading" style="font-size:16px">支付房费：</span>
+		<span class="price" style="font-size:16px;padding-left:5px;">¥<span th:text="${order.totalPrice}" style="padding-left:0px;">1280.00</span>元</span>
+	  </li>
+	  <li class="list-group-item" style="border-bottom:0px;">
+		<span class="list-group-item-heading" style="font-size:16px">请选择支付方式</span>
+	  </li>
+	  <li class="list-group-item" style="border-top:0px;border-bottom:0px;">
+		  <a href="javascript:payOrder()" class="nextbtn btn btn-primary btn-lg center-block">
+			<img th:src="@{/resources/mobile/images/wx.png}"/> 微信支付
+		  </a>
+	  </li>
+	  <li class="list-group-item" style="border-top:0px;border-bottom:0px;text-align:center;">
+		  <span id="pay-message" style="font-size:16px;color:red;padding-left:0;display:none;">支付失败，请稍后再试</span>
+		  <span id="pay-check-message" style="font-size:16px;color:red;padding-left:0;display:none;">您预订的房间已被售出！</span>
+	  </li>
+	  <!-- <li class="list-group-item" style="border-top:0px;border-bottom:0px;">
+		  <a href="javascript:paySuccess()" class="nextbtn btn btn-primary btn-lg center-block">
+			<img th:src="@{/resources/mobile/images/wx.png}"/>支付成功
+		  </a>
+	  </li>
+	   <li class="list-group-item" style="border-top:0px;border-bottom:0px;">
+		  <a class="nextbtn btn btn-primary btn-lg center-block" th:href="@{/site/mobile/member/center/orderDetail(orderId=${order.id})}">
+			返回
+		  </a>
+	  </li>
+	 <li class="list-group-item">
+		<span class="list-group-item-heading"><img src="../../../../../resources/mobile/images/zfb.png"> 支付宝支付</span>
+		<input type="radio" name="optionsRadios" id="optionsRadios1" value="option2">
+	  </li>
+	  <li class="list-group-item">
+		<span class="list-group-item-heading"><img src="images/yh.png"> 银行卡支付</span>
+		<input type="radio" name="optionsRadios" id="optionsRadios1" value="option3">
+	  </li> -->
+	</ul>
+</div>
+
+
+
+	<!-- 结束主体内容 -->
+	</div>
+</div>
+
+<div id="footer" th:include="site/mobile/web/fragment/navFragment :: navTab(2)">
+		<div class="btn-group btn-group-justified" role="group">
+			<div class="btn-group" role="group">
+				<a href="index.html" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-home"></i> <br/>主页
+				</a>
+			</div>
+			<div class="btn-group" role="group">
+				<a href="zb.html" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-map-marker"></i> <br/>周边
+				</a>
+			</div>
+			<div class="btn-group" role="group">
+				<a href="my.html" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-user"></i> <br/>我的
+				</a>
+			</div>
+		</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>知识库管理---查看</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+	</head>
+
+	<body style="background-color: white;">
+		<!-- PAGE CONTENT BEGINS -->
+		<div class="row page-content">
+			<div class="col-xs-12 tabbable">
+				<ul th:if="${!isModal}" class="nav nav-tabs padding-12 tab-color-blue background-blue" >
+					<li>
+						<a th:href="@{/sys/knowledge/list.do(categoryId=${ chooseCategoryId })}">知识列表</a>
+					</li>
+					<li >
+						<a th:href="@{/sys/knowledge/add.do(chooseCategoryId=${ chooseCategoryId })}">添加</a>
+					</li>
+					<li th:class="active">
+						<a >查看</a>
+					</li>
+					<li class="message-tab">
+						<span th:text="${operationMessage}"></span>
+					</li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane in active">
+						<form action="#" class="form-horizontal" role="form">
+							<input type="hidden"  th:field="${instance.id}"/>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> id </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.id}' placeholder='id' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 名称 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.name}' placeholder='名称' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 分类 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.category.id}' placeholder='分类' class='col-xs-10 col-sm-5' />
+									<input type='hidden' th:field='${instance.category.name}' placeholder='分类' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 标签 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.labels}' placeholder='标签' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 文件 </label>
+								<div class='col-sm-9'>
+									<a target="_blank" th:if="${knowledgeFile}" th:href="@{${knowledgeFile.resPath}}">
+									<span th:text="${knowledgeFile.resName}">下载</span>
+									<i class="icon-download-alt bigger-125 blue"></i>
+									</a>
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 其他参数 </label>
+								<div class='col-sm-9'>
+									<table id="parameter_table" class="table table-striped table-bordered table-hover" style="margin-bottom: 0px;">
+										<thead>
+											<tr>
+												<th >属性名称</th>
+												<th >属性值</th>
+											</tr>
+										</thead>
+										
+										<tbody  >
+											<tr th:each="para : ${parameters}" >
+												<td >
+													<input type='text' name="parameterName" th:value="${para.get('name')}" placeholder='属性名称' class="col-xs-4" style="width:100%;" />
+												</td>
+												<td >
+													<input type='text' name="parameterValue"  th:value="${para.get('value')}" placeholder='属性值' class="col-xs-4" style="width:100%;" />
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 文件类型 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.fileType}' placeholder='文件类型' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> Logo </label>
+								<div class='col-sm-9'>
+									<img th:src="@{${resource}?${resource.resPath}:''}"/>
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 浏览次数 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.browseCount}' placeholder='浏览次数' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 下载次数 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.downloadCount}' placeholder='下载次数' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 所属机构 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.orgId}' placeholder='所属机构' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 创建人 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.createUserId}' placeholder='创建人' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 创建时间 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.createTime}' placeholder='创建时间' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 最后修改人 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.lastModifyUserId}' placeholder='最后修改人' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 最后修改时间 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.lastModifyTime}' placeholder='最后修改时间' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 描述 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.description}' placeholder='描述' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							
+							<div th:if="${!isModal}" class="clearfix form-actions">
+								<div class="col-md-offset-3 col-md-9">
+									<a th:href="@{/sys/knowledge/list.do}" class="btn btn-prev">
+										<i class="icon-arrow-left"></i>
+										返回
+									</a>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div><!-- /.col -->
+		</div><!-- /.row -->
+	
+		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+			<i class="icon-double-angle-up icon-only bigger-110"></i>
+		</a>
+	</body>
+</html>

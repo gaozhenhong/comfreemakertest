@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	 	<meta charset="utf-8" />
+		<title>消息管理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		 
+	 	<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+	<body style="background-color: white;">
+		<div class="page-content">
+			<!-- PAGE CONTENT BEGINS -->
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="tabbable">
+						<ul id="inbox-tabs" class="inbox-tabs nav nav-tabs padding-16 tab-size-bigger tab-space-1">
+							<!-- @LCY_TODO -->
+							<li class="hide li-new-mail pull-right">
+								<a data-toggle="tab" href="#write" data-target="write" class="btn-new-mail">
+									<span class="btn bt1n-small btn-purple no-border">
+										<i class=" icon-envelope bigger-130"></i>
+										<span class="bigger-110">发信息</span>
+									</span>
+								</a>
+							</li><!-- ./li-new-mail -->
+
+							<li class="active">
+								<a data-toggle="tab" href="#inbox" data-target="inbox">
+									<i class="blue icon-inbox bigger-130"></i>
+									<span class="bigger-110">收件箱</span>
+								</a>
+							</li>
+							<!-- @LCY_TODO -->
+							<li class="hide">
+								<a data-toggle="tab" th:href="@{/sys/message/sentList.do}" data-target="sent">
+									<i class="orange icon-location-arrow bigger-130 "></i>
+									<span class="bigger-110">已发信息</span>
+								</a>
+							</li>
+							<!-- LCY_TODO -->
+							<li class="dropdown" style="display:none;">
+								<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+									<i class="pink icon-flag bigger-130"></i>
+
+									<span class="bigger-110">
+										旗标
+										<i class="icon-caret-down"></i>
+									</span>
+								</a>
+
+								<ul class="dropdown-menu dropdown-light-blue dropdown-125">
+									<li>
+										<a data-toggle="tab" href="#tag-1" data-target="tag-1">
+											<span class="mail-tag badge badge-pink"></span>
+											<span class="pink icon-flag"></span>
+										</a>
+									</li>
+									<li>
+										<a data-toggle="tab" href="#tag-1" data-target="tag-1">
+											<span class="mail-tag badge badge-success"></span>
+											<span class="green icon-flag"></span>
+										</a>
+									</li>
+									<li>
+										<a data-toggle="tab" href="#tag-1" data-target="tag-1">
+											<span class="mail-tag badge badge-info"></span>
+											<span class="blue icon-flag"></span>
+										</a>
+									</li>
+									<li>
+										<a data-toggle="tab" href="#tag-1" data-target="tag-1">
+											<span class="mail-tag badge badge-grey"></span>
+											<span class="grey icon-flag"></span>
+										</a>
+									</li>
+								</ul>
+							</li><!-- /.dropdown -->
+						</ul>
+
+						<div class="tab-content no-border no-padding">
+							<div class="tab-pane in active">
+								<div class="message-container">
+									<div id="id-message-list-navbar" class="message-navbar align-center clearfix">
+										<div class="message-bar">
+											<div class="message-infobar" id="id-message-infobar">
+												<span class="blue bigger-150">收件箱</span>
+												<span th:if="${unreadNumber > 0}" class="grey bigger-110" >
+													(<span id="unreadNumber" class="red" style="font-size: 16px;" th:text="${unreadNumber}" >2</span>  条未读)
+												</span>
+											</div>
+
+											<div class="message-toolbar hide">
+												<div class="inline position-relative align-left">
+													<a href="#" class="btn-message btn btn-xs dropdown-toggle" data-toggle="dropdown">
+														<span class="bigger-110">操作</span>
+
+														<i class="icon-caret-down icon-on-right"></i>
+													</a>
+
+													<ul class="dropdown-menu dropdown-lighter dropdown-caret dropdown-125">
+														<li>
+															<a href="#">
+																<i class="icon-mail-reply blue"></i>
+																&nbsp; 回复
+															</a>
+														</li>
+
+														<li>
+															<a href="#">
+																<i class="icon-mail-forward green"></i>
+																&nbsp; 转发
+															</a>
+														</li>
+
+														<li class="divider"></li>
+
+														<li>
+															<a class="mark-read" >
+																<i class="icon-eye-open blue"></i>
+																&nbsp; 标记为已读
+															</a>
+														</li>
+													</ul>
+												</div>
+												<!-- LCY_TODO -->
+												<div class="inline position-relative align-left" style="display:none;">
+													<a href="#" class="btn-message btn btn-xs dropdown-toggle" data-toggle="dropdown">
+														<i class="icon-folder-close-alt bigger-110"></i>
+														<span class="bigger-110">加旗标</span>
+
+														<i class="icon-caret-down icon-on-right"></i>
+													</a>
+
+													<ul class="dropdown-menu dropdown-lighter dropdown-caret dropdown-125">
+														<li>
+															<a data-toggle="tab" href="#tag-1" data-target="tag-1">
+																<span class="mail-tag badge badge-pink"></span>
+																<span class="pink icon-flag"></span>
+															</a>
+														</li>
+														<li>
+															<a data-toggle="tab" href="#tag-1" data-target="tag-1">
+																<span class="mail-tag badge badge-success"></span>
+																<span class="green icon-flag"></span>
+															</a>
+														</li>
+														<li>
+															<a data-toggle="tab" href="#tag-1" data-target="tag-1">
+																<span class="mail-tag badge badge-info"></span>
+																<span class="blue icon-flag"></span>
+															</a>
+														</li>
+														<li>
+															<a data-toggle="tab" href="#tag-1" data-target="tag-1">
+																<span class="mail-tag badge badge-grey"></span>
+																<span class="grey icon-flag"></span>
+															</a>
+														</li>
+													</ul>
+												</div>
+
+											<a class="btn btn-xs btn-message batch-delete"> <i
+												class="icon-trash bigger-125"></i> <span class="bigger-110">删除</span>
+											</a>
+										</div>
+										</div>
+
+										<div>
+											<div class="messagebar-item-left">
+												<label class="inline middle">
+													<input type="checkbox" id="id-toggle-all" class="ace" />
+													<span class="lbl"></span>
+												</label>
+
+												&nbsp;
+												<div class="inline position-relative">
+													<a href="#" data-toggle="dropdown" class="dropdown-toggle">
+														<i class="icon-caret-down bigger-125 middle"></i>
+													</a>
+
+													<ul class="dropdown-menu dropdown-lighter dropdown-100">
+														<li>
+															<a id="id-select-message-all" href="#">全选</a>
+														</li>
+
+														<li>
+															<a id="id-select-message-none" href="#">全取消</a>
+														</li>
+
+														<li class="divider"></li>
+
+														<li>
+															<a id="id-select-message-unread" href="#">未读</a>
+														</li>
+
+														<li>
+															<a id="id-select-message-read" href="#">已读</a>
+														</li>
+													</ul>
+												</div>
+											</div>
+
+											<div class="messagebar-item-right">
+												<div class="inline position-relative">
+													<a href="#" data-toggle="dropdown" class="dropdown-toggle">
+														排序 &nbsp;
+														<i class="icon-caret-down bigger-125"></i>
+													</a>
+
+													<ul class="dropdown-menu dropdown-lighter pull-right dropdown-100">
+														<li>
+															<a href="#">
+																<i class="icon-ok green"></i>
+																接收时间
+															</a>
+														</li>
+
+														<li>
+															<a href="#">
+																<i class="icon-ok invisible"></i>
+																来源
+															</a>
+														</li>
+
+														<li>
+															<a href="#">
+																<i class="icon-ok invisible"></i>
+																标题
+															</a>
+														</li>
+													</ul>
+												</div>
+											</div>
+
+											<div class="nav-search minimized">
+												<form class="form-search">
+													<span class="input-icon">
+														<input type="text" autocomplete="off" class="input-small nav-search-input" placeholder="根据标题查询 ..." />
+														<i class="icon-search nav-search-icon"></i>
+													</span>
+												</form>
+											</div>
+										</div>
+									</div>
+
+									<div id="id-message-item-navbar" class="hide message-navbar align-center clearfix">
+										<div class="message-bar">
+											<span class="blue bigger-150">消息阅读</span>
+										</div>
+
+										<div>
+											<div class="messagebar-item-left">
+												<a href="#" class="btn-back-message-list">
+													<i class="icon-arrow-left blue bigger-110 middle"></i>
+													<b class="bigger-110 middle">返回</b>
+												</a>
+											</div>
+
+											<div class="messagebar-item-right">
+												<span class="time grey"></span>
+											</div>
+										</div>
+									</div>
+
+									<div id="id-message-new-navbar" class="hide message-navbar align-center clearfix">
+										<div class="message-bar">
+											<div class="message-toolbar">
+												<a href="#" class="btn btn-xs btn-message">
+													<i class="icon-save bigger-125"></i>
+													<span class="bigger-110">保存草稿</span>
+												</a>
+
+												<a href="#" class="btn btn-xs btn-message">
+													<i class="icon-remove bigger-125"></i>
+													<span class="bigger-110">删除</span>
+												</a>
+											</div>
+										</div>
+
+										<div class="message-item-bar">
+											<div class="messagebar-item-left">
+												<a href="#" class="btn-back-message-list no-hover-underline">
+													<i class="icon-arrow-left blue bigger-110 middle"></i>
+													<b class="middle bigger-110">返回</b>
+												</a>
+											</div>
+
+											<div class="messagebar-item-right">
+												<span class="inline btn-send-message">
+													<button type="button" class="btn btn-sm btn-primary no-border">
+														<span class="bigger-110">发送</span>
+
+														<i class="icon-arrow-right icon-on-right"></i>
+													</button>
+												</span>
+											</div>
+										</div>
+									</div>
+
+									<div class="message-list-container">
+										<div class="message-list" id="message-list">
+											<div th:each="obj:${list}" th:class="${obj.readStatus==1 ?'message-item': 'message-item message-unread'}">
+												<label class="inline">
+													<input name="rowId" th:value="${obj.id}" type="checkbox" class="ace" />
+													<span class="lbl"></span>
+												</label>
+
+												<i class="message-star icon-star orange2"></i>
+												<span th:text="${obj.sentPerson.name}">发送者 </span>
+												<span class="time" style="width:120px;" th:text="${#dates.format(obj.sentTime,'yyyy-MM-dd HH:mm')}">1:33 pm</span>
+
+												<span class="summary">
+													<span class="text title" th:attr="data-id=${obj.id},data-link=@{${obj.message != null and #strings.length(obj.message) >0 }?'':${obj.link}}"
+													 th:text="${ (obj.messageType != null and #strings.length(obj.messageType) > 0  )? '【'+obj.messageType +'】' + obj.messageTitle:obj.messageTitle}">
+														标题
+													</span>
+												</span>
+											</div>
+										</div>
+									</div><!-- /.message-list-container -->
+
+									<div class="message-footer clearfix" >
+										<ul th:replace="fragment :: pagination"></ul>
+									</div>
+									<div class="hide message-footer message-footer-style2 clearfix">
+										<div class="pull-left">  </div>
+
+										<div class="pull-right">
+											<span class="inline middle" th:text="${'总' + pager.totalRecord +'条'}"></span>
+											&nbsp; &nbsp;
+											<ul class="pagination middle">
+												<li class="disabled">
+													<span>
+														<i class="icon-angle-left bigger-150"></i>
+													</span>
+												</li>
+
+												<li>
+													<a href="#">
+														<i class="icon-angle-right bigger-150"></i>
+													</a>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div><!-- /.message-container -->
+							</div><!-- /.tab-pane -->
+						</div><!-- /.tab-content -->
+					</div><!-- /.tabbable -->
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+			
+			
+			<div class="hide message-content" id="id-message-content">
+			</div><!-- /.message-content -->
+			
+			
+		</div><!-- /.page-content -->
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		
+		<script th:src="@{/resources/js/jquery.slimscroll.min.js}"></script>
+		<!-- 表格排序 分页绑定JS --> 
+		<script th:src="@{/resources/jsoil/js/jsoil.common.table.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			jQuery(function($){
+				var prevTab = 'inbox';
+				$('#inbox-tabs a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+					var currentTab = $(e.target).data('target');
+					if(currentTab == 'write') {
+						Inbox.show_form();
+					}
+					else {
+						if(prevTab == 'write')
+							Inbox.show_list();
+			
+						//load and display the relevant messages 
+					}
+					prevTab = currentTab;
+				});
+			
+			
+				
+				//basic initializations
+				$('.message-list .message-item input[type=checkbox]').removeAttr('checked');
+				$('.message-list').delegate('.message-item input[type=checkbox]' , 'click', function() {
+					$(this).closest('.message-item').toggleClass('selected');
+					if(this.checked) Inbox.display_bar(1);//display action toolbar when a message is selected
+					else {
+						Inbox.display_bar($('.message-list input[type=checkbox]:checked').length);
+						//determine number of selected messages and display/hide action toolbar accordingly
+					}		
+				});
+			
+			
+				//check/uncheck all messages
+				$('#id-toggle-all').removeAttr('checked').on('click', function(){
+					if(this.checked) {
+						Inbox.select_all();
+					} else Inbox.select_none();
+				});
+				
+				//select all
+				$('#id-select-message-all').on('click', function(e) {
+					e.preventDefault();
+					Inbox.select_all();
+				});
+				
+				//select none
+				$('#id-select-message-none').on('click', function(e) {
+					e.preventDefault();
+					Inbox.select_none();
+				});
+				
+				//select read
+				$('#id-select-message-read').on('click', function(e) {
+					e.preventDefault();
+					Inbox.select_read();
+				});
+			
+				//select unread
+				$('#id-select-message-unread').on('click', function(e) {
+					e.preventDefault();
+					Inbox.select_unread();
+				});
+				
+				//mark read
+				$('.mark-read').on('click', function(e) {
+					e.preventDefault();
+					$.ajax({
+						url: [[@{/sys/message/markToReadAction.do}]], 
+						context: document.body, 
+						type : "GET", 
+					    dataType:"text",
+					    contentType:'application/json;charset=UTF-8',
+					    data : {
+					    		"ids": getAllCheckedRowId()
+					    },
+						success: function(resultData){
+							window.location.reload();;
+			      		},
+					    error:function(xhr,status,error){
+					    	  	alert("标记失败，请检查！error="+error);
+					    	  	return false;
+					    }
+					});
+				});
+				
+				//删除
+				$('.batch-delete').on('click', function(e) {
+					e.preventDefault();
+					$.ajax({
+						url: [[@{/sys/message/batchDeleteAction.do}]], 
+						context: document.body, 
+						type : "GET", 
+					    dataType:"text",
+					    contentType:'application/json;charset=UTF-8',
+					    data : {
+					    		"ids": getAllCheckedRowId()
+					    },
+						success: function(resultData){
+							window.location.reload();;
+			      		},
+					    error:function(xhr,status,error){
+					    	  	alert("删除失败，请检查！error="+error);
+					    	  	return false;
+					    }
+					});
+				});
+			
+				/////////
+			
+				//display first message in a new area
+				$('.message-list .message-item .title').on('click', function() {
+					//show the loading icon
+					$('.message-container').append('<div class="message-loading-overlay"><i class="icon-spin icon-spinner orange2 bigger-160"></i></div>');
+					
+					$('.message-inline-open').removeClass('message-inline-open').find('.message-content').remove();
+			
+					var message_list = $(this).closest('.message-list');
+					var href = [[@{/sys/message/view.do}]]+'?id=' + $(this).attr("data-id");
+					if($(this).attr("data-link") !=null && $(this).attr("data-link") != ""){
+						href = $(this).attr("data-link");
+					}
+					var messageItem = $(this).closest(".message-item");
+					
+					$.ajax({ 
+						url: href, 
+						context: document.body, 
+						type : "POST", 
+					    dataType:"text",
+					    contentType:'application/json;charset=UTF-8',
+					    data : JSON.stringify({
+					    		"id": $(this).attr("data-id")
+					    }),
+						success: function(resultData){
+							//alert(resultData);
+							$("#id-message-content").html(resultData);
+							if(messageItem != null && messageItem.hasClass("message-unread")){
+								//修改未读条数
+								var unreadNumber = $("#unreadNumber").text();
+								if(parseInt(unreadNumber) == 1){
+									$("#unreadNumber").text(0);
+									$("#unreadNumber").parent().addClass("hide");
+								}else{
+									$("#unreadNumber").text(parseInt(unreadNumber) - 1);
+								}
+								
+								//修改本条记录的样式
+								messageItem.removeClass("message-unread");
+								//LCY_TODO 还需要修改父窗口的提示铃
+							}
+							//some waiting
+							//hide everything that is after .message-list (which is either .message-content or .message-form)
+							message_list.next().addClass('hide');
+							$('.message-container').find('.message-loading-overlay').remove();
+				
+							//close and remove the inline opened message if any!
+				
+							//hide all navbars
+							$('.message-navbar').addClass('hide');
+							//now show the navbar for single message item
+							$('#id-message-item-navbar').removeClass('hide');
+				
+							//hide all footers
+							$('.message-footer').addClass('hide');
+							//now show the alternative footer
+							$('.message-footer-style2').removeClass('hide');
+				
+							
+							//move .message-content next to .message-list and hide .message-list
+							message_list.addClass('hide').after($('.message-content')).next().removeClass('hide');
+							$("#id-message-content").removeClass("hide");
+							//add scrollbars to .message-body
+							$('.message-content .message-body').slimScroll({
+								height: 200,
+								railVisible:true
+							});
+			      		},
+					    error:function(xhr,status,error){
+					    	  	alert("读取消息失败，请检查！error="+error);
+					    	  	return false;
+					    }
+					});
+				});
+			
+			
+				//back to message list
+				$('.btn-back-message-list').on('click', function(e) {
+					e.preventDefault();
+					Inbox.show_list();
+					$('#inbox-tabs a[data-target="inbox"]').tab('show'); 
+				});
+			
+			
+			
+				//hide message list and display new message form
+				/**
+				$('.btn-new-mail').on('click', function(e){
+					e.preventDefault();
+					Inbox.show_form();
+				});
+				*/
+			
+			
+			
+			
+				var Inbox = {
+					//displays a toolbar according to the number of selected messages
+					display_bar : function (count) {
+						if(count == 0) {
+							$('#id-toggle-all').removeAttr('checked');
+							$('#id-message-list-navbar .message-toolbar').addClass('hide');
+							$('#id-message-list-navbar .message-infobar').removeClass('hide');
+						}
+						else {
+							$('#id-message-list-navbar .message-infobar').addClass('hide');
+							$('#id-message-list-navbar .message-toolbar').removeClass('hide');
+						}
+					}
+					,
+					select_all : function() {
+						var count = 0;
+						$('.message-item input[type=checkbox]').each(function(){
+							this.checked = true;
+							$(this).closest('.message-item').addClass('selected');
+							count++;
+						});
+						
+						$('#id-toggle-all').get(0).checked = true;
+						
+						Inbox.display_bar(count);
+					}
+					,
+					select_none : function() {
+						$('.message-item input[type=checkbox]').removeAttr('checked').closest('.message-item').removeClass('selected');
+						$('#id-toggle-all').get(0).checked = false;
+						
+						Inbox.display_bar(0);
+					}
+					,
+					select_read : function() {
+						$('.message-unread input[type=checkbox]').removeAttr('checked').closest('.message-item').removeClass('selected');
+						
+						var count = 0;
+						$('.message-item:not(.message-unread) input[type=checkbox]').each(function(){
+							this.checked = true;
+							$(this).closest('.message-item').addClass('selected');
+							count++;
+						});
+						Inbox.display_bar(count);
+					}
+					,
+					select_unread : function() {
+						$('.message-item:not(.message-unread) input[type=checkbox]').removeAttr('checked').closest('.message-item').removeClass('selected');
+						
+						var count = 0;
+						$('.message-unread input[type=checkbox]').each(function(){
+							this.checked = true;
+							$(this).closest('.message-item').addClass('selected');
+							count++;
+						});
+						
+						Inbox.display_bar(count);
+					}
+				}
+			
+				//show message list (back from writing mail or reading a message)
+				Inbox.show_list = function() {
+					$('.message-navbar').addClass('hide');
+					$('#id-message-list-navbar').removeClass('hide');
+			
+					$('.message-footer').addClass('hide');
+					$('.message-footer:not(.message-footer-style2)').removeClass('hide');
+			
+					$('.message-list').removeClass('hide').next().addClass('hide');
+					//hide the message item / new message window and go back to list
+				}
+			
+				//show write mail form
+				Inbox.show_form = function() {
+					if($('.message-form').is(':visible')) return;
+					if(!form_initialized) {
+						initialize_form();
+					}
+					
+					
+					var message = $('.message-list');
+					$('.message-container').append('<div class="message-loading-overlay"><i class="icon-spin icon-spinner orange2 bigger-160"></i></div>');
+					
+					setTimeout(function() {
+						message.next().addClass('hide');
+						
+						$('.message-container').find('.message-loading-overlay').remove();
+						
+						$('.message-list').addClass('hide');
+						$('.message-footer').addClass('hide');
+						$('.message-form').removeClass('hide').insertAfter('.message-list');
+						
+						$('.message-navbar').addClass('hide');
+						$('#id-message-new-navbar').removeClass('hide');
+						
+						
+						//reset form??
+						$('.message-form .wysiwyg-editor').empty();
+					
+						$('.message-form .ace-file-input').closest('.file-input-container:not(:first-child)').remove();
+						$('.message-form input[type=file]').ace_file_input('reset_input');
+						
+						$('.message-form').get(0).reset();
+						
+					}, 300 + parseInt(Math.random() * 300));
+				}
+			
+			
+			
+			
+				var form_initialized = false;
+				function initialize_form() {
+					if(form_initialized) return;
+					form_initialized = true;
+					
+					//intialize wysiwyg editor
+					$('.message-form .wysiwyg-editor').ace_wysiwyg({
+						toolbar:
+						[
+							'bold',
+							'italic',
+							'strikethrough',
+							'underline',
+							null,
+							'justifyleft',
+							'justifycenter',
+							'justifyright',
+							null,
+							'createLink',
+							'unlink',
+							null,
+							'undo',
+							'redo'
+						]
+					}).prev().addClass('wysiwyg-style1');
+			
+					//file input
+					$('.message-form input[type=file]').ace_file_input()
+					//and the wrap it inside .span7 for better display, perhaps
+					.closest('.ace-file-input').addClass('width-90 inline').wrap('<div class="row file-input-container"><div class="col-sm-7"></div></div>');
+			
+					//the button to add a new file input
+					$('#id-add-attachment').on('click', function(){
+						var file = $('<input type="file" name="attachment[]" />').appendTo('#form-attachments');
+						file.ace_file_input();
+						file.closest('.ace-file-input').addClass('width-90 inline').wrap('<div class="row file-input-container"><div class="col-sm-7"></div></div>')
+						.parent(/*.span7*/).append('<div class="action-buttons pull-right col-xs-1">\
+							<a href="#" data-action="delete" class="middle">\
+								<i class="icon-trash red bigger-130 middle"></i>\
+							</a>\
+						</div>').find('a[data-action=delete]').on('click', function(e){
+							//the button that removes the newly inserted file input
+							e.preventDefault();			
+							$(this).closest('.row').hide(300, function(){
+								$(this).remove();
+							});
+						});
+					});
+				}//initialize_form
+			
+			});
+		/*]]>*/
+		</script>
+	</body>
+</html>

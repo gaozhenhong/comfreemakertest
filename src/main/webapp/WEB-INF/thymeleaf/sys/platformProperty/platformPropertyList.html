@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	 	<meta charset="utf-8" />
+		<title>平台参数设置</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		 
+	 	<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+	<body style="background-color: white;">
+		<div class="page-content">
+			<!-- PAGE CONTENT BEGINS -->
+			<div class="row">
+				<div class="col-xs-12">
+					<div id="top-tabbable" class="tabbable">
+						<ul th:include="fragment :: topTab('list','平台参数设置','/sys/platformProperty/')" class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab" ></ul>
+						<div class="tab-content padding-4">
+							<div id="tab-list" class="tab-pane in active" style="margin-left:-4px;margin-right:-4px;">
+								<form id="queryForm"  action="#" th:action="@{/sys/platformProperty/list.do}" th:object="${query}" class="form-horizontal" role="form">
+									<input type="hidden"  th:field="${query.currentPage}"/>
+									<input type="hidden"  th:field="${query.orderByProperty}"/>
+									<input type="hidden"  th:field="${query.orderByKind}"/>
+									<div class="container query-container">
+										<div class='input-group'>
+											<span class='input-group-addon'> 参数名称 </span>
+											<input type='text' th:field='${query.name}' placeholder='参数名称' />
+										</div>
+										<div class='input-group'>
+											<span class='input-group-addon'> 参数编码 </span>
+											<input type='text' th:field='${query.code}' placeholder='参数编码' />
+										</div>
+										<div class='input-group query-group'>
+											<button class='btn btn-sm' type='submit'>
+												<i class='icon-search nav-search-icon'></i>
+												查询
+											</button>
+										</div>
+
+									</div>
+									<div class='space-2'></div>
+									<div>
+										<table id="list-table" class="table table-striped table-bordered table-hover" style="margin-bottom: 0px;">
+											<thead>
+												<tr>
+													<th class="center">
+														<label>
+															<input id="checkAll" type="checkbox" class="ace" />
+															<span class="lbl"></span>
+														</label>
+													</th>
+													<th id='name' class="table-order-column">参数名称</th>
+													<th id='code' class="table-order-column">参数编码</th>
+													<th id='value' class="table-order-column">参数值</th>
+													<th></th>
+												</tr>
+											</thead>
+				
+											<tbody>
+												<tr th:each="obj:${list}">
+													<td class="center">
+														<label>
+															<input type="checkbox" name="rowId" th:value="${obj.id}" class="ace" />
+															<span class="lbl"></span>
+														</label>
+													</td>
+													<td th:text="${obj.name}">参数名称</td>
+													<td th:text="${obj.code}">参数编码</td>
+													<td th:text="${obj.value}">参数值</td>
+													<td >
+														<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons row-action-buttons">
+															<a class="blue show-a" th:href="@{/sys/platformProperty/view.do(id=${obj.id},isModal=false)}" data-rel="tooltip" title="查看">
+																<i class="icon-zoom-in bigger-130"></i>
+															</a>
+									
+															<a class="green" th:href="@{/sys/platformProperty/edit.do(id=${obj.id})}" data-rel="tooltip" title="修改">
+																<i class="icon-pencil bigger-130"></i>
+															</a>
+									
+															<a class="red row_del_button" th:href="@{/sys/platformProperty/deleteAction.do(id=${obj.id})}" data-rel="tooltip" title="删除">
+																<i class="icon-trash bigger-130"></i>
+															</a>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div class="wiwi-pagination">
+										<div class="batch_button_div">
+											<button class="btn btn-primary btn-xs batch_operate_button" type="button" th:attr="data-action=@{/sys/platformProperty/batchDeleteAction.do}" >删除</button>
+										</div>
+										<ul th:replace="fragment :: pagination">
+										</ul>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+		</div><!-- /.page-content -->
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		<!-- 表格排序 分页绑定JS --> 
+		<script th:src="@{/resources/jsoil/js/jsoil.common.table.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+	</body>
+</html>

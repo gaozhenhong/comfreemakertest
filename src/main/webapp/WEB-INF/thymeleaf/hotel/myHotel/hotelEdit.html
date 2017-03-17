@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>客栈管理---添加</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/ace/css/chosen.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+
+	<body style="background-color: white;">
+		<!-- PAGE CONTENT BEGINS -->
+		<div class="row page-content">
+			<div class="col-xs-12 tabbable">
+				<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab" >
+					<li class="active">
+						<a data-toggle="tab"  href="#">修改</a>
+					</li>
+					<li class="message-tab">
+						<span th:text="${operationMessage}"></span>
+					</li>
+				</ul>
+				
+				<div class="tab-content">
+					<div class="tab-pane in active">
+						<form id="validation-form"  action="#" th:action="@{/myHotel/editAction.do}" th:object="${instance}" class="form-horizontal" role="form">
+							<input type="hidden"  th:field="${instance.id}"/>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 客栈名称 *  </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.name}' placeholder='客栈名称' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 所属城市 *  </label>
+								<div class='col-sm-9'>
+									<select class="width-40 chosen-select"  th:field='${instance.city.id}' data-placeholder="请选择所属城市...">
+										<option th:each="city:${cityList}" th:value="${city.id}" th:text="${city.abbreviation + city.name}">模块名称</option>
+									</select>
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 区域 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.street}' placeholder='区域' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 地址 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.address}' placeholder='地址' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 客栈封面 </label>
+								<div class='col-sm-9' th:include="meituFragment :: imgUpload(${instance.logo},'hotel/logo',${ResourceUtil.getPath(instance.logo,'/resources/images/hotel_default.png')},'')">
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 地理坐标 </label>
+								<div class='col-sm-3 '>
+									<label> 经度 </label>
+									<input type='text' th:field='${instance.longitude}' placeholder='经度' />
+								</div>
+								<div class='col-sm-3'>
+									<label> 纬度 </label>
+									<input type='text' th:field='${instance.latitude}' placeholder='纬度' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<div class='col-sm-6 col-sm-offset-3'>
+									<button id="baiduMap" class="btn btn-info" type="button" 
+									>
+										获取经纬度
+									</button>
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 掌柜 </label>
+								
+								<div class='col-sm-9'>
+									<select class="width-40 chosen-select"  th:field='${instance.shopkeeper.id}' data-placeholder="请选择掌柜...">
+										<option th:each="shopkeeper:${shopkeeperList}" th:value="${shopkeeper.id}" th:text="${shopkeeper.name}">模块名称</option>
+									</select>
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 电话 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.telphone}' placeholder='电话' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 客栈微信号 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.weixin}' placeholder='客栈微信号' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 设施及特色 </label>
+								<div class='col-sm-6'>
+									<div style="width:25%;float:left;" th:each="option : ${DictionaryUtil.getDictionaryOption('installation')}" >
+										<label>
+											<input th:value="${option.dictionaryCode+'#'+option.code}"  name="installation" type="checkbox" class="ace"
+											th:checked="${#strings.containsIgnoreCase(instance.installation,option.dictionaryCode+'#'+option.code)}"/>
+											<span class="lbl" th:text="${option.name}"> wifi</span>
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 客栈标签 </label>
+								<div class='col-sm-9'>
+									<input type="text" th:field='${instance.labels}' class="col-xs-10 col-sm-5 form-field-tags" placeholder="输入客栈标签" /> 可输入多个，每一个输入完毕，回车即可
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 描述 </label>
+								<div class='col-sm-9'>
+									<textarea th:field='${instance.description}' rows="5" placeholder='描述' class='autosize-transition form-control' style="width:60%;"></textarea>
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 订房通知电话 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.noticeTelephone}' class="col-xs-10 col-sm-5 form-field-tags" placeholder="订房通知电话" /> 可输入多个，每一个输入完毕，回车即可
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 邮件 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.email}' class="col-xs-10 col-sm-5 " placeholder="电子邮件" /> 
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 支付宝账号 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.alipay}' class="col-xs-10 col-sm-5 " placeholder="支付宝账号" /> 
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 排序号 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.orderNo}' placeholder='排序号' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							
+							<div class="clearfix form-actions">
+								<div class="col-md-offset-3 col-md-9">
+									<button class="btn btn-info" type="submit">
+										<i class="icon-ok bigger-110"></i>
+										提交
+									</button>
+	
+									<button class="btn" type="reset">
+										<i class="icon-undo bigger-110"></i>
+										重置
+									</button>
+									
+									<a th:href="@{/myHotel/list.do}" class="btn btn-prev">
+										<i class="icon-arrow-left"></i>
+										返回
+									</a>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div><!-- /.col -->
+		</div><!-- /.row -->
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<script th:src="@{/resources/js/jquery.validate.min.js}"></script>
+		<script th:src="@{/resources/js/jquery.messages_zh.js}"></script>
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		<!-- choose -->
+		<script th:src="@{/resources/ace/js/chosen.jquery.min.js}"></script>
+		<!-- meitu scripts -->
+		<script th:src="@{/resources/meiTu/js/layer/layer.min.js}"></script>
+		<script th:src="@{/resources/meiTu/js/meiTu.js}"></script>
+		<script th:src="@{/resources/meiTu/js/meiTuInit.js}"></script>
+		<!-- 引入tag输入域 -->
+		<script th:src="@{/resources/js/bootstrap-tag.min.js}"></script>
+		<script th:src="@{/resources/js/typeahead-bs2.min.js}"></script>
+		
+		<!-- textarea 的自动宽度 -->
+		<script th:src="@{/resources/js/jquery.autosize.min.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+		
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		 jQuery(function($) {
+			 $("#validation-form").validate({
+		        rules: {
+					name: "required",
+					city: "required",
+					telphone: "required"
+
+		        }
+			});
+			 
+			 
+			 var tag_input = $('.form-field-tags');
+			if(! ( /msie\s*(8|7|6)/.test(navigator.userAgent.toLowerCase())) ) {
+				$('.form-field-tags').each(function (){
+					$(this).tag({
+						placeholder: $(this).attr('placeholder'),
+						//enable typeahead by specifying the source array
+						source: ace.variable_US_STATES,//defined in ace.js >> ace.enable_search_ahead
+					  })
+				  	}
+				  );
+			}else {
+				//display a textarea for old IE, because it doesn't support this plugin or another one I tried!
+				tag_input.after('<textarea id="'+tag_input.attr('id')+'" name="'+tag_input.attr('name')+'" rows="3">'+tag_input.val()+'</textarea>').remove();
+				//$('#form-field-tags').autosize({append: "\n"});
+			};
+			
+			$('#baiduMap').on('click', function (e) {
+				if($('#address').val() == ''){
+					alert('请输入客栈详细地址!');
+					return;
+				}
+				
+	    		e.preventDefault();
+	    		var $_this = this,
+	            $this = $($_this);
+	    		$.teninedialog({
+	    	        title : '百度定位',
+	    	        css: 'width:800px;height:350px;',
+	    	        content: '',//
+	    	        url: [[@{/myHotel/baiduMap.do}]],//不支持跨域，如果url不为空，就会加载url的内容，content的内容忽略
+	    	        showIframe : true,//是否是以iframe的模式打开
+	    	        showCloseButton:false,
+	    	        bootstrapModalOption:{keyboard: true},
+	    	    });
+	   		 });
+		 });
+		/*]]>*/
+		</script>
+	</body>
+</html>

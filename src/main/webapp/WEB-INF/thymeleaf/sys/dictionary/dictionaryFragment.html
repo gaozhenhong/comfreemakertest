@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	 	<meta charset="utf-8" />
+		<title>字典选项</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		 
+	 	<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+	<body style="background-color: white;">
+		
+		<div th:fragment="optionFragment()" class="channels_box" style="border:1px solid #CCCCCC ; padding:5px 0px 10px 10px;background-color: white;float:left;width:100%;border-radius:5px;">
+			<h5 th:text="${dictionary.demo}"></h5>
+			<div class="hr"></div>
+			<ul  class="ui-sortable" style="background-color: white;">
+				<li th:each="option : ${optionList}">
+	                    <i class="ico-self"></i>
+						<div class="ordercolors channels_color">
+							<span class="osapphireblue" title="" tag="channelcolor"></span>
+				 			<div class="list" style="">
+								 <div class="item"><span class="ofreshgreen" value="ofreshgreen" title="清新绿"></span>清新绿</div><div class="item"><span class="osapphireblue checked" value="osapphireblue" title="宝石蓝"></span>宝石蓝</div>
+								 <div class="item"><span class="oblue" value="oblue" title="蓝色"></span>蓝色</div>										 <div class="item"><span class="ocyan" value="ocyan" title="青绿色"></span>青绿色</div>										 <div class="item"><span class="ogreen" value="ogreen" title="绿色"></span>绿色</div>										 <div class="item"><span class="oyellow" value="oyellow" title="黄色"></span>黄色</div>										 <div class="item"><span class="oorange" value="oorange" title="橙色"></span>橙色</div>										 <div class="item"><span class="ored" value="ored" title="红色"></span>红色</div>										 <div class="item"><span class="oluxuryred" value="oluxuryred" title="奢华红"></span>奢华红</div>										 <div class="item"><span class="opurple" value="opurple" title="紫色"></span>紫色</div>									 
+							</div>
+						</div>
+						<label for="checkbox" th:text="${option.name}">字典项名称</label>
+						<a th:href="@{/sys/dictionary/option/deleteAction.do(dictionaryId=${dictionaryId},id=${option.id})}" title="删除该字典项" class="delete row_del_button" data-noReload="true"></a>
+				</li>
+				<li style="background-color: white;">
+					<a class="open-a" th:href="@{/sys/dictionary/option/add.do(dictionaryId=${dictionary.id})}" data-rel="tooltip"
+					title="添加字典项" data-showIframe="true">
+						<i class="icon-plus bigger-120">添加字典项</i>
+					</a>
+				</li>
+			</ul>
+		</div>
+		
+	</body>
+</html>

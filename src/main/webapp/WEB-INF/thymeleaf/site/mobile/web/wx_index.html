@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
+	<title>微信</title>
+	<script src="../../../../../resources/mobile/js/jquery.min.js" th:src="@{/resources/mobile/js/jquery.min.js}"></script>
+	<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+   $(document).ready(function() {  
+  }); 
+function createMeau(){
+	var href= [[@{'/site/tc/wx/test/createMenu'}]];
+	$.ajax({ 
+		url: href, 
+		context: document.body, 
+		type : "POST", 
+	    dataType:"text",
+	    contentType:'application/text;charset=UTF-8',
+	    data : {},
+		success: function(resultData){
+			$("#result").html(resultData);
+		},
+	    error:function(xhr,status,error){
+	    	  	alert("异常：error=" + error);
+	    }
+	});
+}
+
+
+function oauth2Login(){
+	var href= [[@{${oauth2Url}}]];
+	$.ajax({ 
+		url: href, 
+		context: document.body, 
+		type : "POST", 
+	    dataType:"text",
+	    contentType:'application/text;charset=UTF-8',
+	    data : {},
+		success: function(resultData){
+			$("#result").html(resultData);
+		},
+	    error:function(xhr,status,error){
+	    	  	alert("异常：error=" + error);
+	    }
+	});
+}
+
+function getUnifiedOrder(){
+	var href= [[@{'/site/tc/wx/pay/unifiedorder'}]];
+	$.ajax({ 
+		url: href, 
+		type:"post", 
+	    dataType:"json",
+	    contentType:'application/json;charset=UTF-8',
+	    data:JSON.stringify({"productRemark":"111","orderNumber":"orderNo2222","totalPrice":"3333","clientIp":"444"}),
+		success: function(resultData){
+			//alert(resultData);
+			$("#result").html(JSON.stringify(resultData));
+		},
+	    error:function(xhr,status,error){
+	    	  	alert("异常：error=" + error);
+	    }
+	});
+}
+
+function getClientIP(){
+	var href= [[@{'/site/tc/wx/test/clientIP'}]];
+	$.ajax({ 
+		url: href, 
+		type:"post", 
+	    dataType:"json",
+	    contentType:'application/json;charset=UTF-8',
+	    data:{},
+		success: function(resultData){
+			//alert(resultData);
+			$("#result").html(JSON.stringify(resultData));
+		},
+	    error:function(xhr,status,error){
+	    	  	alert("异常：error=" + error);
+	    }
+	});
+}
+
+/*]]>*/
+</script>
+<style>
+ .button-ul{
+ 	display: inline;
+ 	list-style: none;
+ }
+ .button-ul li{
+ 	height:50px;
+ 	margin-top:10px;
+ 	padding:2px;
+ 	border:1px solid #eee;
+ }
+</style>
+</head>
+<body>
+		 <div>
+		 <ul class="button-ul">
+		 	<li>
+		 	 	<a href="hotel_list.html" th:href="@{'/site/mobile/web/CNDL0102/index'}" >
+			     	<span class="zb-label-span">微网站首页</span>
+			     </a>
+		 	</li>
+		 	<li>
+		 	 	<a href="hotel_list.html" th:href="@{'/site/tc/wx/test/getPersonList'}" >
+			     	<span class="zb-label-span">获取用户信息</span>
+			     </a>
+		 	</li>
+		 	<li>
+		 		<a href="hotel_list.html" th:href="${oauth2Url}">
+			     	<span class="zb-label-span">授权认证登录</span>
+			     </a>
+		 	</li>
+		 	<li>
+		 		<a href="javascript:createMeau()">
+			     	<span class="zb-label-span">创建微信菜单</span>
+			     </a>
+		 	</li>
+		 	<li>
+		 		<a href="javascript:getClientIP()">
+			     	<span class="zb-label-span">获取客户端IP</span>
+			     </a>
+		 	</li>
+		 	<li>
+		 		<a  th:href="@{${wxOauth2PayUrl}}">
+			     	<span class="zb-label-span">微信支付-统一下单接口</span>
+			     </a>
+		 	</li>
+		 </ul>
+		 </div>
+		 <div id="result" style="width:100%;height:300px;border:1px solid red;" th:text="${returnCode}">
+		 </div>
+</body>
+</html>

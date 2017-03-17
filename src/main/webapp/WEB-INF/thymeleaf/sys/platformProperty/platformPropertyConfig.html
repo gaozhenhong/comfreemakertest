@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>参数配置</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+
+	</head>
+
+	<body>
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="main-container-inner">
+				
+				<div class="main-content" style="margin-left:5px;">
+
+					<div class="page-content" th:include="project/propertyConfigFragment :: propertyConfig">
+						<div class="page-header">
+							<h1>
+								参数配置
+								<small>
+									<i class="icon-double-angle-right"></i>
+								</small>
+								
+								
+							</h1>
+						</div><!-- /.page-header -->
+						
+						<div class="row">
+							<div class="col-xs-12">
+								<h3 class="header smaller lighter green">结算周期</h3>
+
+								<p>
+									<a href="#" class="btn btn-default btn-app radius-4">
+										<i class="icon-cog bigger-230"></i>
+										Default
+										<span class="badge badge-pink">+3</span>
+									</a>
+
+									
+
+									<button class="btn btn-app btn-grey btn-xs radius-4">
+										<i class="icon-save bigger-160"></i>
+
+										Save
+										<span class="badge badge-transparent">
+											<i class="light-red icon-asterisk"></i>
+										</span>
+									</button>
+
+									<button class="btn btn-app btn-light btn-xs">
+										<i class="icon-print bigger-160"></i>
+										Print
+									</button>
+
+									<a href="#" class="btn btn-app btn-yellow btn-xs">
+										<i class="icon-shopping-cart bigger-160"></i>
+										Shop
+									</a>
+								</p>
+							</div>
+						</div>
+
+						<div class="space"></div>
+					</div><!-- /.page-content -->
+				</div><!-- /.main-content -->
+
+			</div><!-- /.main-container-inner -->
+
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="icon-double-angle-up icon-only bigger-110"></i>
+			</a>
+		</div><!-- /.main-container -->
+
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+		
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			jQuery(function($){
+				getProperty(getAllPropertyCode());
+			});
+		
+		
+		
+			function getAllPropertyCode(){
+				var codes = "";
+				$("[name=propertyCode]").each(function (e){
+					codes = codes + ","+$(this).val();
+				});
+				return codes;
+			}
+			
+		
+			function getProperty(propertyCodes){
+				var href=[[@{/sys/platformProperty/getProperyList.do}]];
+				$.ajax({
+					url: href, 
+					context: document.body, 
+					type : "POST", 
+				    dataType:"json",
+				    contentType:'application/json;charset=UTF-8',
+				    data : JSON.stringify({
+				    		"codes": codes
+				    }),
+					success: function(resultData){
+						//alert("推荐客栈数=="+resultData.length);
+						if( resultData.length > 0){
+							for(var i = 0;i < resultData.length;i++){
+								$("[data-hotelCode='"+resultData[i].code+"']").each(function (index){
+									$(this).text(resultData[i].name);
+								});
+							}
+						}
+		      		},
+				    error:function(xhr,status,error){
+				    		$(".message-tab").text("读取来源客栈信息失败，请检查！error="+error);
+				    	  	return false;
+				    }
+				});
+			}
+			
+		/*]]>*/
+		</script>
+	</body>
+</html>

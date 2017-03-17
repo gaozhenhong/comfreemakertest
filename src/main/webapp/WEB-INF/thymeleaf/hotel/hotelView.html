@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<title>客栈管理---查看</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/ace/css/chosen.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+
+	<body style="background-color: white;">
+		<!-- PAGE CONTENT BEGINS -->
+		<div class="row page-content">
+			<div class="col-xs-12 tabbable">
+				<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab" >
+					<li class="active">
+						<a data-toggle="tab"  href="#">查看</a>
+					</li>
+					<li class="message-tab">
+						<a class="blue pull-right" style="padding-left:10px;" th:href="@{/myHotel/list.do}" data-rel="tooltip" data-placement="left"  title="返回">
+							<i class="icon-arrow-left bigger-120"></i>
+						</a>
+					</li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane in active profile-user-info profile-user-info-striped">
+						<form id="validation-form"  action="#" th:object="${instance}" class="form-horizontal" role="form">
+							<input type="hidden"  th:field="${instance.id}"/>
+							<div class="profile-info-row pull-right" style="z-index: 999;">
+								<ul class="list-unstyled spaced2">
+									<li>
+										<img th:src="@{${qrCodeUrl}}"/>
+									</li>
+									<li style="text-align: center;">
+										<span>微信扫一扫，打开微店</span>
+									</li>
+								</ul>
+							</div>
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 客栈名称  </div>
+								<div class='profile-info-value'>
+									<span th:text="${instance.name}"></span>
+								</div>
+							</div>
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 客栈编码  </div>
+								<div class='profile-info-value'>
+									<span th:text="${instance.code}"></span>
+								</div>
+							</div>
+							
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 微网站地址  </div>
+								<div class='profile-info-value'>
+									<a target="_blank" th:href="@{'/site/mobile/web/'+${instance.code}+'/index'}"
+									th:text="@{'/site/mobile/web/'+${instance.code}+'/index'}" ></a>
+								</div>
+							</div>
+							
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 所属城市  </div>
+								<div class='profile-info-value'>
+									<span th:text="${instance.city.name}"></span>
+								</div>
+							</div>
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 区域 </div>
+								<div class='profile-info-value'>
+									<span th:text="${instance.street}"></span>
+								</div>
+							</div>
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 地址 </div>
+								<div class='profile-info-value'>
+									<span th:text="${instance.address}"></span>
+								</div>
+							</div>
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 客栈封面 </div>
+								<div class='profile-info-value'>
+									<img style="width:80px;height: 80px;" th:src="@{${ResourceUtil.getPath(instance.logo,'/resources/images/hotel_default.png')}}"/>
+								</div>
+							</div>
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 导航位置 </div>
+								<div class='profile-info-value bigger'>
+									<a href="#" class="action-buttons">
+										<i class="icon-globe icon-2x"></i>
+									</a>
+									【<span th:text="${instance.longitude}"></span> <span th:text="${instance.latitude}"></span>】
+								</div>
+							</div>
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 掌柜 </div>
+								<div class='profile-info-value'>
+									<ul class="list-unstyled spaced2">
+										<li>
+											<img style="text-alignleft; width:80px;height: 80px;" th:src="@{${ResourceUtil.getPath(instance.shopkeeper.logo,'/resources/images/user.png')}}"/>
+										</li>
+										<li style="text-align: left;">
+											<span th:text="${instance.shopkeeper.name}"></span>
+										</li>
+									</ul>
+									
+								</div>
+							</div>
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 电话 </div>
+								<div class='profile-info-value'>
+									<span th:text="${instance.telphone}"></span>
+								</div>
+							</div>
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 客栈微信号 </div>
+								<div class='profile-info-value'>
+									<span th:text="${instance.weixin}"></span>
+								</div>
+							</div>
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 设施及特色 </div>
+								<div class='profile-info-value'>
+									<span th:text="${instance.getInstallationNames()}"></span>
+									<span th:text="${instance.installation}" class="hide"></span>
+								</div>
+							</div>
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 客栈标签 </div>
+								<div class='profile-info-value'>
+									<span th:text="${instance.labels}"></span>
+								</div>
+							</div>
+							
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 订房通知电话 </div>
+								<div class='profile-info-value'>
+									<span th:text="${instance.noticeTelephone}"></span>
+								</div>
+							</div>
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 邮件 </div>
+								<div class='profile-info-value'>
+									<span th:text="${instance.email}"></span>
+								</div>
+							</div>
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 支付宝账号 </div>
+								<div class='profile-info-value'>
+									<span th:text="${instance.alipay}"></span>
+								</div>
+							</div>
+							
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 描述 </div>
+								<div class='profile-info-value'>
+									<span th:utext="${instance.description}"></span>
+								</div>
+							</div>
+							<div class='profile-info-row'>
+								<div class='profile-info-name'> 所属企业 </div>
+								<div class='profile-info-value'>
+									<span th:utext="${instance.company.name}"></span>
+								</div>
+							</div>
+							
+						</form>
+					</div>
+				</div>
+			</div><!-- /.col -->
+		</div><!-- /.row -->
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<script th:src="@{/resources/js/jquery.validate.min.js}"></script>
+		<script th:src="@{/resources/js/jquery.messages_zh.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+		
+	</body>
+</html>

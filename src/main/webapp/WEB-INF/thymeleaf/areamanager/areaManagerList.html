@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	 	<meta charset="utf-8" />
+		<title>客栈区域管理</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		 
+	 	<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+	<body style="background-color: white;">
+		<div class="page-content">
+			<div class="page-header">
+				<h1>
+					区域管理
+					<small>
+						<i class="icon-double-angle-right"></i>
+					</small>
+				</h1>
+			</div><!-- /.page-header -->
+			<div th:if="${categoryList != null AND NOT #lists.isEmpty(categoryList) }" class="row">
+				<div th:each="area : ${categoryList}" class="col-xs-6 col-sm-3 pricing-box">
+					<div class="widget-box">
+						<div class="widget-header header-color-blue">
+							<h5 class="bigger lighter" >
+								<span th:text="${area.name}" style="color: white;"></span>
+							</h5>
+						</div>
+
+						<div class="widget-body">
+							<div class="widget-main">
+								<ul class="list-unstyled spaced2">
+									<li>
+										<i class="icon-home green"></i>
+										客栈数：<span>12</span>
+									</li>
+								</ul>
+
+								<hr />
+								<div class="price action-buttons" style="font-size: 14px;">
+									<a th:href="@{/areamanager/areaHotelList.do(areaId=${area.id})}" class="pull-left purple" style="cursor: pointer;" data-rel="tooltip">
+										<i class="icon-home bigger-80"></i>
+										<span >客栈分配</span>
+									</a>
+									
+									<a th:href="@{/areamanager/areaUserList.do(areaId=${area.id})}" style="margin-left:15px;cursor: pointer;" 
+										class="pull-left purple" data-rel="tooltip">
+										<i class="fa fa-users bigger-80"></i>
+										<span >管理员分配</span>
+									</a>
+									
+									<a th:href="@{${'/pano/project/'+area.code+'/point.html'}(areaId=${area.id})}" target="_blank"
+										style="margin-left:15px;cursor: pointer;" 
+										class="pull-left purple" data-rel="tooltip" title="三维定点">
+										<i class="fa fa-location-arrow bigger-80"></i>
+									</a>
+								</div>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div><!-- /.row -->
+		</div><!-- /.page-content -->
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		<!-- 表格排序 分页绑定JS --> 
+		<script th:src="@{/resources/jsoil/js/jsoil.common.table.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+		
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			function hotelManager(obj){
+	    		var $_this = obj,
+	            $this = $($_this),
+	            orderId = $this.attr("data-orderId");
+	    		var href = [[@{/order/view.do}]]+'?id='+orderId;
+	    		$.teninedialog({
+	    	        title : "订单详情",
+	    	        css: 'width:700px;height:500px;',
+	    	        content: '',//
+	    	        url: href,//不支持跨域，如果url不为空，就会加载url的内容，content的内容忽略
+	   	        	showIframe : true,//是否是以iframe的模式打开
+	    	        showCloseButton: true,
+	    	        otherButtons: ["确认退单"],
+	    	        otherButtonStyles: ["btn-primary pull-left"],
+	    	        bootstrapModalOption:{keyboard: true},
+	    	        clickButton:function(sender,modal,index){
+		    	        	if(index == 0){
+		    	        		//退单
+		    	        		self.location = [[@{/order/myOrder/confirmCancelOrder.do}]]+'?id='+orderId;
+		    	        	}
+	    	            $(this).closeDialog(modal);
+	    	        }
+	    	    });
+        	}			
+		/*]]>*/
+		</script>
+	</body>
+</html>

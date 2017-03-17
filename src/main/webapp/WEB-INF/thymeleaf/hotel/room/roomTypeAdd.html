@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" />
+		<base target="_parent"/>
+		<title>房型管理---添加</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- basic styles -->
+		<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+		<style>
+			.del-roomNo{
+				height:25px;
+				margin-left:-10px;
+				background-color: white;
+				cursor: pointer;
+				Opacity:0.7;
+				border: 0px;
+				top:-10px;
+			}
+			
+			.in-row-li{
+				float:left;
+				margin-right:20px;
+			}
+		</style>
+	</head>
+
+	<body style="background-color: white;">
+		<!-- PAGE CONTENT BEGINS -->
+		<div class="row page-content">
+			<div class="col-xs-12 tabbable">
+				<div class="tab-content">
+					<div class="tab-pane in active">
+						<form id="validation-form"  action="#" th:action="@{addAction.do}" th:object="${instance}" class="form-horizontal" role="form">
+							<input type="hidden"  th:field="${instance.id}"/>
+							<input type="hidden"  th:field="${instance.hotelId}"/>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 房型名称* </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.name}' placeholder='房型名称' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 可入住人数* </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.availableNumber}' placeholder='房型名称' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 床型* </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.bedType}' placeholder='床型' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 封面图 </label>
+								<div class='col-sm-9' th:include="meituFragment :: imgUpload('','roomType/logo','/resources/images/roomType.png','')">
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 默认价格* </label>
+								<div class='col-sm-9'>
+									<span class="input-icon">
+										<input type='text' th:field='${instance.defaultPrice}' placeholder='默认价格' />
+										<i class="icon-jpy"></i>
+									</span>
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 周末价和平日不同 </label>
+								<div class='col-sm-9'>
+									<input id="weekend-checkbox" type='checkbox' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							
+							<div id="weekend" class='form-group hide' style="margin-top:-15px;">
+								<div class="col-sm-3">
+								</div>
+								
+								<div class='col-sm-1'>
+									<label class=' control-label no-padding-right'> 周一 </label>
+									<input type='text' th:field='${instance.mondayPrice}' placeholder='周一价格' class='input-small' />
+								</div>
+								<div class='col-sm-1'>
+									<label class=' control-label no-padding-right'> 周二 </label>
+									<input type='text' th:field='${instance.tuesdayPrice}' placeholder='周二价格' class='input-small' />
+								</div>
+								<div class='col-sm-1'>
+									<label class=' control-label no-padding-right'> 周三 </label>
+									<input type='text' th:field='${instance.wednesdayPrice}' placeholder='周三价格' class='input-small' />
+								</div>
+								<div class='col-sm-1'>
+									<label class=' control-label no-padding-right'> 周四 </label>
+									<input type='text' th:field='${instance.thursdayPrice}' placeholder='周四价格' class='input-small' />
+								</div>
+								<div class='col-sm-1'>
+									<label class=' control-label no-padding-right'> 周五 </label>
+									<input type='text' th:field='${instance.fridayPrice}' placeholder='周五价格' class='input-small' />
+								</div>
+								<div class='col-sm-1'>
+									<label class=' control-label no-padding-right'> 周六 </label>
+									<input type='text' th:field='${instance.saturdayPrice}' placeholder='周六价格' class='input-small' />
+								</div>
+								<div class='col-sm-1'>
+									<label class=' control-label no-padding-right'> 周日 </label>
+									<input type='text' th:field='${instance.sundayPrice}' placeholder='周日价格' class='input-small' />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 房间数量 </label>
+								<div class='col-sm-9'>
+									<input type='text' id="roomNumber" th:field='${instance.roomNumber}' placeholder='房间数量' class='col-xs-10 col-sm-5' readonly="readonly" />
+								</div>
+							</div>
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 房号 </label>
+								<div class='col-sm-9'>
+
+									<ul class="list-unstyled">
+										<li class="in-row-li">
+											<input type='text' name="roomNo" placeholder='房号' class='input-small' />
+										</li>
+										<li>
+											<a href="#" class="blue add-room" data-rel="tooltip"  title="添加房间" style="padding:10px;">
+												<i class="icon-plus bigger-160"></i>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+							
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 描述 </label>
+								<div class='col-sm-9'>
+									<textarea th:field='${instance.description}' rows="5" placeholder='描述' class='autosize-transition form-control' style="width:60%;"></textarea>
+								</div>
+							</div>
+							
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 排序号 </label>
+								<div class='col-sm-9'>
+									<input type='text' th:field='${instance.orderNo}' placeholder='排序号' class='col-xs-10 col-sm-5' />
+								</div>
+							</div>
+							
+							<div class="clearfix form-actions">
+								<div class="col-md-offset-3 col-md-9">
+									<button class="btn btn-info" type="submit">
+										<i class="icon-ok bigger-110"></i>
+										提交
+									</button>
+	
+									<button class="btn" type="reset">
+										<i class="icon-undo bigger-110"></i>
+										重置
+									</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div><!-- /.col -->
+		</div><!-- /.row -->
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<script th:src="@{/resources/js/jquery.validate.min.js}"></script>
+		<script th:src="@{/resources/js/jquery.messages_zh.js}"></script>
+		
+		<!-- meitu scripts -->
+		<script th:src="@{/resources/meiTu/js/layer/layer.min.js}"></script>
+		<script th:src="@{/resources/meiTu/js/meiTu.js}"></script>
+		<script th:src="@{/resources/meiTu/js/meiTuInit.js}"></script>
+		
+		<script th:src="@{/resources/js/jquery.autosize.min.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		 jQuery(function($) {
+			 $("#validation-form").validate({
+		        rules: {
+		        		name : "required",
+		        		availableNumber : {required:true,number:true },
+		        		bedType : "required",
+		        		roomNo : "required",
+			 		defaultPrice : {required:true,number:true }
+		        }
+			});
+			 
+			 $("#weekend-checkbox").on("click",function(event){
+				 if ($(this).is(':checked') ==true){
+					 $("#weekend").removeClass("hide");
+				 }else{
+					 $("#weekend").addClass("hide");
+				 }
+			 });
+			 
+			 $(".add-room").on("click",function(event){
+				 event.preventDefault();
+				 var roomObj = "<li class='in-row-li'><input type='text' name='roomNo' placeholder='房号' class='input-small' /><button class='del-roomNo' ><i class='icon-remove'/></button></li>";
+				 $(this).closest("li").before(roomObj) ;
+				 //$(".list-unstyled").append(roomObj) ;
+				 $("#roomNumber").val($("input[name='roomNo']").length);
+			 });
+			 
+			 $(document).on("click",".del-roomNo",function(event){
+				 event.preventDefault();
+				 $(this).prev().remove();
+				 $(this).remove() ;
+				 $("#roomNumber").val($("input[name='roomNo']").length);
+			 });
+			 
+		 });
+			
+		/*]]>*/
+		</script>
+	</body>
+</html>

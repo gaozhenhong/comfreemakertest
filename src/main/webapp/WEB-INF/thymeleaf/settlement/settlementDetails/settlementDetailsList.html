@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	 	<meta charset="utf-8" />
+		<title>结算详情</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		 
+	 	<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+	<body style="background-color: white;">
+		<div class="page-content">
+			<!-- PAGE CONTENT BEGINS -->
+			<div class="row">
+				<div class="col-xs-12">
+					<div id="top-tabbable" class="tabbable">
+						<ul th:include="fragment :: topTab('list','结算详情','/settlement/settlementDetails')" class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab" ></ul>
+						<div class="tab-content padding-4">
+							<div id="tab-list" class="tab-pane in active" style="margin-left:-4px;margin-right:-4px;">
+								<form id="queryForm"  action="#" th:action="@{/settlement/settlementDetailslist.do}" th:object="${query}" class="form-horizontal" role="form">
+									<input type="hidden"  th:field="${query.currentPage}"/>
+									<input type="hidden"  th:field="${query.orderByProperty}"/>
+									<input type="hidden"  th:field="${query.orderByKind}"/>
+									<div class="container query-container">
+																					<div class='input-group'>
+												<span class='input-group-addon'> payOrgId </span>
+												<input type='text' th:field='${query.payOrgId}' placeholder='payOrgId' />
+											</div>
+											<div class='input-group'>
+												<span class='input-group-addon'> receiveOrgId </span>
+												<input type='text' th:field='${query.receiveOrgId}' placeholder='receiveOrgId' />
+											</div>
+											<div class='input-group'>
+												<span class='input-group-addon'> 金额 </span>
+												<input type='text' th:field='${query.amount}' placeholder='金额' />
+											</div>
+											<div class='input-group'>
+												<span class='input-group-addon'> title </span>
+												<input type='text' th:field='${query.title}' placeholder='title' />
+											</div>
+											<div class='input-group'>
+												<span class='input-group-addon'> orderId </span>
+												<input type='text' th:field='${query.orderId}' placeholder='orderId' />
+											</div>
+											<div class='input-group'>
+												<span class='input-group-addon'> originOrgId </span>
+												<input type='text' th:field='${query.originOrgId}' placeholder='originOrgId' />
+											</div>
+											<div class='input-group'>
+												<span class='input-group-addon'> orderPayPrice </span>
+												<input type='text' th:field='${query.orderPayPrice}' placeholder='orderPayPrice' />
+											</div>
+											<div class='input-group'>
+												<span class='input-group-addon'> percentage </span>
+												<input type='text' th:field='${query.percentage}' placeholder='percentage' />
+											</div>
+											<div class='input-group'>
+												<span class='input-group-addon'> settlementId </span>
+												<input type='text' th:field='${query.settlementId}' placeholder='settlementId' />
+											</div>
+											<div class='input-group query-group'>
+												<button class='btn btn-sm' type='submit'>
+													<i class='icon-search nav-search-icon'></i>
+													查询
+												</button>
+											</div>
+
+									</div>
+									<div class='space-2'></div>
+									<div>
+										<table id="list-table" class="table table-striped table-bordered table-hover" style="margin-bottom: 0px;">
+											<thead>
+												<tr>
+													<th class="center">
+														<label>
+															<input id="checkAll" type="checkbox" class="ace" />
+															<span class="lbl"></span>
+														</label>
+													</th>
+																						<th id='payOrgId' class="table-order-column">payOrgId</th>
+									<th id='receiveOrgId' class="table-order-column">receiveOrgId</th>
+									<th id='amount' class="table-order-column">金额</th>
+									<th id='title' class="table-order-column">title</th>
+									<th id='orderId' class="table-order-column">orderId</th>
+									<th id='originOrgId' class="table-order-column">originOrgId</th>
+									<th id='orderPayPrice' class="table-order-column">orderPayPrice</th>
+									<th id='percentage' class="table-order-column">percentage</th>
+									<th id='settlementId' class="table-order-column">settlementId</th>
+
+													<th></th>
+												</tr>
+											</thead>
+				
+											<tbody>
+												<tr th:each="obj:${list}">
+													<td class="center">
+														<label>
+															<input type="checkbox" name="rowId" th:value="${obj.id}" class="ace" />
+															<span class="lbl"></span>
+														</label>
+													</td>
+																						<td th:text="${obj.payOrgId}">payOrgId</td>
+									<td th:text="${obj.receiveOrgId}">receiveOrgId</td>
+									<td th:text="${obj.amount}">金额</td>
+									<td th:text="${obj.title}">title</td>
+									<td th:text="${obj.orderId}">orderId</td>
+									<td th:text="${obj.originOrgId}">originOrgId</td>
+									<td th:text="${obj.orderPayPrice}">orderPayPrice</td>
+									<td th:text="${obj.percentage}">percentage</td>
+									<td th:text="${obj.settlementId}">settlementId</td>
+
+													<td >
+														<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons row-action-buttons">
+															<a class="blue show-a" th:href="@{/settlement/settlementDetailsview.do(id=${obj.id},isModal=false)}" data-rel="tooltip" title="查看">
+																<i class="icon-zoom-in bigger-130"></i>
+															</a>
+									
+															<a class="green" th:href="@{/settlement/settlementDetailsedit.do(id=${obj.id})}" data-rel="tooltip" title="修改">
+																<i class="icon-pencil bigger-130"></i>
+															</a>
+									
+															<a class="red row_del_button" th:href="@{/settlement/settlementDetailsdeleteAction.do(id=${obj.id})}" data-rel="tooltip" title="删除">
+																<i class="icon-trash bigger-130"></i>
+															</a>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div class="wiwi-pagination">
+										<div class="batch_button_div">
+											<button class="btn btn-primary btn-xs batch_operate_button" type="button" th:attr="data-action=@{/settlement/settlementDetailsbatchDeleteAction.do}" >删除</button>
+										</div>
+										<ul th:replace="fragment :: pagination">
+										</ul>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+		</div><!-- /.page-content -->
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		<!-- 表格排序 分页绑定JS --> 
+		<script th:src="@{/resources/jsoil/js/jsoil.common.table.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+	</body>
+</html>

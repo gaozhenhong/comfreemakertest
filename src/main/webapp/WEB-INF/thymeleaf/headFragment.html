@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head >
+	<meta charset="utf-8" />
+</head>	
+<head th:fragment="head(title)">
+	<meta charset="utf-8" />
+	<title th:text="${title}">${title}</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<!-- basic styles -->
+	<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+	<link th:href="@{/resources/ace/css/chosen.css}" rel="stylesheet" />
+	<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+	<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+	<!-- page specific plugin styles -->
+	<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+	<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+	
+	<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+	<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+</head>
+</html>

@@ -1,0 +1,27 @@
+.jp-video-960p{
+	width:960px;
+}
+.jp-video-960p .jp-jplayer{
+	width:960px;
+}
+.jp-video-960p .jp-gui{
+	width:960px;
+}
+
+.jp-video-960p .jp-playlist{
+	width:960px;
+}
+
+.jp-video-1280p{
+	width:1280px;
+}
+.jp-video-1280p .jp-jplayer{
+	width:1280px;
+}
+.jp-video-1280p .jp-gui{
+	width:1280px;
+}
+
+.jp-video-1280p .jp-playlist{
+	width:1280px;
+}

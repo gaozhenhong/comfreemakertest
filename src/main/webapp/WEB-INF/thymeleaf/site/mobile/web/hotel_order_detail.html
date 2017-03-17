@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
+<title th:text="${hotel.name}">流浪狗</title>
+<link href="../../../../../resources/mobile/css/bootstrap.min.css" th:href="@{/resources/mobile/css/bootstrap.min.css}"  rel="stylesheet"/>
+<link href="../../../../../resources/mobile/css/app.css" th:href="@{/resources/mobile/css/app.css}"  rel="stylesheet"/>
+<script src="../../../../../resources/mobile/js/jquery.min.js" th:src="@{/resources/mobile/js/jquery.min.js}" ></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/iscroll.js" th:src="@{/resources/mobile/js/iscroll.js}"></script>
+<script src="../../../../../resources/mobile/js/bootstrap.min.js" th:src="@{/resources/mobile/js/bootstrap.min.js}" ></script>
+<script type="text/javascript">
+var myScroll;
+function loaded () {myScroll = new IScroll('#wrapper', { mouseWheel: true,click:true });}
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);   
+</script>
+</head>
+
+<body onload="loaded()">
+<div class="userpage" id="wrapper">
+	<div id="scroller">
+	<!-- 开始主体内容 -->
+      <div class="order jumbotron">
+        <div>
+          <h2>状态 —— <span th:text="${order.status.label}">已离店</span></h2>
+          <div class="progress">
+            <div class="progress-bar" th:classappend="${order.status == OrderStatus.RESERVATION?'progress-bar-success':''}" style="width: 25%">
+              <span>提交订单</span>
+            </div>
+            <div class="progress-bar " th:classappend="${order.status == OrderStatus.CONFIRM?'progress-bar-success':''}" style="width: 25%">
+              <span>酒店确认</span>
+            </div>
+            <div class="progress-bar" th:classappend="${order.status == OrderStatus.CHECKIN?'progress-bar-success':''}" style="width: 25%">
+              <span>入住</span>
+            </div>
+            <div class="progress-bar" th:classappend="${order.status == OrderStatus.CLOSED?'progress-bar-success':''}" style="width: 25%">
+              <span>离店</span>
+            </div>
+          </div>
+        </div>
+        <div class="order_main">
+          <h2 th:text="${hotel.name}">别想那只大象客栈</h2>
+          <h3 th:text="${roomType.name}">海景大床房</h3>
+          <div class="otime center-block">
+            <div>入住<br/><span th:text="${#dates.format(startDate,'yyyy-MM-dd')}">10月28日</span></div>
+            <div class="otimeall"><span th:text="共+${consumeDay}+晚"></span></div>
+            <div>离店<br/><span th:text="${#dates.format(endDate,'yyyy-MM-dd')}">10月30日</span></div>
+          </div>
+          <h4>地址：<span th:text="${hotel.address}">大理市双廊镇大建旁村103号</span></h4> 
+          <a class="daohang" href="#">
+          	<span class="daohang"><i class="glyphicon glyphicon-map-marker" aria-hidden="true"></i>导航</span>
+          </a>
+        </div>
+        <div class="order_more">
+           <h2>订单详情</h2>
+		           订单号：<span th:text="${order.orderCode}">L952795279527</span><br/>
+		           下单时间：<span th:text="${#dates.format(order.orderTime,'yyyy-MM-dd hh:mm')}">2015-11-11 22:16</span><br/>
+		           房间数：<span th:text="${orderNumber}">1</span>间<br/>
+		           客人姓名：<span th:text="${order.orderName}">西门吹雪</span><br/>
+		           联系电话：<span th:text="${order.orderTelephone}">18588335566</span><br/>
+        </div>
+
+        <div class="order_more">
+           <h2>费用及优惠</h2>
+           <h3>订单总额：¥<span th:text="${order.totalPrice}">480</span>&nbsp;&nbsp;<span class="mcolor"  th:text="${order.payStatus.label}">支付成功</span></h3>
+        </div>
+         <a th:href="@{${payActionUrl}}" th:if="${order.payStatus == OrderPayStatus.NO_PAYMENT}"  class="nextbtn btn btn-primary btn-lg center-block" role="button">去付款</a>
+         <!-- <a th:href="@{/site/mobile/member/center/order/pay/wxOpenId(orderId=${order.id})}" th:if="${order.payStatus == OrderPayStatus.NO_PAYMENT}"  class="nextbtn btn btn-primary btn-lg center-block" role="button">去付款</a> -->
+      </div>
+
+
+
+
+	<!-- 结束主体内容 -->
+	</div>
+</div>
+
+<div id="footer" th:include="site/mobile/web/fragment/navFragment :: navTab(2)">
+		<div class="btn-group btn-group-justified" role="group">
+			<div class="btn-group" role="group">
+				<a href="index.html" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-home"></i> <br/>主页
+				</a>
+			</div>
+			<div class="btn-group" role="group">
+				<a href="zb.html" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-map-marker"></i> <br/>周边
+				</a>
+			</div>
+			<div class="btn-group" role="group">
+				<a href="my.html" type="button" class="btn btn-default"> <i
+					class="glyphicon glyphicon-user"></i> <br/>我的
+				</a>
+			</div>
+		</div>
+</div>
+
+</body>
+</html>

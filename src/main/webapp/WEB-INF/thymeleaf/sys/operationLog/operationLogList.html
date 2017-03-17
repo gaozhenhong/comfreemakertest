@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	 	<meta charset="utf-8" />
+		<title>操作日志记录</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		 
+	 	<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+	<body style="background-color: white;">
+		<div class="page-content">
+			<!-- PAGE CONTENT BEGINS -->
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="tabbable">
+						<div class="tab-content padding-4">
+							<div class="tab-pane in active">
+								<form id="queryForm"  action="#" th:action="@{/sys/operationLog/list.do}" th:object="${query}" class="form-horizontal" role="form">
+									<input type="hidden"  th:field="${query.currentPage}"/>
+									<input type="hidden"  th:field="${query.orderByProperty}"/>
+									<input type="hidden"  th:field="${query.orderByKind}"/>
+									<div class="container">
+										<div class="row">
+											<div class='col-xs-3'>
+												用户名：<input type='text' th:field='${query.userName}' placeholder='用户名' />
+											</div>
+											<div class='col-xs-3'>
+												操作时间：<input type='text' th:field='${query.operateTime}' placeholder='操作时间' />
+											</div>
+											<div class='col-xs-2'>
+												操作类型：<input type='text' class="input-small" th:field='${query.operateType}' placeholder='操作类型' />
+											</div>
+											<div class='col-xs-3'>
+												所属组织：<input type='text' th:field='${query.userOrgId}' placeholder='所属组织' />
+											</div>
+											<div class='col-xs-1  no-padding-left' style='text-align: left;'>
+												<button class='btn btn-sm' type='submit'>
+													<i class='icon-search nav-search-icon'></i>
+													查询
+												</button>
+											</div>
+										</div>
+
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<div>
+						<table id="list-table" class="table table-striped table-bordered table-hover" style="margin-bottom: 0px;">
+							<thead>
+								<tr>
+									<th class="center">
+										<label>
+											<input id="checkAll" type="checkbox" class="ace" />
+											<span class="lbl"></span>
+										</label>
+									</th>
+									<th id='userName' class='table-order-column'>用户名</th>
+									<th id='operateTime' class='table-order-column'>操作时间</th>
+									<th id='url' class='table-order-column'>请求地址</th>
+									<th id='ip' class='table-order-column'>IP</th>
+									<th id='operateType' class='table-order-column'>操作类型</th>
+									<th id='userOrgName' class='table-order-column'>机构</th>
+
+									<th></th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr th:each="obj:${list}">
+									<td class="center">
+										<label>
+											<input type="checkbox" name="rowId" th:value="${obj.id}" class="ace" />
+											<span class="lbl"></span>
+										</label>
+									</td>
+									<td th:text='${obj.userName}'>字段内容</td>
+									<td th:text="${#dates.format(obj.operateTime, 'yyyy-MM-dd HH:mm')}">字段内容</td>
+									<td th:text='${obj.url}' style="max-width:400px;word-wrap: break-word; ">字段内容</td>
+									<td th:text='${obj.ip}'>字段内容</td>
+									<td th:text='${obj.operateType}'>字段内容</td>
+									<td th:text='${obj.userOrgName}'>字段内容</td>
+
+									<td th:include="fragment ::actionTd(baseUrl='/sys/operationLog/',haveView='true',haveEdit='false',haveDelete='true')"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					
+					<div class="wiwi-pagination">
+						<div class="batch_button_div">
+							<button class="btn btn-primary btn-xs batch_operate_button" type="button" th:attr="data-action=@{/sys/operationLog/batchDeleteAction.do}" >删除</button>
+						</div>
+						<ul th:replace="fragment :: pagination">
+						</ul>
+					</div>
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+		</div><!-- /.page-content -->
+
+		<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+			<i class="icon-double-angle-up icon-only bigger-110"></i>
+		</a>
+
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		<!-- 表格排序 分页绑定JS --> 
+		<script th:src="@{/resources/jsoil/js/jsoil.common.table.js}"></script>
+		<script th:src="@{/resources/jsoil/js/jsoil.common.js}"></script>
+	</body>
+</html>

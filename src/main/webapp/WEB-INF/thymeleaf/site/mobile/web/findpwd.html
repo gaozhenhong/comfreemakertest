@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+<title>流浪狗</title>
+<link href="../../../../../resources/mobile/css/bootstrap.min.css" rel="stylesheet">
+<link href="../../../../../resources/mobile/css/app.css" rel="stylesheet">
+<script src="../../../../../resources/mobile/js/jquery.min.js"></script>
+<script src="../../../../../resources/mobile/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../../../../resources/mobile/js/iscroll.js"></script>
+<script type="text/javascript">
+var myScroll;
+function loaded () {myScroll = new IScroll('#wrapper', { mouseWheel: true });}
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+</script>
+</head>
+
+<body onload="loaded()">
+<!-- <div id="header">标题</div> -->
+
+<div id="wrapper">
+	<div id="scroller">
+	<!-- 开始主体内容 -->
+
+
+	<form>
+  	<div class="form-group">
+
+		 <div class="input-group">
+		    <input class="form-control input-lg" type="text" value="" placeholder="请输入手机号 或者 邮箱">
+		        <span class="input-group-addon">验证</span>
+		  </div>
+	    
+
+	    <input class="form-control input-lg" type="text" value="" placeholder="请输入验证码">
+
+	    <input class="form-control input-lg" type="password" value="" placeholder="请输入新密码">
+
+	    <input class="form-control input-lg" type="password" value="" placeholder="请再次输入密码">
+
+		<button type="submit" class="nextbtn btn btn-primary btn-lg center-block" role="button">完成</button>
+
+	</div>
+	</form>
+
+
+
+
+
+
+	<!-- 结束主体内容 -->
+	</div>
+</div>
+
+<div id="footer">
+	<div class="btn-group btn-group-justified" role="group">
+		<div class="btn-group" role="group">
+			<a href="index.html" type="button" class="btn btn-default"> <i class="glyphicon glyphicon-home"></i>
+				<br>主页</a>
+		</div>
+		<div class="btn-group" role="group">
+			<a href="zb.html" type="button" class="btn btn-default"> <i class="glyphicon glyphicon-map-marker"></i>
+				<br>周边</a>
+		</div>
+		<div class="btn-group" role="group">
+			<a href="login.html" type="button" class="btn btn-default">
+				<i class="glyphicon glyphicon-user"></i>
+				<br>我的</a>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

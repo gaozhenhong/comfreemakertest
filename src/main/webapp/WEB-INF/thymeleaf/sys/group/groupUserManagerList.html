@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+	<head>
+	 	<meta charset="utf-8" />
+		<title>用户组</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		 
+	 	<link th:href="@{/resources/bootstrap-3.3.2/css/bootstrap.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/3.2.1/css/font-awesome.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/font-awesome/4.2.0/css/font-awesome.min.css}" rel="stylesheet" />
+		<!-- page specific plugin styles -->
+		<link th:href="@{/resources/ace/css/ace.min.css}" rel="stylesheet" />
+		<link th:href="@{/resources/jsoil/css/wiwi-jsoil.css}" rel="stylesheet" />
+		
+		<script th:src="@{/resources/js/jquery-2.0.3.min.js}"></script>
+		<script th:src="@{/resources/ace/js/ace-extra.min.js}"></script>
+	</head>
+	<body style="margin: 0px 0px 0px 0px;background-color: white;">
+	
+	<!-- PAGE CONTENT BEGINS -->
+	<div class="widget-box" style="border-bottom:0px;">
+		<div class="widget-header widget-header-blue widget-header-flat" >
+			<h4 class="lighter">用户组管理</h4>
+		</div>
+		<div class="widget-body" style="border:0px;">	
+			<div class="widget-main" style="min-height: 600px;height: 100%;padding: 0px;">
+				<div class="row" >
+					<div class="col-xs-12"  >
+						<div class="tabbable tabs-left" >
+							<ul class="nav nav-tabs" id="myTab3" style="width:200px;">
+								<li th:each="obj:${list}" th:class="${obj.id == chooseGroup.id?'active':''}" >
+									<a class="user-group" th:href="@{/sys/group/groupUserList.do(groupId=${obj.id})}">
+										<i class="pink icon-dashboard bigger-110"></i>
+										<span th:text='${obj.name}'></span>
+									</a>
+									<!-- 
+									<a class="green" style="float:left;" th:href="@{/sys/group/edit.do(id=${obj.id})}">
+										<i class="icon-pencil bigger-130"></i>
+									</a>
+									<a class="red row_del_button" style="float:left;" th:href="@{/sys/group/deleteAction.do(id=${obj.id})}">
+										<i class="icon-trash bigger-130"></i>
+									</a>
+									 -->
+								</li>
+							</ul>
+
+							<div class="tab-content" style="border:1px solid #c5d0dc;padding: 0px 0px;margin: 0px;">
+								<div id="home3" class="tab-pane in active">
+									<div class="page-iframe" id="content" style="min-height: 400px;">
+										<iframe th:src="@{/sys/group/groupUserList.do(groupId=${chooseGroup.id})}" style="width:100%;height: 550px;" frameborder="0" id="groupUserFrame" class="appiframe"></iframe>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div><!-- /.row -->
+	</div>
+		<!-- basic scripts -->
+		<script th:src="@{/resources/bootstrap-3.3.2/js/bootstrap.min.js}"></script>
+		<!-- 对话框JS --> 
+		<script th:src="@{/resources/js/jquery.bootstrap.teninedialog.v3.js}"></script>
+		
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+			 jQuery(function($) {
+			 $(".user-group").on('click', function (e) {
+		    		e.preventDefault();
+		    		var $_this = this,
+		            $this = $($_this),
+		            href = $this.prop('href');
+		    		$parentLi = $this.closest("li");
+		    		$parentLi.addClass("active");
+		    		$parentLi.siblings().removeClass("active");
+		    		
+		    		$("#groupUserFrame").attr("src",href);
+			});
+		 });
+		           
+		/*]]>*/
+		</script>
+		
+	</body>
+</html>
