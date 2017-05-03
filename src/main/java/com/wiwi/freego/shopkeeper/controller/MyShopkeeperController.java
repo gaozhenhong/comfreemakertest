@@ -33,7 +33,8 @@ public class MyShopkeeperController extends BaseController
 
     model.addAttribute("pager", query);
     model.addAttribute("ResourceUtil", ResourceUtil.class);
-
+    model.addAttribute("user", user);
+    
     processOperationMessage(model);
     return "/shopkeeper/myShopkeeper/myShopkeeperList";
   }

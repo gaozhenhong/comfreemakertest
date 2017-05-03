@@ -70,11 +70,13 @@ public class RoomBoardController extends BaseController
   public String list(@RequestParam(value="hotelId", required=false) Long hotelId, @RequestParam(value="firstDay", required=false) @DateTimeFormat(pattern="yyyy-MM-dd") Date firstDay, @RequestParam(value="dayNumber", required=false) Integer dayNumber, @RequestParam(value="modal", required=false) String modal, Model model)
     throws Exception
   {
+	User user = getUser();
     List myHotelList = this.hotelService.getHotelListByUserId(getUser());
     if ((myHotelList == null) || (myHotelList.size() < 1))
       return "/roomBoard/noHotelInfo";
 
     model.addAttribute("myHotelList", myHotelList);
+    model.addAttribute("user", user);
     if (hotelId == null)
       hotelId = ((Hotel)myHotelList.get(0)).getId();
     

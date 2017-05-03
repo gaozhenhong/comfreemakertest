@@ -44,10 +44,12 @@ public class MyHotelController extends BaseController
   @RequestMapping({"list.do"})
   public String list(@ModelAttribute("query") HotelQ query, Model model) throws Exception {
     List myHotelList = this.service.getHotelListByUserId(getUser());
+    User user = getUser();
     model.addAttribute("myHotelList", myHotelList);
     model.addAttribute("pager", query);
     model.addAttribute("ResourceUtil", ResourceUtil.class);
     model.addAttribute("HotelStatus", Hotel.Status.class);
+    model.addAttribute("user", user);
     processOperationMessage(model);
     return "/hotel/myHotel/myHotelList";
   }
@@ -113,7 +115,7 @@ public class MyHotelController extends BaseController
     User user = getUser();
     List shopkeeperList = new ShopkeeperService().getListByOrgId(user.getOrg().getId());
     model.addAttribute("shopkeeperList", shopkeeperList);
-
+    model.addAttribute("user", user);
     CityQ cityQ = new CityQ();
     cityQ.setRecordPerPage(-1);
     model.addAttribute("cityList", new CityService().getList(cityQ));
