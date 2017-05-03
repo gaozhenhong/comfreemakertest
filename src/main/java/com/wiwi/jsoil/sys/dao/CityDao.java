@@ -13,12 +13,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CityDao
   extends DaoBase
 {
-  private static Logger log = Logger.getLogger(CityDao.class);
+  private static Logger log =  LoggerFactory.getLogger(CityDao.class);
   private String sql = null;
   private Connection conn = null;
   private PreparedStatement ps = null;
