@@ -96,6 +96,7 @@ public class SettlementController extends BaseController
     List canSettlementOrderList = this.hotelOrderService.getAllCanSettlementOrderList(null, endFinishTime);
     double percentage = SettlementUtil.getPercentage();
     this.service.genSettlementList(canSettlementOrderList, endFinishTime, percentage, user);
+    model.addAttribute("user", user);
     processOperationMessage(model);
     return "redirect:settlementPeriodHome.do?periodDate=" + endFinishTime;
   }
@@ -142,8 +143,10 @@ public class SettlementController extends BaseController
   public String list(@ModelAttribute("query") SettlementQ query, Model model)
     throws Exception
   {
+	User user = getUser();
     model.addAttribute("list", this.service.getList(query));
     model.addAttribute("pager", query);
+    model.addAttribute("user", user);
     processOperationMessage(model);
     return "/settlement/settlementList";
   }

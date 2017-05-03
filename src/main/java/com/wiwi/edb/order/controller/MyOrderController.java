@@ -75,7 +75,7 @@ public class MyOrderController extends BaseController
     model.addAttribute("OrderStatus", Order.Status.class);
     model.addAttribute("PayStatus", Order.PayStatus.class);
     model.addAttribute("Freego", HotelOrder.ORDER_ORIGIN_FREEGO);
-
+    model.addAttribute("user", user);
     processOperationMessage(model);
 
     return "/order/myOrder/myWaitForConfirmOrderList";
@@ -113,7 +113,7 @@ public class MyOrderController extends BaseController
     model.addAttribute("myHotelList", this.hotelService.getHotelListByUserId(user));
 
     model.addAttribute("pager", query);
-
+    model.addAttribute("user", user);
     model.addAttribute("OrderStatus", Order.Status.class);
     model.addAttribute("PayStatus", Order.PayStatus.class);
     model.addAttribute("Freego", HotelOrder.ORDER_ORIGIN_FREEGO);
@@ -137,8 +137,9 @@ public class MyOrderController extends BaseController
     model.addAttribute("OrderStatus", Order.Status.class);
     model.addAttribute("PayStatus", Order.PayStatus.class);
     model.addAttribute("Freego", HotelOrder.ORDER_ORIGIN_FREEGO);
-
+    model.addAttribute("user", user);
     processOperationMessage(model);
+
     return "/order/myOrder/myCommentOrderList";
   }
 
@@ -151,7 +152,7 @@ public class MyOrderController extends BaseController
     User user = getUser();
     model.addAttribute("hotelList", new HotelService().getHotelListByUserId(user));
     model.addAttribute("canSettlementOrderList", canSettlementOrderList);
-
+    model.addAttribute("user", user);
     model.addAttribute("pager", orderQuery);
     model.addAttribute("OrderStatus", Order.Status.class);
     model.addAttribute("PayStatus", Order.PayStatus.class);
@@ -186,7 +187,6 @@ public class MyOrderController extends BaseController
   {
     User user = getUser();
     this.service.setAllStatus(id, Order.Status.CANCELED, user, "");
-
     setOperationMessage("退单成功！");
 
     return "redirect:myCancleOrderList.do";
