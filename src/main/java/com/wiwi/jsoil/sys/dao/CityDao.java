@@ -110,12 +110,12 @@ public class CityDao
       while (this.rs.next())
       {
         City city = new City();
-        city.setId(Integer.valueOf(this.rs.getInt("id")));
+        city.setId(this.rs.getLong("id"));
         city.setCode(this.rs.getString("code"));
         city.setAbbreviation(this.rs.getString("abbreviation"));
         city.setName(this.rs.getString("name"));
         city.setDemo(this.rs.getString("demo"));
-        city.setParentId(Integer.valueOf(this.rs.getInt("parentId")));
+        city.setParentId(this.rs.getLong("parentId"));
         list.add(city);
       }
       return list;
@@ -146,12 +146,12 @@ public class CityDao
       while (this.rs.next())
       {
         City city = new City();
-        city.setId(Integer.valueOf(this.rs.getInt("id")));
+        city.setId(this.rs.getLong("id"));
         city.setCode(this.rs.getString("code"));
         city.setAbbreviation(this.rs.getString("abbreviation"));
         city.setName(this.rs.getString("name"));
         city.setDemo(this.rs.getString("demo"));
-        city.setParentId(Integer.valueOf(this.rs.getInt("parentId")));
+        city.setParentId(this.rs.getLong("parentId"));
         list.add(city);
       }
       return list;
@@ -182,12 +182,12 @@ public class CityDao
       while (this.rs.next())
       {
         City city = new City();
-        city.setId(Integer.valueOf(this.rs.getInt("id")));
+        city.setId(this.rs.getLong("id"));
         city.setCode(this.rs.getString("code"));
         city.setAbbreviation(this.rs.getString("abbreviation"));
         city.setName(this.rs.getString("name"));
         city.setDemo(this.rs.getString("demo"));
-        city.setParentId(Integer.valueOf(this.rs.getInt("parentId")));
+        city.setParentId(this.rs.getLong("parentId"));
         list.add(city);
       }
       return list;
@@ -219,12 +219,12 @@ public class CityDao
       if (this.rs.next())
       {
         city = new City();
-        city.setId(Integer.valueOf(this.rs.getInt("id")));
+        city.setId(this.rs.getLong("id"));
         city.setCode(this.rs.getString("code"));
         city.setAbbreviation(this.rs.getString("abbreviation"));
         city.setName(this.rs.getString("name"));
         city.setDemo(this.rs.getString("demo"));
-        city.setParentId(Integer.valueOf(this.rs.getInt("parentId")));
+        city.setParentId(this.rs.getLong("parentId"));
       }
       return city;
     }
