@@ -73,7 +73,6 @@ public class BaseController
     User user = null;
     try {
       LoginLog loginLog = (LoginLog)getSession().getAttribute("LoGiNsEsSiOnKeY");
-      logger.debug("==11"+loginLog);
       user = loginLog.getUser();
     } catch (Exception e) {
       e.printStackTrace();

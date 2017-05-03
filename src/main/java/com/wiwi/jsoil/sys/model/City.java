@@ -7,7 +7,7 @@ public class City
   private String code;
   private String name;
   private String demo;
-  private Integer parentId;
+  private Long parentId;
   private Float latitude;
   private Float longitude;
 
@@ -36,10 +36,10 @@ public class City
   public void setName(String name) {
     this.name = name; }
 
-  public Integer getParentId() {
+  public Long getParentId() {
     return this.parentId; }
 
-  public void setParentId(Integer parentId) {
+  public void setParentId(Long parentId) {
     this.parentId = parentId; }
 
   public String getAbbreviation() {
