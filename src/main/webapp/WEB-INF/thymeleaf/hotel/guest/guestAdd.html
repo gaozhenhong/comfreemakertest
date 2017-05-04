@@ -26,30 +26,47 @@
 						<form id="validation-form"  action="#" th:action="@{/hotel/guest/addAction.do}" th:object="${instance}" class="form-horizontal" role="form">
 							<input type="hidden"  th:field="${instance.id}"/>
 							<div class='form-group'>
-								<label class='col-sm-3 control-label no-padding-right'> name </label>
+								<label class='col-sm-3 control-label no-padding-right'> 姓名 </label>
 								<div class='col-sm-9'>
-									<input type='text' th:field='${instance.name}' placeholder='name' class='col-xs-10 col-sm-5' />
+									<input type='text' th:field='${instance.name}' placeholder='姓名' class='col-xs-10 col-sm-5' />
 								</div>
 							</div>
 							<div class='form-group'>
-								<label class='col-sm-3 control-label no-padding-right'> idCardType </label>
+								<label class='col-sm-3 control-label no-padding-right'> 证件类型 </label>
 								<div class='col-sm-9'>
-									<input type='text' th:field='${instance.idCardType}' placeholder='idCardType' class='col-xs-10 col-sm-5' />
+									<!-- <input type='text' th:field='${instance.idCardType}' placeholder='证件类型' class='col-xs-10 col-sm-5' /> -->
+									<select th:field='${instance.idCardType}' class="width-40 form-control"   data-placeholder="请选择证件类型">
+												<option value="idCard">身份证</option>
+												<option value="passport">护照</option>
+												<option value="gangaoPassport">港澳通行证</option>
+												<option value="militaryCard">军官证</option>
+												<option value="other">其它</option>
+									</select>
 								</div>
 							</div>
 							<div class='form-group'>
-								<label class='col-sm-3 control-label no-padding-right'> idcard </label>
+								<label class='col-sm-3 control-label no-padding-right'> 证件号码 </label>
 								<div class='col-sm-9'>
-									<input type='text' th:field='${instance.idcard}' placeholder='idcard' class='col-xs-10 col-sm-5' />
+									<input type='text' th:field='${instance.idCardNo}' placeholder='证件号码' class='col-xs-10 col-sm-5' />
 								</div>
 							</div>
 							<div class='form-group'>
-								<label class='col-sm-3 control-label no-padding-right'> telephone </label>
+								<label class='col-sm-3 control-label no-padding-right'> 电话 </label>
 								<div class='col-sm-9'>
-									<input type='text' th:field='${instance.telephone}' placeholder='telephone' class='col-xs-10 col-sm-5' />
+									<input type='text' th:field='${instance.telephone}' placeholder='电话' class='col-xs-10 col-sm-5' />
 								</div>
 							</div>
 							
+							<div class='form-group'>
+								<label class='col-sm-3 control-label no-padding-right'> 性别</label>
+								<div class='col-sm-9'>
+									<!--<input type='text' th:field='${instance.gender}' placeholder='性别' class='col-xs-10 col-sm-5' />  -->
+									<select th:field='${instance.gender}' class="width-40 form-control" style="width:80px;" >
+												<option value="0">男</option>
+												<option value="1">女</option>
+									 </select>
+								</div>
+							</div>
 							<div class="clearfix form-actions">
 								<div class="col-md-offset-3 col-md-9">
 									<button class="btn btn-info" type="submit">
